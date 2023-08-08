@@ -3,7 +3,7 @@ package telran.functionality.com.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.entity.Manager;
-import telran.functionality.com.service.ManagerServiceImpl;
+import telran.functionality.com.service.ManagerService;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class ManagerController {
 
     @Autowired
-    private ManagerServiceImpl managerService;
+    private ManagerService managerService;
 
     @GetMapping
     public List<Manager> getAll() {
@@ -25,7 +25,7 @@ public class ManagerController {
     }
 
     @PostMapping
-    public Manager save(@RequestBody Manager manager){
+    public Manager save(@RequestBody Manager manager) {
         return managerService.create(manager);
     }
 }

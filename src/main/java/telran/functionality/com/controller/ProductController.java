@@ -3,7 +3,8 @@ package telran.functionality.com.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.entity.Product;
-import telran.functionality.com.service.ProductServiceImpl;
+import telran.functionality.com.service.ProductService;
+
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    private ProductServiceImpl productService;
+    private ProductService productService;
 
     @GetMapping
     public List<Product> getAll() {
@@ -25,7 +26,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public Product save(@RequestBody Product product){
+    public Product save(@RequestBody Product product) {
         return productService.create(product);
     }
 }

@@ -3,7 +3,7 @@ package telran.functionality.com.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.entity.Agreement;
-import telran.functionality.com.service.AgreementServiceImpl;
+import telran.functionality.com.service.AgreementService;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 public class AgreementController {
 
     @Autowired
-    private AgreementServiceImpl agreementService;
+    private AgreementService agreementService;
 
     @GetMapping
     public List<Agreement> getAll() {
@@ -26,7 +26,7 @@ public class AgreementController {
     }
 
     @PostMapping
-    public Agreement save(@RequestBody Agreement agreement){
+    public Agreement save(@RequestBody Agreement agreement) {
         return agreementService.create(agreement);
     }
 }

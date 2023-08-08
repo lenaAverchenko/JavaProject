@@ -3,7 +3,8 @@ package telran.functionality.com.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.entity.Client;
-import telran.functionality.com.service.ClientServiceImpl;
+import telran.functionality.com.service.ClientService;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 public class ClientController {
 
     @Autowired
-    private ClientServiceImpl clientService;
+    private ClientService clientService;
 
     @GetMapping
     public List<Client> getAll() {
@@ -26,7 +27,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public Client save(@RequestBody Client client){
+    public Client save(@RequestBody Client client) {
         return clientService.create(client);
     }
 

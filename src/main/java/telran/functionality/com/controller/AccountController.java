@@ -3,7 +3,8 @@ package telran.functionality.com.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.entity.Account;
-import telran.functionality.com.service.AccountServiceImpl;
+import telran.functionality.com.service.AccountService;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 public class AccountController {
 
     @Autowired
-    private AccountServiceImpl accountService;
+    private AccountService accountService;
 
     @GetMapping
     public List<Account> getAll() {
@@ -26,7 +27,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public Account save(@RequestBody Account account){
+    public Account save(@RequestBody Account account) {
         return accountService.create(account);
     }
 }

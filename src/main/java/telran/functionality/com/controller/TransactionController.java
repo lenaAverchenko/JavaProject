@@ -6,7 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import telran.functionality.com.entity.Transaction;
-import telran.functionality.com.service.TransactionServiceImpl;
+import telran.functionality.com.service.TransactionService;
+
 
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import java.util.UUID;
 public class TransactionController {
 
     @Autowired
-    TransactionServiceImpl transactionService;
+    private TransactionService transactionService;
 
     @GetMapping
     public List<Transaction> getAll() {
