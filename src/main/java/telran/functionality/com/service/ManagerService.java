@@ -13,7 +13,7 @@ public interface ManagerService {
 
     Manager create(Manager account);
 
-    Manager update(long id);
+    Manager update(long id, Manager manager);
 
     void delete(long id);
 }

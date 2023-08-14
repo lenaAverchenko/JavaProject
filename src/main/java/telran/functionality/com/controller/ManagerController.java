@@ -2,30 +2,48 @@ package telran.functionality.com.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import telran.functionality.com.entity.Manager;
+import telran.functionality.com.converter.ManagerConverter;
+import telran.functionality.com.dto.ManagerDto;
 import telran.functionality.com.service.ManagerService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/manager")
+@RequestMapping("/managers")
 public class ManagerController {
 
     @Autowired
     private ManagerService managerService;
+    @Autowired
+    private ManagerConverter managerConverter;
 
     @GetMapping
-    public List<Manager> getAll() {
-        return managerService.getAll();
+    public List<ManagerDto> getAll() {
+
+        return managerService.getAll().stream()
+                .map(manager -> managerConverter.toDto(manager))
+                .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public Manager getById(@PathVariable(name = "id") long id) {
-        return managerService.getById(id);
+    public ManagerDto getById(@PathVariable(name = "id") long id) {
+
+        return managerConverter.toDto(managerService.getById(id));
     }
 
     @PostMapping
-    public Manager save(@RequestBody Manager manager) {
-        return managerService.create(manager);
+    public ManagerDto save(@RequestBody ManagerDto managerDto) {
+
+        return managerConverter.toDto(managerService.create(managerConverter.toEntity(managerDto)));
+    }
+    @PutMapping("/{id}")
+    public ManagerDto updateInformation(@PathVariable(name = "id") long id, @RequestBody ManagerDto managerDto){
+        return managerConverter.toDto(managerService.update(id, managerConverter.toEntity(managerDto)));
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable(name = "id") long id) {
+        managerService.delete(id);
     }
 }

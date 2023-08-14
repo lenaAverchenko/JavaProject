@@ -2,14 +2,16 @@ package telran.functionality.com.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
 
 @Entity
-@Table(name = "agreement")
+@Table(name = "agreements")
 @NoArgsConstructor
+@ToString
 @Data
 public class Agreement {
 
@@ -35,17 +37,4 @@ public class Agreement {
         this.updatedAt = new Timestamp(new Date().getTime());
     }
 
-    @Override
-    public String toString() {
-        return "Agreement{" +
-                "id=" + id +
-                ", account=" + account +
-                ", product=" + product +
-                ", interestRate=" + interestRate +
-                ", status=" + status +
-                ", sum=" + sum +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

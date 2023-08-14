@@ -2,6 +2,7 @@ package telran.functionality.com.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -9,8 +10,9 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-@Table(name = "transaction")
+@Table(name = "transactions")
 @NoArgsConstructor
+@ToString
 @Data
 public class Transaction {
 
@@ -31,17 +33,10 @@ public class Transaction {
     private String description;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
 
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", debitAccount=" + debitAccount +
-                ", creditAccount=" + creditAccount +
-                ", type=" + type +
-                ", amount=" + amount +
-                ", description='" + description + '\'' +
-                ", createdAt=" + createdAt +
-                '}';
+    public Transaction(UUID id, Account debitAccount, Account creditAccount, double amount) {
+        this.id = id;
+        this.debitAccount = debitAccount;
+        this.creditAccount = creditAccount;
+        this.amount = amount;
     }
 }
