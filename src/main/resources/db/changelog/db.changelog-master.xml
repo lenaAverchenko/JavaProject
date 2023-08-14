@@ -9,7 +9,7 @@
     <changeSet id="20230813170500" author="Lena Averchenko">
         <comment>Add accounts table</comment>
         <createTable tableName="accounts">
-            <column autoIncrement="true" name="id" type="BINARY(16)">
+            <column name="id" type="BINARY(16)">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="account_pkey"/>
             </column>
             <column name="client_id" type="BINARY(16)">
@@ -108,9 +108,9 @@
     </changeSet>
 
     <changeSet id="20230813200208" author="Lena Averchenko">
-        <comment>Add products table</comment>
+        <comment>Add transactions table</comment>
         <createTable tableName="transactions">
-            <column autoIncrement="true" name="id" type="BINARY(16)">
+            <column name="id" type="BINARY(16)">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="transaction_pkey"/>
             </column>
             <column name="debit_account_id" type="BINARY(16)">
