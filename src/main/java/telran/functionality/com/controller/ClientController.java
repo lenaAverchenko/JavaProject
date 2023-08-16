@@ -1,9 +1,11 @@
 package telran.functionality.com.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import telran.functionality.com.converter.ClientConverter;
+import telran.functionality.com.converter.Converter;
 import telran.functionality.com.dto.ClientDto;
+import telran.functionality.com.entity.Client;
 import telran.functionality.com.service.ClientService;
 
 
@@ -13,13 +15,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/clients")
+@RequiredArgsConstructor
 public class ClientController {
 
     @Autowired
-    private ClientService clientService;
+    private final ClientService clientService;
 
     @Autowired
-    private ClientConverter clientConverter;
+    private final Converter<Client, ClientDto> clientConverter;
 
     @GetMapping
     public List<ClientDto> getAll() {
@@ -38,7 +41,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ClientDto updateInformation(@PathVariable(name = "id") UUID id, @RequestBody ClientDto clientDto){
+    public ClientDto updateInformation(@PathVariable(name = "id") UUID id, @RequestBody ClientDto clientDto) {
         return clientConverter.toDto(clientService.update(id, clientConverter.toEntity(clientDto)));
     }
 

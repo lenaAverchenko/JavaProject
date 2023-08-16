@@ -1,6 +1,5 @@
 package telran.functionality.com.service;
 
-import telran.functionality.com.entity.Account;
 import telran.functionality.com.entity.Transaction;
 
 import java.util.List;
@@ -11,5 +10,7 @@ public interface TransactionService {
     List<Transaction> getAll();
 
     Transaction getById(UUID id);
+
+    Transaction save(Transaction transaction);
 
 }

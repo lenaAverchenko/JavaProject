@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,9 +18,10 @@ import java.util.UUID;
 public class ClientDto {
 
     private UUID id;
-    private ManagerDto manager;
-    private List<AccountDto> accounts;
     private String firstName;
     private String lastName;
+    private ManagerDto manager;
+    private List<AccountDto> accounts = new ArrayList<>();
+
 
 }

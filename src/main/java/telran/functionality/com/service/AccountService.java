@@ -17,8 +17,11 @@ public interface AccountService {
     Account update(UUID id, Account account);
 
     void delete(UUID id);
+
     double getBalanceOf(UUID id);
 
     List<Transaction> getHistoryOfTransactionsByAccountId(UUID id);
+
+    void transferMoneyBetweenAccounts(UUID debitAccountId, UUID creditAccountId, double sum, int type, String description);
 
 }

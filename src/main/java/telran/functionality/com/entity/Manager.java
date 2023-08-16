@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,12 +28,12 @@ public class Manager {
     @OneToMany(mappedBy = "manager")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Client> clients;
+    private List<Client> clients = new ArrayList<>();
 
     @OneToMany(mappedBy = "manager")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;
 

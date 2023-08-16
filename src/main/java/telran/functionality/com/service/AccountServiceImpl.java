@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Account;
 import telran.functionality.com.entity.Transaction;
+import telran.functionality.com.exceptions.NotEnoughMoneyException;
 import telran.functionality.com.repository.AccountRepository;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -41,8 +41,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account update(UUID id, Account account) {
-        List <Account> accounts = getAll();
-        for (Account currentAccount: accounts) {
+        List<Account> accounts = getAll();
+        for (Account currentAccount : accounts) {
             if (currentAccount.getId().equals(id)) {
                 currentAccount.setName(account.getName());
                 currentAccount.setType(account.getType());
@@ -71,11 +71,28 @@ public class AccountServiceImpl implements AccountService {
         List<Transaction> allTransactions = transactionService.getAll();
         List<Transaction> creditTransactions = allTransactions.stream()
                 .filter(transaction -> transaction.getCreditAccount()
-                .getId().equals(id)).toList();
+                        .getId().equals(id)).toList();
         List<Transaction> debitTransactions = allTransactions.stream()
                 .filter(transaction -> transaction.getDebitAccount()
                         .getId().equals(id)).toList();
         return Stream.concat(debitTransactions.stream(), creditTransactions.stream()).collect(Collectors.toList());
     }
+
+    @Override
+    public void transferMoneyBetweenAccounts(UUID debitAccountId, UUID creditAccountId, double sum, int type, String description) {
+        Account debitAccount = accountRepository.getReferenceById(debitAccountId);
+        Account creditAccount = accountRepository.getReferenceById(creditAccountId);
+        if ((debitAccount.getBalance() - sum) < 0) {
+            throw new NotEnoughMoneyException(String.format(
+                    "There is not enough money to transfer on the chosen account: %s", debitAccountId));
+        }
+        debitAccount.setBalance(debitAccount.getBalance() - sum);
+        creditAccount.setBalance(creditAccount.getBalance() + sum);
+        update(debitAccountId, debitAccount);
+        update(creditAccountId, creditAccount);
+        Transaction newTransaction = new Transaction(debitAccount, creditAccount, type, sum, description);
+        transactionService.save(newTransaction);
+    }
+
 
 }

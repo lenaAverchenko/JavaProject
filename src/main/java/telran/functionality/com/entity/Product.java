@@ -34,12 +34,12 @@ public class Product {
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;
 
-    public Product(long id, Manager manager, String name, int status, int limitValue) {
+    public Product(long id, String name, int status, int limitValue, Manager manager) {
         this.id = id;
-        this.manager = manager;
         this.name = name;
         this.status = status;
         this.limitValue = limitValue;
+        this.manager = manager;
     }
 
     public void setUpdatedAt(Timestamp updatedAt) {

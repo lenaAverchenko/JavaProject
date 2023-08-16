@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,11 +28,10 @@ public class Client {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Manager manager;
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id_")
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
-    private List<Account> accounts;
+    private List<Account> accounts = new ArrayList<>();
     private int status;
     private String taxCode;
     private String firstName;
@@ -43,12 +43,12 @@ public class Client {
     private Timestamp updatedAt;
 
 
-    public Client(UUID id, Manager manager, List<Account> accounts, String firstName, String lastName) {
+    public Client(UUID id, String firstName, String lastName, Manager manager, List<Account> accounts) {
         this.id = id;
-        this.manager = manager;
-        this.accounts = accounts;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.manager = manager;
+        this.accounts = accounts;
     }
 
     public void setUpdatedAt(Timestamp updatedAt) {

@@ -15,8 +15,8 @@ import lombok.ToString;
 public class ProductDto {
 
     private long id;
-    private ManagerDto manager;
     private String name;
     private int status;
     private int limitValue;
+    private ManagerDto manager;
 }

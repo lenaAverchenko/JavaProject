@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,8 +20,8 @@ public class ManagerDto {
     private long id;
     private String firstName;
     private String lastName;
-    private List<ClientDto> clients;
-    private List<ProductDto> products;
+    private List<ClientDto> clients = new ArrayList<>();
+    private List<ProductDto> products = new ArrayList<>();
 
 
 }

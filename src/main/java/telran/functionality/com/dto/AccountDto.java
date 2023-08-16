@@ -15,7 +15,7 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountDto {
     private UUID id;
-    private UUID clientId;
     private String name;
+    private ClientDto clientDto;
     private double balance;
 }
