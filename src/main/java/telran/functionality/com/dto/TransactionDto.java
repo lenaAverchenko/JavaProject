@@ -1,14 +1,9 @@
 package telran.functionality.com.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import telran.functionality.com.entity.Account;
+import lombok.*;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.UUID;
 
 @Data

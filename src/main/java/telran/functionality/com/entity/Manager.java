@@ -1,11 +1,9 @@
 package telran.functionality.com.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,13 +14,15 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @Data
+@AllArgsConstructor
 public class Manager {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String firstName;
     private String lastName;
+    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
     private int status;
 
     @OneToMany(mappedBy = "manager")
@@ -37,12 +37,13 @@ public class Manager {
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;
 
-    public Manager(long id, String firstName, String lastName, List<Client> clients, List<Product> products) {
-        this.id = id;
+    public Manager(String firstName, String lastName, List<Client> clients, List<Product> products, Timestamp updatedAt) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.status = 1;
         this.clients = clients;
         this.products = products;
+        this.updatedAt = updatedAt;
     }
 
     public void setUpdatedAt(Timestamp updatedAt) {

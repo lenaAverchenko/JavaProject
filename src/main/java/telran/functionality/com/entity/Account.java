@@ -1,12 +1,13 @@
 package telran.functionality.com.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import telran.functionality.com.enums.Currency;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Table(name = "accounts")
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Account {
 
@@ -25,20 +27,27 @@ public class Account {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Client client;
+    @NotBlank(message = "Field name is mandatory")
     private String name;
     private int type;
+    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
     private int status;
     private double balance;
-    private int currencyCode;
+    @Enumerated(EnumType.STRING)
+    @NotBlank
+    private Currency currencyCode;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;
 
 
-    public Account(UUID id, String name, Client client, double balance) {
-        this.id = id;
-        this.name = name;
+    public Account(Client client, String name, int type, double balance, Currency currencyCode, Timestamp updatedAt) {
         this.client = client;
+        this.name = name;
+        this.type = type;
+        this.status = 0;
         this.balance = balance;
+        this.currencyCode = currencyCode;
+        this.updatedAt = updatedAt;
     }
 
     public void setUpdatedAt(Timestamp updatedAt) {

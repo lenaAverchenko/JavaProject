@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,14 +13,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClientDto {
+public class TransactionCreateDto {
 
-    private UUID id;
-    private int status;
-    private String firstName;
-    private String lastName;
-    private ManagerDto manager;
-    private List<AccountDto> accounts = new ArrayList<>();
-
-
+    private UUID debitAccountId;
+    private UUID creditAccountId;
+    private int type;
+    private double amount;
+    private String description;
 }

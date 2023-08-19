@@ -54,7 +54,8 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="account_pkey"/>
             </column>
             <column name="client_id" type="BINARY(16)">
-                <constraints foreignKeyName="accounts_client_fkey" referencedTableName="clients" referencedColumnNames="id" nullable="false"/>
+                <constraints foreignKeyName="accounts_client_fkey" referencedTableName="clients"
+                             referencedColumnNames="id" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(100)"/>
             <column name="type" type="TINYINT"/>
@@ -73,7 +74,8 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="product_pkey"/>
             </column>
             <column name="manager_id" type="BIGINT">
-                <constraints foreignKeyName="products_manager_fkey" referencedTableName="managers" referencedColumnNames="id" nullable="false"/>
+                <constraints foreignKeyName="products_manager_fkey" referencedTableName="managers"
+                             referencedColumnNames="id" nullable="false"/>
             </column>
             <column name="name" type="VARCHAR(70)"/>
             <column name="status" type="TINYINT"/>
@@ -117,16 +119,25 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="transaction_pkey"/>
             </column>
             <column name="debit_account_id" type="BINARY(16)">
-                <constraints foreignKeyName="debit_account_fkey" referencedTableName="accounts" referencedColumnNames="id" nullable="false"/>
+                <constraints foreignKeyName="debit_account_fkey" referencedTableName="accounts"
+                             referencedColumnNames="id" nullable="false"/>
             </column>
             <column name="credit_account_id" type="BINARY(16)">
-                <constraints foreignKeyName="credit_account_fkey" referencedTableName="accounts" referencedColumnNames="id" nullable="false"/>
+                <constraints foreignKeyName="credit_account_fkey" referencedTableName="accounts"
+                             referencedColumnNames="id" nullable="false"/>
             </column>
             <column name="type" type="TINYINT"/>
             <column name="amount" type="DECIMAL(12,4)"/>
             <column name="description" type="VARCHAR(255)"/>
             <column name="created_at" type="TIMESTAMP"/>
         </createTable>
+    </changeSet>
+
+    <changeSet id="20230817170500" author="Lena Averchenko">
+        <comment>Change type of columns in accounts and products tables</comment>
+        <modifyDataType tableName="accounts" columnName="balance" newDataType="DECIMAL(15,2)"/>
+        <modifyDataType tableName="accounts" columnName="currency_code" newDataType="VARCHAR(4)"/>
+        <modifyDataType tableName="products" columnName="currency_code" newDataType="VARCHAR(4)"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -6,8 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 @Data
@@ -15,14 +14,11 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClientDto {
+public class AgreementCreateDto {
 
-    private UUID id;
-    private int status;
-    private String firstName;
-    private String lastName;
-    private ManagerDto manager;
-    private List<AccountDto> accounts = new ArrayList<>();
-
-
+    private UUID accountId;
+    private long productId;
+    private double interestRate;
+    private double sum;
+    private Timestamp updatedAt;
 }

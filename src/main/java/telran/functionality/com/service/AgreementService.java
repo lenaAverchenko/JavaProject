@@ -10,9 +10,13 @@ public interface AgreementService {
 
     Agreement getById(long id);
 
-    Agreement create(Agreement account);
+    Agreement create(Agreement agreement);
 
-    Agreement update(long id);
+    void changeStatus(long id, int status);
+
+    void inactivateAgreement(long id);
+
+    void changeInterestRate(long id, double newRate);
 
     void delete(long id);
 }

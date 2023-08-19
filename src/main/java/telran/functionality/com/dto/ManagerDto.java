@@ -20,6 +20,7 @@ public class ManagerDto {
     private long id;
     private String firstName;
     private String lastName;
+    private int status;
     private List<ClientDto> clients = new ArrayList<>();
     private List<ProductDto> products = new ArrayList<>();
 

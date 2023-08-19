@@ -1,6 +1,7 @@
 package telran.functionality.com.service;
 
 import telran.functionality.com.entity.Account;
+import telran.functionality.com.entity.Agreement;
 import telran.functionality.com.entity.Transaction;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface AccountService {
 
     Account create(Account account);
 
-    Account update(UUID id, Account account);
+    Account changeStatus(UUID id, int newStatus);
 
     void delete(UUID id);
 
@@ -23,5 +24,16 @@ public interface AccountService {
     List<Transaction> getHistoryOfTransactionsByAccountId(UUID id);
 
     void transferMoneyBetweenAccounts(UUID debitAccountId, UUID creditAccountId, double sum, int type, String description);
+
+    Account withdrawMoney(UUID clientId, UUID accountId, double sum);
+
+    Account putMoney(UUID accountId, double sum);
+
+    boolean accountIsValid(UUID id);
+
+    void inactivateAccount(UUID id);
+
+    boolean accountBelongsToClient(UUID clientId, UUID accountId);
+
 
 }

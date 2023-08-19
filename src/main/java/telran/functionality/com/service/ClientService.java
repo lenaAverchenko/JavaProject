@@ -1,6 +1,8 @@
 package telran.functionality.com.service;
 
 
+import telran.functionality.com.entity.Account;
+import telran.functionality.com.entity.Agreement;
 import telran.functionality.com.entity.Client;
 
 import java.util.List;
@@ -14,7 +16,14 @@ public interface ClientService {
 
     Client create(Client account);
 
-    Client update(UUID id, Client client);
+    Client updatePersonalInfo(UUID id, Client client);
 
     void delete(UUID id);
+
+    void changeManager(UUID clientId, long managerId);
+
+    void changeStatus(UUID clientId, int status);
+
+    void inactivateStatus(UUID id);
+
 }

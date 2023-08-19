@@ -1,13 +1,14 @@
 package telran.functionality.com.entity;
 
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+import telran.functionality.com.enums.Currency;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
+
 import java.util.Date;
 
 @Entity
@@ -15,10 +16,11 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 @Data
+@AllArgsConstructor
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
@@ -26,20 +28,27 @@ public class Product {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Manager manager;
+    @NotBlank(message = "Field name is mandatory")
     private String name;
+    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
     private int status;
-    private int currencyCode;
+    @Enumerated(EnumType.STRING)
+    @NotBlank
+    private Currency currencyCode;
     private double interestRate;
+    @NotBlank
     private int limitValue;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;
 
-    public Product(long id, String name, int status, int limitValue, Manager manager) {
-        this.id = id;
-        this.name = name;
-        this.status = status;
-        this.limitValue = limitValue;
+    public Product(Manager manager, String name, Currency currencyCode, double interestRate, int limitValue, Timestamp updatedAt) {
         this.manager = manager;
+        this.name = name;
+        this.status = 1;
+        this.currencyCode = currencyCode;
+        this.interestRate = interestRate;
+        this.limitValue = limitValue;
+        this.updatedAt = updatedAt;
     }
 
     public void setUpdatedAt(Timestamp updatedAt) {

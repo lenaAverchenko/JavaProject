@@ -1,11 +1,10 @@
 package telran.functionality.com.entity;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @ToString
 @Data
+@AllArgsConstructor
 public class Client {
 
     @Id
@@ -32,24 +32,34 @@ public class Client {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Account> accounts = new ArrayList<>();
+    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
     private int status;
     private String taxCode;
+    @NotBlank(message = "Field firstName is mandatory")
     private String firstName;
+    @NotBlank(message = "Field lastName is mandatory")
     private String lastName;
     private String email;
+    @NotBlank(message = "Field address is mandatory")
     private String address;
     private String phone;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;
 
 
-    public Client(UUID id, String firstName, String lastName, Manager manager, List<Account> accounts) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Client(Manager manager, List<Account> accounts, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {
         this.manager = manager;
         this.accounts = accounts;
+        this.status = 1;
+        this.taxCode = taxCode;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.address = address;
+        this.phone = phone;
+        this.updatedAt = updatedAt;
     }
+
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = new Timestamp(new Date().getTime());

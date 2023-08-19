@@ -10,10 +10,16 @@ public interface ProductService {
 
     Product getById(long id);
 
-    Product create(Product account);
+    Product save(Product account);
 
-    Product update(long id);
+    void changeManager(long id, long managerId);
+
+    void changeStatus(long id, int status);
+
+    void changeLimitValue(long id, int limitValue);
 
     void delete(long id);
+
+    void inactivateStatus(long id);
 
 }
