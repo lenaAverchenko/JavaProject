@@ -8,6 +8,7 @@ import telran.functionality.com.entity.Account;
 import telran.functionality.com.entity.Transaction;
 import telran.functionality.com.exceptions.*;
 import telran.functionality.com.repository.AccountRepository;
+import telran.functionality.com.repository.AgreementRepository;
 ;
 
 import java.sql.Timestamp;
@@ -24,6 +25,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private AgreementRepository agreementRepository;
 
     @Autowired
     private TransactionService transactionService;
@@ -59,10 +63,15 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account changeStatus(UUID id, int newStatus) {
         logger.info("Call method changeStatus of account in service from {} to {}", getById(id).getStatus(), newStatus);
+        Account currentAccount = getById(id);
+        if (!agreementRepository.findAll().stream()
+                .map(agreement -> agreement.getAccount().getId())
+                .toList().contains(id)){
+            throw new AccountIsNotValidException("Account has not activated yet");
+        }
         if (newStatus < 0 || newStatus > 2) {
             throw new WrongValueException("Status can only be: 0, 1, 2");
         }
-        Account currentAccount = getById(id);
         currentAccount.setStatus(newStatus);
         currentAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
         accountRepository.save(currentAccount);
@@ -93,7 +102,11 @@ public class AccountServiceImpl implements AccountService {
         List<Transaction> debitTransactions = allTransactions.stream()
                 .filter(transaction -> transaction.getDebitAccount()
                         .getId().equals(id)).toList();
-        return Stream.concat(debitTransactions.stream(), creditTransactions.stream()).collect(Collectors.toList());
+        List<Transaction> resultedList = Stream.concat(debitTransactions.stream(), creditTransactions.stream()).collect(Collectors.toList());
+        if (resultedList.size() == 0) {
+            throw new EmptyRequiredListException("There is no one registered transaction for account with id " + id);
+        }
+        return resultedList;
     }
 
     @Override
@@ -128,7 +141,7 @@ public class AccountServiceImpl implements AccountService {
     public boolean accountBelongsToClient(UUID clientId, UUID accountId) {
         logger.info("Call method accountBelongsToClient in service for accountId: {} and clientId: {}", accountId, clientId);
         Account foundAccount = getById(accountId);
-        if (!foundAccount.getClient().getId().equals(accountId)) {
+        if (!foundAccount.getClient().getId().equals(clientId)) {
             throw new AccountDoesntBelongToClientException(String.format("Account with id %s doesn't belong to client with id %s", accountId, clientId));
         }
         logger.info("Method accountBelongsToClient has resulted with: true");
@@ -147,6 +160,9 @@ public class AccountServiceImpl implements AccountService {
             foundAccount.setBalance(sum);
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
             accountRepository.save(foundAccount);
+            //            TODO
+//            Transaction newTransaction = new Transaction(getById(accountId),getById(),4,sum, "bank account withdrawal");
+//            transactionService.save(newTransaction);
         }
         return foundAccount;
     }
@@ -159,6 +175,9 @@ public class AccountServiceImpl implements AccountService {
             foundAccount.setBalance(sum + foundAccount.getBalance());
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
             accountRepository.save(foundAccount);
+//            TODO
+//            Transaction newTransaction = new Transaction(null,getById(accountId),2,sum, "bank account replenishment");
+//            transactionService.save(newTransaction);
         }
         return foundAccount;
     }

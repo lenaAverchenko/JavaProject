@@ -32,7 +32,7 @@ public class Client {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Account> accounts = new ArrayList<>();
-    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
+
     private int status;
     private String taxCode;
     @NotBlank(message = "Field firstName is mandatory")

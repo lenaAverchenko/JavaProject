@@ -42,7 +42,6 @@ public class TransactionConverterImpl implements Converter<Transaction, Transact
         return newTransactionDto;
     }
 
-    /* Todo */
 
     @Override
     public Transaction toEntity(TransactionCreateDto createdDto) {

@@ -47,6 +47,16 @@ public class AccountController {
         return allAccounts;
     }
 
+    @GetMapping("/allAgreements")
+    public List<AgreementDto> getAllAgreements() {
+        logger.info("Call method getAll agreements from accounts");
+        List<AgreementDto> allAgreements = agreementService.getAll().stream()
+                .map(agreementConverter::toDto)
+                .toList();
+        logger.info("Method getAll agreements has resulted with: " + allAgreements);
+        return allAgreements;
+    }
+
     @GetMapping("/{id}")
     public AccountDto getById(@PathVariable(name = "id") UUID id) {
         logger.info("Call method getById {}", id);
@@ -71,14 +81,14 @@ public class AccountController {
         return updatedAccount;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable(name = "id") UUID id) {
         logger.info("Call method delete account by id {}", id);
         accountService.delete(id);
         logger.info("Method delete client has ended");
     }
 
-    @GetMapping("/getBalance/{id}")
+    @GetMapping("/getBalanceOf/{id}")
     public double getBalanceOf(@PathVariable(name = "id") UUID id) {
         logger.info("Call method getBalanceOf accountId: {}", id);
         double currentBalance = accountService.getBalanceOf(id);
@@ -86,7 +96,7 @@ public class AccountController {
         return currentBalance;
     }
 
-    @GetMapping("/getHistory/{id}")
+    @GetMapping("/getHistoryOf/{id}")
     public List<TransactionDto> getHistoryOfTransactionsByAccountId(@PathVariable(name = "id") UUID id) {
         logger.info("Call method getHistoryOfTransactionsByAccountId: {}", id);
         List<TransactionDto> listOfTransactions = accountService.getHistoryOfTransactionsByAccountId(id).stream()
@@ -125,13 +135,14 @@ public class AccountController {
         return updatedAccount;
     }
 
-    @PostMapping("/createNewDeal/")
-    public AgreementDto createNewDeal(@RequestBody Agreement agreement) {
+    @PostMapping("/agreements/createNewDeal")
+    public void createNewDeal(@RequestBody AgreementCreateDto agreement) {
         logger.info("Call method createNewDeal and make agreement {}", agreement);
-        Account accountWithValidStatus = accountService.changeStatus(agreement.getAccount().getId(), 1);
-        AgreementDto createdAgreement = agreementConverter.toDto(agreementService.create(agreement));
-        logger.info("Method createNewDeal has ended and resulted with: {} and changed status for account: {}", createdAgreement, accountWithValidStatus);
-        return createdAgreement;
+        agreementService.create(agreementConverter.toEntity(agreement));
+//        AgreementDto createdAgreement = agreementConverter.toDto(agreementService.create(agreement));
+        Account accountWithValidStatus = accountService.changeStatus(agreement.getAccountId(), 1);
+        logger.info("Method createNewDeal has ended and changed status for its account: {}", accountWithValidStatus);
+//        return createdAgreement;
     }
 
     @PutMapping("/inactivateAccount/{accountId}")
@@ -142,10 +153,11 @@ public class AccountController {
     }
 
     @GetMapping("/accountBelongsToClient/{accountId}/{clientId}")
-    public void accountBelongsToClient(@PathVariable(name = "accountId") UUID accountId, @PathVariable(name = "clientId") UUID clientId) {
+    public boolean accountBelongsToClient(@PathVariable(name = "accountId") UUID accountId, @PathVariable(name = "clientId") UUID clientId) {
         logger.info("Call method accountBelongsToClient for accountId {} and clientId {}", accountId, clientId);
-        accountService.accountBelongsToClient(accountId, clientId);
+        boolean result = accountService.accountBelongsToClient(accountId, clientId);
         logger.info("Method accountBelongsToClient has ended");
+        return result;
     }
 
     @PutMapping("/agreements/inactivateAgreement/{id}")
@@ -162,7 +174,7 @@ public class AccountController {
         logger.info("Method changeStatusOfAgreement has ended");
     }
 
-    @PutMapping("/agreements/changeInterestRat/{id}/{newRate}")
+    @PutMapping("/agreements/changeInterestRate/{id}/{newRate}")
     public void changeInterestRateForAgreement(@PathVariable(name = "id") long id, @PathVariable(name = "newRate") double newRate) {
         logger.info("Call method changeInterestRateForAgreement by id {} to {}", id, newRate);
         agreementService.changeInterestRate(id, newRate);

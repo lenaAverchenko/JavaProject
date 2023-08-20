@@ -57,7 +57,7 @@ public class ClientController {
         return savedClient;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/updateInformation/{id}")
     public ClientDto updateInformation(@PathVariable(name = "id") UUID id, @RequestBody ClientCreateDto clientCreateDto) {
         logger.info("Call method updateInformation about client by id {} with information: {}", id, clientCreateDto);
         ClientDto updatedClientDto = clientConverter.toDto(clientService.updatePersonalInfo(id, clientConverter.toEntity(clientCreateDto)));
@@ -65,7 +65,7 @@ public class ClientController {
         return updatedClientDto;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable(name = "id") UUID id) {
         logger.info("Call method delete client by id {}", id);
         clientService.delete(id);
@@ -73,7 +73,7 @@ public class ClientController {
 
     }
 
-    @PutMapping("/changeManager/{id}/{managerId}")
+    @PutMapping("/changeManagerForClient/{id}/{managerId}")
     public void changeManager(@PathVariable(name = "id") UUID id, @PathVariable(name = "managerId") long managerId) {
         logger.info("Call method changeManager for client by id {} with new manaderId: {}", id, managerId);
         clientService.changeManager(id, managerId);

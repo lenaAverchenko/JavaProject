@@ -20,5 +20,5 @@ public class AgreementCreateDto {
     private long productId;
     private double interestRate;
     private double sum;
-    private Timestamp updatedAt;
+//    private Timestamp updatedAt;
 }

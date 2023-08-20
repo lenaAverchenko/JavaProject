@@ -30,11 +30,9 @@ public class Account {
     @NotBlank(message = "Field name is mandatory")
     private String name;
     private int type;
-    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
     private int status;
     private double balance;
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private Currency currencyCode;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;

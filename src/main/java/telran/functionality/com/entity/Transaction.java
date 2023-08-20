@@ -35,7 +35,6 @@ public class Transaction {
     private Account creditAccount;
 
     private int type;
-    @NotBlank(message = "Field description is mandatory")
     @Positive
     private double amount;
     @NotBlank(message = "Field description is mandatory")
@@ -49,4 +48,11 @@ public class Transaction {
         this.amount = amount;
         this.description = description;
     }
+    public Transaction(Account account, int type, double amount, String description) {
+        this.debitAccount = account;
+        this.type = type;
+        this.amount = amount;
+        this.description = description;
+    }
+
 }

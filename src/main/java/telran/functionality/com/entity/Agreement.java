@@ -29,7 +29,6 @@ public class Agreement {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
     private double interestRate;
-    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
     private int status;
     @Positive
     private double sum;

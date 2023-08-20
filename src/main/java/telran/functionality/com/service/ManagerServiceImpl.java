@@ -75,6 +75,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public void changeStatus(long managerId, int status) {
         logger.info("Call method changeStatus of manager with id: {} in service from {} to {}", managerId, getById(managerId).getStatus(), status);
+        if (status < 0 || status > 2) {
+            throw new WrongValueException("Status can only be: 0, 1, 2");
+        }
         Manager manager = getById(managerId);
         manager.setStatus(status);
         manager.setUpdatedAt(new Timestamp(new Date().getTime()));
@@ -86,7 +89,7 @@ public class ManagerServiceImpl implements ManagerService {
         logger.info("Call method addProduct to manager with id: {} in service", managerId);
         Manager currentManager = getById(managerId);
         if (statusIsValid(managerId)) {
-            currentManager.getProducts().add(product);
+            productService.save(product);
             currentManager.setUpdatedAt(new Timestamp(new Date().getTime()));
             managerRepository.save(currentManager);
         }

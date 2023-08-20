@@ -22,7 +22,6 @@ public class Manager {
     private long id;
     private String firstName;
     private String lastName;
-    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
     private int status;
 
     @OneToMany(mappedBy = "manager")

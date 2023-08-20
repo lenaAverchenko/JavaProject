@@ -58,7 +58,7 @@ public class ManagerController {
         return savedManager;
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/updateInformation/{id}")
     public ManagerDto updateInformation(@PathVariable(name = "id") long id, @RequestBody ManagerCreateDto managerCreateDto) {
         logger.info("Call method updateInformation about manager by id {} with information: {}", id, managerCreateDto);
         ManagerDto updatedManagerDto = managerConverter.toDto(managerService.update(id, managerConverter.toEntity(managerCreateDto)));
@@ -66,21 +66,28 @@ public class ManagerController {
         return updatedManagerDto;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void delete(@PathVariable(name = "id") long id) {
         logger.info("Call method delete manager by id {}", id);
         managerService.delete(id);
         logger.info("Method delete manager has ended");
     }
 
-    @PutMapping("/{id}/{status}")
+    @PutMapping("/changeStatus/{id}/{status}")
     public void changeStatus(@PathVariable(name = "id") long id, @PathVariable(name = "status") int status) {
         logger.info("Call method changeStatus of manager by id {}", id);
         managerService.changeStatus(id, status);
         logger.info("Method changeStatus has ended");
     }
 
-    @PutMapping("/addProduct/{id}")
+    @PutMapping("/inactivateStatus/{id}")
+    public void inactivateStatus(@PathVariable(name = "id") long id) {
+        logger.info("Call method inactivateStatus for manager with id: {}", id);
+        managerService.inactivateStatus(id);
+        logger.info("Method inactivateStatus has ended");
+    }
+
+    @PutMapping("/addProductTo/{id}")
     public ManagerDto addProduct(@PathVariable(name = "id") long id, @RequestBody ProductCreateDto productDto) {
         logger.info("Call method addProduct: {} -  to manager by id {}", productDto, id);
         ManagerDto updatedManager = managerConverter.toDto(managerService.addProduct(id, productConverter.toEntity(productDto)));
@@ -117,14 +124,7 @@ public class ManagerController {
         logger.info("Method changeLimitValueOfProduct has ended");
     }
 
-    @PutMapping("/inactivateStatus/{id}/{limitValue}")
-    public void inactivateStatus(@PathVariable(name = "id") long id) {
-        logger.info("Call method inactivateStatus for manager with id: {}", id);
-        managerService.inactivateStatus(id);
-        logger.info("Method inactivateStatus has ended");
-    }
-
-    @PutMapping("/inactivateStatusOfProduct/{id}/{limitValue}")
+    @PutMapping("/inactivateStatusOfProduct/{id}")
     public void inactivateStatusOfProduct(@PathVariable(name = "id") long productId) {
         logger.info("Call method inactivateStatusOfProduct with id: {}", productId);
         managerService.inactivateStatusOfProduct(productId);

@@ -5,9 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import telran.functionality.com.exceptions.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
@@ -37,7 +39,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity handle(AccountDoesntBelongToClientException exception, HttpServletRequest request) {
+    public ResponseEntity handleAccountDoesntBelongToClientException(AccountDoesntBelongToClientException exception, HttpServletRequest request) {
         return new ResponseEntity(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 
@@ -47,8 +49,28 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity ProductDoesntBelongToManagerException(ProductDoesntBelongToManagerException exception, HttpServletRequest request) {
+    public ResponseEntity handleProductDoesntBelongToManagerException(ProductDoesntBelongToManagerException exception, HttpServletRequest request) {
         return new ResponseEntity(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleAccountIsNotValidException(AccountIsNotValidException exception, HttpServletRequest request) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleSQLIntegrityConstraintViolationException(SQLIntegrityConstraintViolationException exception, HttpServletRequest request) {
+        return new ResponseEntity("Unable to make changes to Entity, linked to another Entity. " + exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleIllegalArgumentException(IllegalArgumentException exception, HttpServletRequest request) {
+        return new ResponseEntity("Wrong type of provided data. " + exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
+        return new ResponseEntity("Wrong type of provided data. " + exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
 }

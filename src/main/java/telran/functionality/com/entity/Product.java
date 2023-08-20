@@ -30,13 +30,12 @@ public class Product {
     private Manager manager;
     @NotBlank(message = "Field name is mandatory")
     private String name;
-    @Pattern(regexp = "[012]", message = "The field status must be either 0 or 1")
+
     private int status;
     @Enumerated(EnumType.STRING)
-    @NotBlank
     private Currency currencyCode;
     private double interestRate;
-    @NotBlank
+
     private int limitValue;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt;
