@@ -35,7 +35,7 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Currency currencyCode;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
-    private Timestamp updatedAt;
+    private Timestamp updatedAt = new Timestamp(new Date().getTime());
 
 
     public Account(Client client, String name, int type, double balance, Currency currencyCode, Timestamp updatedAt) {

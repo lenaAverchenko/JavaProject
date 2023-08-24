@@ -33,7 +33,7 @@ public class Agreement {
     @Positive
     private double sum;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
-    private Timestamp updatedAt;
+    private Timestamp updatedAt = new Timestamp(new Date().getTime());
 
     public Agreement(Account account, Product product, double interestRate, double sum, Timestamp updatedAt) {
         this.account = account;

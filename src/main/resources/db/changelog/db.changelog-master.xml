@@ -140,4 +140,77 @@
         <modifyDataType tableName="products" columnName="currency_code" newDataType="VARCHAR(4)"/>
     </changeSet>
 
+
+<!--    <changeSet id="20230820170501" author="Lena Averchenko">-->
+<!--        <comment>Fill in managers tables with data</comment>-->
+<!--        <sql>-->
+<!--            insert into managers (first_name, last_name, status, created_at) values ("Oleh", "Olehov",1, current_timestamp);-->
+<!--            insert into managers (first_name, last_name, status, created_at) values ("Dalim", "Dalimow",1, current_timestamp);-->
+<!--            insert into managers (first_name, last_name, status, created_at) values ("Anna", "Antonova",1, current_timestamp);-->
+<!--            insert into managers (first_name, last_name, status, created_at) values ("Dmytro", "Dmytreev",1, current_timestamp);-->
+<!--            insert into managers (first_name, last_name, status, created_at) values ("Antonina", "Anisimova",1, current_timestamp)-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+<!--    <changeSet id="20230820170502" author="Lena Averchenko">-->
+<!--        <comment>Fill in clients table with data</comment>-->
+<!--        <sql>-->
+<!--            insert into clients (manager_id, status, tax_code, first_name, last_name, email, address, phone, created_at) values (1,1,"FT11111","Michail","Michailov","michail@mail.com", "12/7 Long Street" "111222333444", current_timestamp);-->
+<!--            insert into clients (manager_id, status, tax_code, first_name, last_name, email, address, phone, created_at) values (1,1,"FT22222","Leo","Leonov","leo@mail.com", " 2 Down Street" "777888999666", current_timestamp);-->
+<!--            insert into clients (manager_id, status, tax_code, first_name, last_name, email, address, phone, created_at) values (2,1,"FT33333","Evelina","Evelinova","eva@mail.com", "4/5 Upper Street" "444555666888", current_timestamp);-->
+<!--            insert into clients (manager_id, status, tax_code, first_name, last_name, email, address, phone, created_at) values (3,1,"FT44444","Basia","Bassnaja","basia@mail.com", "34/8 TownDonw Street" "555666444777", current_timestamp);-->
+<!--            insert into clients (manager_id, status, tax_code, first_name, last_name, email, address, phone, created_at) values (4,1,"FT55555","Nikolaj","Nikolaev","nikola@mail.com", "4/99 Miles Street" "222999888777", current_timestamp);-->
+<!--            insert into clients (manager_id, status, tax_code, first_name, last_name, email, address, phone, created_at) values (4,1,"FT66666","Vinsent","Vinsentov","vin@mail.com", "111 Good Street" "999666444222", current_timestamp);-->
+<!--            insert into clients (manager_id, status, tax_code, first_name, last_name, email, address, phone, created_at) values (5,1,"FT77777","Halina","Halinova","hala@mail.com", "99/3 Excellent Street" "666777444111", current_timestamp);-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="20230820170503" author="Lena Averchenko">-->
+<!--        <comment>Fill in accounts table with data</comment>-->
+<!--        <sql>-->
+<!--            insert into accounts (client_id, name, type, status, balance, currency_code, created_at) values (,"personal", 1, 0,0,"PLN", current_timestamp);-->
+<!--            insert into accounts (client_id, name, type, status, balance, currency_code, created_at) values (,"personal", 1, 0,0,"PLN", current_timestamp);-->
+<!--            insert into accounts (client_id, name, type, status, balance, currency_code, created_at) values (,"personal", 1, 0,0,"PLN", current_timestamp);-->
+<!--            insert into accounts (client_id, name, type, status, balance, currency_code, created_at) values (,"commercial", 2, 0,1000,"PLN", current_timestamp);-->
+<!--            insert into accounts (client_id, name, type, status, balance, currency_code, created_at) values (,"commercial", 2, 0,1000,"PLN", current_timestamp);-->
+<!--            insert into accounts (client_id, name, type, status, balance, currency_code, created_at) values (,"company", 3, 0,5000,"PLN", current_timestamp);-->
+<!--            insert into accounts (client_id, name, type, status, balance, currency_code, created_at) values (,"personal", 1, 0,0,"PLN", current_timestamp);-->
+
+<!--        </sql>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="20230820170504" author="Lena Averchenko">-->
+<!--        <comment>Fill in products table with data</comment>-->
+<!--        <sql>-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (1,"credit", 1, "UAH", 20000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (1,"mortgage", 1, "UAH", 500000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (1,"classic", 1, "UAH", 30000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (2,"credit", 1, "EUR", 5000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (2,"mortgage", 1, "EUR", 100000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (2,"classic", 1, "EUR", 10000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (3,"credit", 1, "USD", 5000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (3,"mortgage", 1, "USD", 80000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (3,"classic", 1, "USD", 20000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (4,"credit", 1, "PLN", 5000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (4,"mortgage", 1, "PLN", 100000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (4,"classic", 1, "PLN", 10000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (5,"credit", 1, "CAD", 5000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (5,"mortgage", 1, "CAD", 50000, current_timestamp);-->
+<!--            insert into products (manager_id, name, status, currency_code, interest_rate, limit_value, created_at) values (5,"classic", 1, "CAD", 5000, current_timestamp);-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+
+<!--    <changeSet id="20230820170505" author="Lena Averchenko">-->
+<!--        <comment>Fill in agreements table with data</comment>-->
+<!--        <sql>-->
+<!--            insert into agreements (account_id, product_id, interest_rate, status, sum, created_at) values (,3, 1.0, 1,8000, current_timestamp);-->
+<!--            insert into agreements (account_id, product_id, interest_rate, status, sum, created_at) values (,4, 10.0, 1,5000, current_timestamp);-->
+<!--            insert into agreements (account_id, product_id, interest_rate, status, sum, created_at) values (,6, 1.0, 1,1000, current_timestamp);-->
+<!--            insert into agreements (account_id, product_id, interest_rate, status, sum, created_at) values (,9, 1.0, 1,3000, current_timestamp);-->
+<!--            insert into agreements (account_id, product_id, interest_rate, status, sum, created_at) values (,2, 3.0, 1,5000, current_timestamp);-->
+<!--            insert into agreements (account_id, product_id, interest_rate, status, sum, created_at) values (,10, 2.0, 1,5000, current_timestamp);-->
+<!--            insert into agreements (account_id, product_id, interest_rate, status, sum, created_at) values (,7, 1.5, 1,1000, current_timestamp);-->
+<!--        </sql>-->
+<!--    </changeSet>-->
+
+
 </databaseChangeLog>

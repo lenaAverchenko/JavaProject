@@ -38,7 +38,7 @@ public class Product {
 
     private int limitValue;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
-    private Timestamp updatedAt;
+    private Timestamp updatedAt = new Timestamp(new Date().getTime());
 
     public Product(Manager manager, String name, Currency currencyCode, double interestRate, int limitValue, Timestamp updatedAt) {
         this.manager = manager;

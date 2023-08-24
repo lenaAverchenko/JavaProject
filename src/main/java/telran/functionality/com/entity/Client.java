@@ -44,7 +44,7 @@ public class Client {
     private String address;
     private String phone;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
-    private Timestamp updatedAt;
+    private Timestamp updatedAt = new Timestamp(new Date().getTime());
 
 
     public Client(Manager manager, List<Account> accounts, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {

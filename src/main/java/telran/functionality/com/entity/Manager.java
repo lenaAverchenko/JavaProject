@@ -3,7 +3,6 @@ package telran.functionality.com.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +33,7 @@ public class Manager {
     @EqualsAndHashCode.Exclude
     private List<Product> products = new ArrayList<>();
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
-    private Timestamp updatedAt;
+    private Timestamp updatedAt = new Timestamp(new Date().getTime());
 
     public Manager(String firstName, String lastName, List<Client> clients, List<Product> products, Timestamp updatedAt) {
         this.firstName = firstName;
