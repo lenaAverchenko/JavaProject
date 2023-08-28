@@ -1,8 +1,8 @@
 package telran.functionality.com.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import telran.functionality.com.enums.Currency;
+import telran.functionality.com.enums.Type;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -11,13 +11,14 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AccountCreateDto {
 
     private UUID clientId;
     private String name;
-    private int type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
     private double balance;
     @Enumerated(EnumType.STRING)
     private Currency currencyCode;
+
 }

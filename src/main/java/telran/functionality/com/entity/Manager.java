@@ -1,6 +1,7 @@
 package telran.functionality.com.entity;
 
 import lombok.*;
+import telran.functionality.com.enums.Status;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -21,7 +22,8 @@ public class Manager {
     private long id;
     private String firstName;
     private String lastName;
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @OneToMany(mappedBy = "manager")
     @ToString.Exclude
@@ -38,7 +40,7 @@ public class Manager {
     public Manager(String firstName, String lastName, List<Client> clients, List<Product> products, Timestamp updatedAt) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.status = 1;
+        this.status = Status.ACTIVE;
         this.clients = clients;
         this.products = products;
         this.updatedAt = updatedAt;

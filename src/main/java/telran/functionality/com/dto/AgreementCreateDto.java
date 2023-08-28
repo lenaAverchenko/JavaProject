@@ -13,12 +13,10 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AgreementCreateDto {
 
     private UUID accountId;
     private long productId;
     private double interestRate;
     private double sum;
-//    private Timestamp updatedAt;
 }

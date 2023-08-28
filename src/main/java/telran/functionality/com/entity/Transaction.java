@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import telran.functionality.com.enums.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,9 +21,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Transaction {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private UUID id;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private UUID uniqueTransactionId;
 
     //    @OneToOne(cascade = CascadeType.ALL)
     @ManyToOne(cascade = CascadeType.ALL)
@@ -34,22 +42,18 @@ public class Transaction {
     @JoinColumn(name = "credit_account_id", referencedColumnName = "id")
     private Account creditAccount;
 
-    private int type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
     @Positive
     private double amount;
     @NotBlank(message = "Field description is mandatory")
     private String description;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
 
-    public Transaction(Account debitAccount, Account creditAccount, int type, double amount, String description) {
+    public Transaction(Account debitAccount, Account creditAccount, Type type, double amount, String description) {
+        this.uniqueTransactionId = UUID.randomUUID();
         this.debitAccount = debitAccount;
         this.creditAccount = creditAccount;
-        this.type = type;
-        this.amount = amount;
-        this.description = description;
-    }
-    public Transaction(Account account, int type, double amount, String description) {
-        this.debitAccount = account;
         this.type = type;
         this.amount = amount;
         this.description = description;

@@ -3,6 +3,7 @@ package telran.functionality.com.entity;
 
 import lombok.*;
 import telran.functionality.com.enums.Currency;
+import telran.functionality.com.enums.Status;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -31,7 +32,8 @@ public class Product {
     @NotBlank(message = "Field name is mandatory")
     private String name;
 
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @Enumerated(EnumType.STRING)
     private Currency currencyCode;
     private double interestRate;
@@ -43,7 +45,7 @@ public class Product {
     public Product(Manager manager, String name, Currency currencyCode, double interestRate, int limitValue, Timestamp updatedAt) {
         this.manager = manager;
         this.name = name;
-        this.status = 1;
+        this.status = Status.ACTIVE;
         this.currencyCode = currencyCode;
         this.interestRate = interestRate;
         this.limitValue = limitValue;

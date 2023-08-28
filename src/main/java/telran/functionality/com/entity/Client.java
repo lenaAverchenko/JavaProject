@@ -1,6 +1,7 @@
 package telran.functionality.com.entity;
 
 import lombok.*;
+import telran.functionality.com.enums.Status;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -20,8 +21,11 @@ import java.util.UUID;
 public class Client {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private UUID uniqueClientId;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
@@ -32,8 +36,8 @@ public class Client {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Account> accounts = new ArrayList<>();
-
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private String taxCode;
     @NotBlank(message = "Field firstName is mandatory")
     private String firstName;
@@ -48,9 +52,10 @@ public class Client {
 
 
     public Client(Manager manager, List<Account> accounts, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {
+        this.uniqueClientId = UUID.randomUUID();
         this.manager = manager;
         this.accounts = accounts;
-        this.status = 1;
+        this.status = Status.ACTIVE;
         this.taxCode = taxCode;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -59,6 +64,21 @@ public class Client {
         this.phone = phone;
         this.updatedAt = updatedAt;
     }
+
+//    public Client(Manager manager, List<Account> accounts, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {
+//        this.uniqueClientId = UUID.randomUUID();
+//        this.manager = manager;
+//        this.accounts = accounts;
+//        this.status = Status.ACTIVE;
+//        this.taxCode = taxCode;
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.email = email;
+//        this.address = address;
+//        this.phone = phone;
+//        this.updatedAt = updatedAt;
+//    }
+
 
 
     public void setUpdatedAt(Timestamp updatedAt) {

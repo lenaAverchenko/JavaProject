@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import telran.functionality.com.enums.Status;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 
 @Data
@@ -16,6 +20,7 @@ public class AgreementDto {
     private AccountDto accountDto;
     private ProductDto productDto;
     private double interestRate;
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private double sum;
 }

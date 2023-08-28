@@ -2,6 +2,8 @@ package telran.functionality.com.entity;
 
 import lombok.*;
 import telran.functionality.com.enums.Currency;
+import telran.functionality.com.enums.Status;
+import telran.functionality.com.enums.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -19,9 +21,16 @@ import java.util.UUID;
 @Data
 public class Account {
 
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private UUID id;
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private UUID uniqueAccountId;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ToString.Exclude
@@ -29,8 +38,10 @@ public class Account {
     private Client client;
     @NotBlank(message = "Field name is mandatory")
     private String name;
-    private int type;
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Type type;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private double balance;
     @Enumerated(EnumType.STRING)
     private Currency currencyCode;
@@ -38,11 +49,12 @@ public class Account {
     private Timestamp updatedAt = new Timestamp(new Date().getTime());
 
 
-    public Account(Client client, String name, int type, double balance, Currency currencyCode, Timestamp updatedAt) {
+    public Account(Client client, String name, Type type, double balance, Currency currencyCode, Timestamp updatedAt) {
+        this.uniqueAccountId = UUID.randomUUID();
         this.client = client;
         this.name = name;
         this.type = type;
-        this.status = 0;
+        this.status = Status.INACTIVE;
         this.balance = balance;
         this.currencyCode = currencyCode;
         this.updatedAt = updatedAt;

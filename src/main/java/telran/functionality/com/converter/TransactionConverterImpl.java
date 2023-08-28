@@ -1,7 +1,5 @@
 package telran.functionality.com.converter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import telran.functionality.com.dto.AccountCreateDto;
@@ -11,45 +9,40 @@ import telran.functionality.com.dto.TransactionDto;
 import telran.functionality.com.entity.Account;
 import telran.functionality.com.entity.Transaction;
 import telran.functionality.com.repository.AccountRepository;
+import telran.functionality.com.service.AccountService;
 
 
 @Component
 public class TransactionConverterImpl implements Converter<Transaction, TransactionDto, TransactionCreateDto> {
 
-    private static final Logger logger = LoggerFactory.getLogger(TransactionConverterImpl.class);
 
     @Autowired
     private Converter<Account, AccountDto, AccountCreateDto> accountConverter;
 
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Override
     public TransactionDto toDto(Transaction transaction) {
-        logger.debug("Call method toDto for Transaction: {}", transaction);
-        TransactionDto newTransactionDto = new TransactionDto(transaction.getId(),
-                new AccountDto(transaction.getDebitAccount().getId(),
+        TransactionDto newTransactionDto = new TransactionDto(transaction.getUniqueTransactionId(),
+                new AccountDto(transaction.getDebitAccount().getUniqueAccountId(),
                         null,
-                        transaction.getDebitAccount().getStatus(), null,
-                        transaction.getDebitAccount().getBalance()),
-                new AccountDto(transaction.getCreditAccount().getId(),
+                        transaction.getDebitAccount().getStatus(), null),
+                new AccountDto(transaction.getCreditAccount().getUniqueAccountId(),
                         null,
                         transaction.getCreditAccount().getStatus(),
-                        null, transaction.getCreditAccount().getBalance()),
+                        null),
                 transaction.getAmount(),
                 transaction.getCreatedAt());
-        logger.debug("Method toDto has ended with the result: {}", newTransactionDto);
         return newTransactionDto;
     }
 
 
     @Override
     public Transaction toEntity(TransactionCreateDto createdDto) {
-        logger.debug("Call method toEntity for Transaction: {}", createdDto);
-        Transaction transaction = new Transaction(accountRepository.getReferenceById(createdDto.getDebitAccountId()),
-                accountRepository.getReferenceById(createdDto.getCreditAccountId()),
+        Transaction transaction = new Transaction(accountService.getByIban(createdDto.getDebitAccountId()),
+                accountService.getByIban(createdDto.getCreditAccountId()),
                 createdDto.getType(), createdDto.getAmount(), createdDto.getDescription());
-        logger.debug("Method toEntity has ended with the result: {}", transaction);
         return transaction;
     }
 }

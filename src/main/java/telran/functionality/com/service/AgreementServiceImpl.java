@@ -1,10 +1,9 @@
 package telran.functionality.com.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Agreement;
+import telran.functionality.com.enums.Status;
 import telran.functionality.com.exceptions.EmptyRequiredListException;
 import telran.functionality.com.exceptions.InvalidStatusException;
 import telran.functionality.com.exceptions.NotExistingEntityException;
@@ -12,6 +11,7 @@ import telran.functionality.com.exceptions.WrongValueException;
 import telran.functionality.com.repository.AgreementRepository;
 
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +19,6 @@ import java.util.UUID;
 @Service
 public class AgreementServiceImpl implements AgreementService {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgreementServiceImpl.class);
 
     @Autowired
     private AgreementRepository agreementRepository;
@@ -28,9 +27,8 @@ public class AgreementServiceImpl implements AgreementService {
 
     @Override
     public List<Agreement> getAll() {
-        logger.info("Call method getAll agreements in service");
         List<Agreement> allAgreements = agreementRepository.findAll();
-        if (allAgreements.size() == 0) {
+        if (allAgreements.isEmpty()) {
             throw new EmptyRequiredListException("There is no one registered agreement");
         }
         return allAgreements;
@@ -39,7 +37,6 @@ public class AgreementServiceImpl implements AgreementService {
 
     @Override
     public Agreement getById(long id) {
-        logger.info("Call method getById {} agreement in service", id);
         Agreement foundAgreement = agreementRepository.findById(id).orElse(null);
         if (foundAgreement == null) {
             throw new NotExistingEntityException(
@@ -49,55 +46,50 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
-    public Agreement create(Agreement agreement) {
-        logger.info("Call method create agreement in service");
+    public Agreement save(Agreement agreement) {
         Agreement createdAgreement = agreementRepository.save(agreement);
-        UUID accountId = createdAgreement.getAccount().getId();
-        accountService.changeStatus(accountId, 1);
+        UUID accountIban = createdAgreement.getAccount().getUniqueAccountId();
+        accountService.changeStatus(accountIban, Status.ACTIVE);
         return createdAgreement;
     }
 
     @Override
-    public void changeStatus(long id, int status) {
-        logger.info("Call method changeStatus for agreement in service with id: {} from {} to {}", id, getById(id).getStatus(), status);
-        if (status < 0 || status > 2) {
-            throw new WrongValueException("Status can only be: 0, 1, 2");
+    public void changeStatus(long id, Status status) {
+        if (!Arrays.stream(Status.values()).toList().contains(status)) {
+            throw new WrongValueException("Status hasn't been recognized. Provided value is incorrect.");
         }
         Agreement agreement = getById(id);
         agreement.setStatus(status);
         agreement.setUpdatedAt(new Timestamp(new Date().getTime()));
-        create(agreement);
+        save(agreement);
     }
 
 
     @Override
     public void changeInterestRate(long id, double newRate) {
-        logger.info("Call method changeInterestRate for agreement in service with id: {}", id);
         Agreement agreement = getById(id);
         if (statusIsValid(id)) {
             agreement.setInterestRate(newRate);
             agreement.setUpdatedAt(new Timestamp(new Date().getTime()));
-            create(agreement);
+            save(agreement);
         }
     }
 
 
     @Override
     public void delete(long id) {
-        logger.info("Call method delete agreement in service by id: {}", id);
         Agreement agreement = getById(id);
-        agreementRepository.delete(agreement);
+        agreementRepository.deleteById(id);
     }
 
     @Override
     public void inactivateAgreement(long id) {
-        logger.info("Call method inactivateAgreement in agreement service");
-        changeStatus(id, 0);
+        changeStatus(id, Status.INACTIVE);
+        accountService.inactivateAccount(getById(id).getAccount().getUniqueAccountId());
     }
 
 
     public boolean agreementExists(Agreement agreement) {
-        logger.info("Call method agreementExists in agreement service");
         if (agreement == null) {
             throw new NotExistingEntityException("Agreement doesn't exist");
         }
@@ -105,10 +97,9 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     public boolean statusIsValid(long id) {
-        logger.info("Call method statusIsValid in agreement service");
         Agreement agreement = agreementRepository.findById(id).orElse(null);
         if (agreementExists(agreement)) {
-            if (agreement.getStatus() == 0) {
+            if (agreement.getStatus().equals(Status.INACTIVE)) {
                 throw new InvalidStatusException(String.format("Unable to get access to the agreement with id %d.", id));
             }
         }

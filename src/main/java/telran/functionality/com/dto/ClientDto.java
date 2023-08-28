@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import telran.functionality.com.enums.Status;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -17,8 +20,9 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientDto {
 
-    private UUID id;
-    private int status;
+    private UUID uniqueId;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private String firstName;
     private String lastName;
     private ManagerDto manager;

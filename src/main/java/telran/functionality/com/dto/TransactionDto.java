@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionDto {
-    private UUID id;
+    private UUID uniqueId;
     private AccountDto debitAccount;
     private AccountDto creditAccount;
     private double amount;

@@ -5,6 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import telran.functionality.com.enums.Status;
+
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 
 
 @Data
@@ -16,7 +20,8 @@ public class ProductDto {
 
     private long id;
     private String name;
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     private int limitValue;
     private ManagerDto manager;
 }

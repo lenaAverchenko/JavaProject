@@ -1,6 +1,7 @@
 package telran.functionality.com.service;
 
 import telran.functionality.com.entity.Product;
+import telran.functionality.com.enums.Status;
 
 import java.util.List;
 
@@ -10,11 +11,11 @@ public interface ProductService {
 
     Product getById(long id);
 
-    Product save(Product account);
+    Product save(Product product);
 
     void changeManager(long id, long managerId);
 
-    void changeStatus(long id, int status);
+    void changeStatus(long id, Status status);
 
     void changeLimitValue(long id, int limitValue);
 

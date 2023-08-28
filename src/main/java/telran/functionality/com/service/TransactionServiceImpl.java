@@ -1,5 +1,6 @@
 package telran.functionality.com.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,6 @@ import java.util.UUID;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private static final Logger logger = LoggerFactory.getLogger(TransactionServiceImpl.class);
 
 
     @Autowired
@@ -23,28 +23,30 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public List<Transaction> getAll() {
-        logger.info("Call method getAll transactions in service");
         List<Transaction> allTransactions = transactionRepository.findAll();
-        if (allTransactions.size() == 0) {
+        if (allTransactions.isEmpty()) {
             throw new EmptyRequiredListException("There is no one registered transaction");
         }
         return allTransactions;
     }
 
     @Override
-    public Transaction getById(UUID id) {
-        logger.info("Call method getById {} transaction in service", id);
-        Transaction foundTransaction = transactionRepository.findById(id).orElse(null);
+    public Transaction getByUniqueId (UUID uniqueId) {
+        Transaction foundTransaction = getAll().stream().filter(tr -> tr.getUniqueTransactionId().equals(uniqueId)).findFirst().orElse(null);
         if (foundTransaction == null) {
             throw new NotExistingEntityException(
-                    String.format("Transaction with id %s doesn't exist", id.toString()));
+                    String.format("Transaction with id %s doesn't exist", uniqueId.toString()));
         }
         return foundTransaction;
     }
 
     @Override
     public Transaction save(Transaction transaction) {
-        logger.info("Call method save transaction in service");
         return transactionRepository.save(transaction);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        transactionRepository.deleteById(getByUniqueId(id).getId());
     }
 }

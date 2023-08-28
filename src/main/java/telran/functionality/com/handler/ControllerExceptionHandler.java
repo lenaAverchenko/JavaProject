@@ -25,7 +25,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Provided data is not equivalent to the expected one");
+        return new ResponseEntity("Provided data is not equivalent to the expected one", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
@@ -34,7 +34,7 @@ public class ControllerExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity handleWrongValueOfStatusException(WrongValueException exception, HttpServletRequest request) {
+    public ResponseEntity handleWrongValueException(WrongValueException exception, HttpServletRequest request) {
         return new ResponseEntity(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 
@@ -65,12 +65,26 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity handleIllegalArgumentException(IllegalArgumentException exception, HttpServletRequest request) {
-        return new ResponseEntity("Wrong type of provided data. " + exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity("Wrong type of provided data. ", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler
     public ResponseEntity handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException exception, HttpServletRequest request) {
-        return new ResponseEntity("Wrong type of provided data. " + exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity("Wrong type of provided data. ", HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler
+    public ResponseEntity handleUnsupportedConvertingTypesOfCurrencyException(UnsupportedConvertingTypesOfCurrencyException exception, HttpServletRequest request) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleNotEmptyBalanceOfAccountException(NotEmptyBalanceOfAccountException exception, HttpServletRequest request) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleConflictIdException(ConflictIdException exception, HttpServletRequest request) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.CONFLICT);
+    }
 }

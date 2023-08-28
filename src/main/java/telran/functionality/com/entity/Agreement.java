@@ -3,6 +3,7 @@ package telran.functionality.com.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import telran.functionality.com.enums.Status;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
@@ -29,7 +30,8 @@ public class Agreement {
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;
     private double interestRate;
-    private int status;
+    @Enumerated(EnumType.STRING)
+    private Status status;
     @Positive
     private double sum;
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
@@ -39,7 +41,7 @@ public class Agreement {
         this.account = account;
         this.product = product;
         this.interestRate = interestRate;
-        this.status = 1;
+        this.status = Status.INACTIVE;
         this.sum = sum;
         this.updatedAt = updatedAt;
     }

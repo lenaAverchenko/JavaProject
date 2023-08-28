@@ -1,11 +1,10 @@
 package telran.functionality.com.dto;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import telran.functionality.com.enums.Status;
+import telran.functionality.com.enums.Currency;
 
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -15,11 +14,10 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccountDto {
-    private UUID id;
-    private String name;
+public class BalanceDto {
+
+    private UUID ibanOfAccount;
+    private double balance;
     @Enumerated(EnumType.STRING)
-    private Status status;
-    private ClientDto clientDto;
+    private Currency currencyCode;
 }
