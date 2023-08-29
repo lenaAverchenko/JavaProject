@@ -1,8 +1,5 @@
 package telran.functionality.com.service;
 
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Transaction;
@@ -15,7 +12,6 @@ import java.util.UUID;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
-
 
 
     @Autowired
@@ -31,11 +27,11 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Transaction getByUniqueId (UUID uniqueId) {
-        Transaction foundTransaction = getAll().stream().filter(tr -> tr.getUniqueTransactionId().equals(uniqueId)).findFirst().orElse(null);
+    public Transaction getById(UUID id) {
+        Transaction foundTransaction = getAll().stream().filter(tr -> tr.getId().equals(id)).findFirst().orElse(null);
         if (foundTransaction == null) {
             throw new NotExistingEntityException(
-                    String.format("Transaction with id %s doesn't exist", uniqueId.toString()));
+                    String.format("Transaction with id %s doesn't exist", id.toString()));
         }
         return foundTransaction;
     }
@@ -47,6 +43,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void delete(UUID id) {
-        transactionRepository.delete(getByUniqueId(id));
+        transactionRepository.delete(getById(id));
     }
 }

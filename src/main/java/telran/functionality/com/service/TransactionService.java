@@ -9,7 +9,7 @@ public interface TransactionService {
 
     List<Transaction> getAll();
 
-    Transaction getByUniqueId(UUID uniqueId);
+    Transaction getById(UUID id);
 
     Transaction save(Transaction transaction);
     void delete(UUID id);

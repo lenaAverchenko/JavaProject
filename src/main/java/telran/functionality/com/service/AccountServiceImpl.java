@@ -11,8 +11,8 @@ import telran.functionality.com.enums.Type;
 import telran.functionality.com.exceptions.*;
 import telran.functionality.com.repository.AccountRepository;
 import telran.functionality.com.repository.AgreementRepository;
-import telran.functionality.com.repository.ClientRepository;
-;
+
+
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.List;
+
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -38,9 +38,6 @@ public class AccountServiceImpl implements AccountService {
     private AgreementRepository agreementRepository;
 
     @Autowired
-    private ClientRepository clientRepository;
-
-    @Autowired
     private TransactionService transactionService;
 
     @Override
@@ -53,11 +50,11 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getByIban(UUID iban) {
-        Account foundAccount = getAll().stream().filter(acc -> acc.getUniqueAccountId().equals(iban)).findFirst().orElse(null);
+    public Account getById(UUID id) {
+        Account foundAccount = accountRepository.findById(id).orElse(null);
         if (foundAccount == null) {
             throw new NotExistingEntityException(
-                    String.format("Account with iban %s doesn't exist", iban));
+                    String.format("Account with id %s doesn't exist", id));
         }
         return foundAccount;
     }
@@ -69,11 +66,11 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
-    public Account changeStatus(UUID iban, Status newStatus) {
-        Account currentAccount = getByIban(iban);
+    public Account changeStatus(UUID id, Status newStatus) {
+        Account currentAccount = getById(id);
         if (!agreementRepository.findAll().stream()
-                .map(agreement -> agreement.getAccount().getUniqueAccountId())
-                .toList().contains(iban)){
+                .map(agreement -> agreement.getAccount().getId())
+                .toList().contains(id)) {
             throw new AccountIsNotValidException("Account has not activated yet. There is no active agreement.");
         }
         if (!Arrays.stream(Status.values()).toList().contains(newStatus)) {
@@ -88,38 +85,37 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void delete(UUID iban) {
-        Account account = getByIban(iban);
+    public void delete(UUID id) {
+        Account account = getById(id);
 
-        if (account.getId() == 1){
+        if (account.getId().equals(getAll().get(0).getId())) {
             throw new ForbiddenDeleteAttemptException("Unable to delete bank account. It belongs to the bank.");
         }
-        if (account.getBalance() != 0){
+        if (account.getBalance() != 0) {
             throw new NotEmptyBalanceOfAccountException("Please, withdraw money from your account before deleting.");
         }
-
         accountRepository.delete(account);
     }
 
     @Override
-    public BalanceDto getBalanceOf(UUID iban) {
-        Account currentAccount = getByIban(iban);
-        return new BalanceDto(iban, currentAccount.getBalance(), currentAccount.getCurrencyCode());
+    public BalanceDto getBalanceOf(UUID id) {
+        Account currentAccount = getById(id);
+        return new BalanceDto(id, currentAccount.getBalance(), currentAccount.getCurrencyCode());
     }
 
     @Override
-    public List<Transaction> getHistoryOfTransactionsByAccountIban(UUID iban) {
-        Account account = getByIban(iban);
+    public List<Transaction> getHistoryOfTransactionsByAccountId(UUID id) {
+        Account account = getById(id);
         List<Transaction> allTransactions = transactionService.getAll();
         List<Transaction> creditTransactions = allTransactions.stream()
                 .filter(transaction -> transaction.getCreditAccount()
-                        .getUniqueAccountId().equals(iban)).toList();
+                        .getId().equals(id)).toList();
         List<Transaction> debitTransactions = allTransactions.stream()
                 .filter(transaction -> transaction.getDebitAccount()
-                        .getUniqueAccountId().equals(iban)).toList();
+                        .getId().equals(id)).toList();
         List<Transaction> resultedList = Stream.concat(debitTransactions.stream(), creditTransactions.stream()).collect(Collectors.toList());
         if (resultedList.isEmpty()) {
-            throw new EmptyRequiredListException("There is no one registered transaction for account with iban " + iban);
+            throw new EmptyRequiredListException("There is no one registered transaction for account with id " + id);
         }
         return resultedList;
     }
@@ -127,25 +123,26 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public void transferMoneyBetweenAccounts(UUID debitAccountIban, UUID creditAccountIban, double sum, Type type, String description) {
+    public void transferMoneyBetweenAccounts(UUID debitAccountId, UUID creditAccountId, double sum, Type type, String description) {
         if (sum < 0) {
             throw new WrongValueException("Unable to transfer negative amount");
         }
-        if (!accountIsValid(debitAccountIban)) {
+        if (!accountIsValid(debitAccountId)) {
             throw new InvalidStatusException("Debit account is not allowed to sent money.");
         }
-        if (!accountIsValid(creditAccountIban)) {
+        if (!accountIsValid(creditAccountId)) {
             throw new InvalidStatusException("Credit account is not allowed to accept money.");
         }
-        Account debitAccount = getByIban(debitAccountIban);
-        Account creditAccount = getByIban(creditAccountIban);
+        Account debitAccount = getById(debitAccountId);
+        Account creditAccount = getById(creditAccountId);
         double convertedSum = sum;
-        if(needsToBeConverted(debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode())){
+        if (needsToBeConverted(debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode())) {
             convertedSum = converter.convertCurrency(sum, debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode());
-        };
+        }
+        ;
         if ((debitAccount.getBalance() - sum) < 0) {
             throw new NotEnoughMoneyException(String.format(
-                    "There is not enough money to transfer on the chosen account: %s", debitAccountIban));
+                    "There is not enough money to transfer on the chosen account: %s", debitAccountId));
         }
         debitAccount.setBalance(debitAccount.getBalance() - sum);
         debitAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
@@ -159,9 +156,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean accountBelongsToClient(UUID clientUniqueId, UUID accountIban) {
-        Account foundAccount = getByIban(accountIban);
-        if (!foundAccount.getClient().getUniqueClientId().equals(clientUniqueId)) {
-            throw new AccountDoesntBelongToClientException(String.format("Account with iban %s doesn't belong to client with id %s", accountIban, clientUniqueId));
+        Account foundAccount = getById(accountIban);
+        if (!foundAccount.getClient().getId().equals(clientUniqueId)) {
+            throw new AccountDoesntBelongToClientException(String.format("Account with id %s doesn't belong to client with id %s", accountIban, clientUniqueId));
         }
         return true;
     }
@@ -169,10 +166,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Account withdrawMoney(UUID clientUniqueId, UUID accountIban, double sum) {
+    public Account withdrawMoney(UUID clientUniqueId, UUID accountId, double sum) {
         double initSum = sum;
-        Account foundAccount = getByIban(accountIban);
-        if (accountBelongsToClient(clientUniqueId, accountIban) && accountIsValid(accountIban)) {
+        Account foundAccount = getById(accountId);
+        if (accountBelongsToClient(clientUniqueId, accountId) && accountIsValid(accountId)) {
             if ((foundAccount.getBalance() - sum) < 0) {
                 throw new NotEnoughMoneyException("There is not enough money to withdraw.");
             }
@@ -180,7 +177,7 @@ public class AccountServiceImpl implements AccountService {
             foundAccount.setBalance(sum);
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
             accountRepository.save(foundAccount);
-            Transaction newTransaction = new Transaction(getByIban(accountIban),accountRepository.findById(1L).orElse(null),Type.INNERBANK,initSum, "bank account withdrawal");
+            Transaction newTransaction = new Transaction(getById(accountId), accountRepository.findAll().get(0), Type.INNERBANK, initSum, "bank account withdrawal");
             transactionService.save(newTransaction);
         }
         return foundAccount;
@@ -188,21 +185,21 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     @Transactional
-    public Account putMoney(UUID accountIban, double sum) {
-        Account foundAccount = getByIban(accountIban);
-        if (accountIsValid(accountIban)) {
+    public Account putMoney(UUID accountId, double sum) {
+        Account foundAccount = getById(accountId);
+        if (accountIsValid(accountId)) {
             foundAccount.setBalance(sum + foundAccount.getBalance());
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
             accountRepository.save(foundAccount);
-            Transaction newTransaction = new Transaction(accountRepository.findById(1L).orElse(null),getByIban(accountIban),Type.INNERBANK,sum , "bank account replenishment");
+            Transaction newTransaction = new Transaction(accountRepository.findAll().get(0), getById(accountId), Type.INNERBANK, sum, "bank account replenishment");
             transactionService.save(newTransaction);
         }
         return foundAccount;
     }
 
     @Override
-    public void inactivateAccount(UUID iban) {
-        changeStatus(iban, Status.INACTIVE);
+    public void inactivateAccount(UUID id) {
+        changeStatus(id, Status.INACTIVE);
     }
 
 
@@ -213,18 +210,19 @@ public class AccountServiceImpl implements AccountService {
         return true;
     }
 
-    public boolean accountIsValid(UUID iban) {
-        Account account = accountRepository.findAll().stream().filter(acc -> acc.getUniqueAccountId().equals(iban)).findFirst().orElse(null);;
+    public boolean accountIsValid(UUID id) {
+        Account account = accountRepository.findAll().stream().filter(acc -> acc.getId().equals(id)).findFirst().orElse(null);
+        ;
         if (accountExists(account)) {
             if (account.getStatus().equals(Status.INACTIVE)) {
-                throw new InvalidStatusException(String.format("Unable to get access to the account with id %s. It's not active.", iban));
+                throw new InvalidStatusException(String.format("Unable to get access to the account with id %s. It's not active.", id));
             }
         }
         return true;
     }
 
-    public boolean needsToBeConverted(Currency from, Currency to){
-        if (from.name().equals(to.name())){
+    public boolean needsToBeConverted(Currency from, Currency to) {
+        if (from.name().equals(to.name())) {
             return false;
         }
         return true;

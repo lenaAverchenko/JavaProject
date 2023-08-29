@@ -22,12 +22,10 @@ public class Agreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @OneToOne(cascade = CascadeType.ALL)
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 
-//    @OneToOne(cascade = CascadeType.ALL)
     @OneToOne
     @JoinColumn(name = "product_id", referencedColumnName = "id")
     private Product product;

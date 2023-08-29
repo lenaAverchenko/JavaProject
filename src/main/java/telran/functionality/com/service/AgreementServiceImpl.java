@@ -48,7 +48,7 @@ public class AgreementServiceImpl implements AgreementService {
     @Override
     public Agreement save(Agreement agreement) {
         Agreement createdAgreement = agreementRepository.save(agreement);
-        UUID accountIban = createdAgreement.getAccount().getUniqueAccountId();
+        UUID accountIban = createdAgreement.getAccount().getId();
         accountService.changeStatus(accountIban, Status.ACTIVE);
         return createdAgreement;
     }
@@ -85,7 +85,7 @@ public class AgreementServiceImpl implements AgreementService {
     @Override
     public void inactivateAgreement(long id) {
         changeStatus(id, Status.INACTIVE);
-        accountService.inactivateAccount(getById(id).getAccount().getUniqueAccountId());
+        accountService.inactivateAccount(getById(id).getAccount().getId());
     }
 
 

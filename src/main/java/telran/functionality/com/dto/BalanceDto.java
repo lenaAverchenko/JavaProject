@@ -16,7 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class BalanceDto {
 
-    private UUID ibanOfAccount;
+    private UUID idOfAccount;
     private double balance;
     @Enumerated(EnumType.STRING)
     private Currency currencyCode;

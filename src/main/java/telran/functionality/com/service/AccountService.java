@@ -13,30 +13,29 @@ public interface AccountService {
 
     List<Account> getAll();
 
-    Account getByIban(UUID iban);
+    Account getById(UUID id);
 
     Account save(Account account);
 
-    Account changeStatus(UUID iban, Status newStatus);
+    Account changeStatus(UUID id, Status newStatus);
 
-    void delete(UUID iban);
+    void delete(UUID id);
 
-    BalanceDto getBalanceOf(UUID iban);
+    BalanceDto getBalanceOf(UUID id);
 
-    List<Transaction> getHistoryOfTransactionsByAccountIban(UUID iban);
+    List<Transaction> getHistoryOfTransactionsByAccountId(UUID id);
 
-    void transferMoneyBetweenAccounts(UUID debitAccountIban, UUID creditAccountIban, double sum, Type type, String description);
+    void transferMoneyBetweenAccounts(UUID debitAccountId, UUID creditAccountId, double sum, Type type, String description);
 
-    Account withdrawMoney(UUID clientId, UUID accountIban, double sum);
+    Account withdrawMoney(UUID clientId, UUID accountId, double sum);
 
-    Account putMoney(UUID accountIban, double sum);
+    Account putMoney(UUID accountId, double sum);
 
-    boolean accountIsValid(UUID iban);
+    boolean accountIsValid(UUID id);
 
-    void inactivateAccount(UUID iban);
+    void inactivateAccount(UUID id);
 
-    boolean accountBelongsToClient(UUID clientId, UUID accountIban);
-
+    boolean accountBelongsToClient(UUID clientId, UUID accountId);
 
 
 }

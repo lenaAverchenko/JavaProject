@@ -65,20 +65,22 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public void delete(long id) {
         Manager foundManager = getById(id);
-        if (foundManager.getId() == 1){
+        if (foundManager.getId() == 1) {
             throw new ForbiddenDeleteAttemptException("Unable to delete the primary manager.");
         }
         List<Client> clients = foundManager.getClients();
         List<Product> products = foundManager.getProducts();
-        if (!clients.isEmpty()){
+        if (!clients.isEmpty()) {
             clients = clients.stream().map(client -> {
                 client.setManager(managerRepository.getReferenceById(1L));
-            return client;}).toList();
+                return client;
+            }).toList();
         }
-        if (!products.isEmpty()){
+        if (!products.isEmpty()) {
             products = products.stream().map(product -> {
                 product.setManager(managerRepository.getReferenceById(1L));
-                return product;}).toList();
+                return product;
+            }).toList();
         }
         managerRepository.delete(foundManager);
         for (Client client : clients) {
@@ -103,7 +105,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public Manager addProduct(long managerId, Product product) {
         Manager currentManager = getById(managerId);
-        if(product.getManager().getId() != managerId){
+        if (product.getManager().getId() != managerId) {
             throw new ConflictIdException("Provided id's are not the same. Check the data.");
         }
         if (statusIsValid(managerId)) {

@@ -58,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
         if (statusIsValid(id)) {
             Product foundProduct = getById(id);
             Manager foundManager = managerRepository.findById(managerId).orElse(null);
-            if (foundManager == null){
+            if (foundManager == null) {
                 throw new NotExistingEntityException(String.format("Manager with id %d does not exist", managerId));
             }
             if (foundManager.getStatus().equals(Status.INACTIVE)) {

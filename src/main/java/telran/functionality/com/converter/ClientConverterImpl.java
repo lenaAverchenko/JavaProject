@@ -25,7 +25,7 @@ public class ClientConverterImpl implements Converter<Client, ClientDto, ClientC
 
     @Override
     public ClientDto toDto(Client client) {
-        ClientDto clientDto = new ClientDto(client.getUniqueClientId(), client.getStatus(),
+        return new ClientDto(client.getId(), client.getStatus(),
                 client.getFirstName(), client.getLastName(),
                 new ManagerDto(client.getManager().getId(),
                         client.getManager().getFirstName(),
@@ -34,15 +34,13 @@ public class ClientConverterImpl implements Converter<Client, ClientDto, ClientC
                         null, null),
                 client.getAccounts().stream().map(accountConverter::toDto)
                         .collect(Collectors.toList()));
-        return clientDto;
     }
 
     @Override
     public Client toEntity(ClientCreateDto createdDto) {
-        Client client = new Client(managerRepository.getReferenceById(createdDto.getManagerId()),
+        return new Client(managerRepository.getReferenceById(createdDto.getManagerId()),
                 new ArrayList<>(), createdDto.getTaxCode(),
                 createdDto.getFirstName(), createdDto.getLastName(), createdDto.getEmail(),
                 createdDto.getAddress(), createdDto.getPhone(), new Timestamp(new Date().getTime()));
-        return client;
     }
 }

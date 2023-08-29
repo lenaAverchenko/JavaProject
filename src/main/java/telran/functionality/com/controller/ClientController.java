@@ -27,12 +27,10 @@ public class ClientController {
     private final Converter<Client, ClientDto, ClientCreateDto> clientConverter;
 
 
-
     @GetMapping
     public List<ClientDto> getAll() {
-        List<ClientDto> allClients = clientService.getAll().stream()
+        return clientService.getAll().stream()
                 .map(clientConverter::toDto).collect(Collectors.toList());
-        return allClients;
     }
 
     @GetMapping("/{id}")

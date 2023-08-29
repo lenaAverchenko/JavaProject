@@ -7,7 +7,6 @@ import telran.functionality.com.enums.Status;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 
 import java.util.Date;
@@ -24,7 +23,6 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     @ToString.Exclude

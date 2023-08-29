@@ -20,21 +20,19 @@ public class ProductConverterImpl implements Converter<Product, ProductDto, Prod
 
     @Override
     public ProductDto toDto(Product product) {
-        ProductDto productDto = new ProductDto(product.getId(), product.getName(),
+        return new ProductDto(product.getId(), product.getName(),
                 product.getStatus(), product.getLimitValue(),
                 new ManagerDto(product.getManager().getId(),
                         product.getManager().getFirstName(),
                         product.getManager().getLastName(),
                         product.getManager().getStatus(), null, null));
-        return productDto;
     }
 
 
     @Override
     public Product toEntity(ProductCreateDto createdDto) {
-        Product product = new Product(managerService.getById(createdDto.getManagerId()),
+        return new Product(managerService.getById(createdDto.getManagerId()),
                 createdDto.getName(), createdDto.getCurrencyCode(),
                 createdDto.getInterestRate(), createdDto.getLimitValue(), new Timestamp(new Date().getTime()));
-        return product;
     }
 }

@@ -18,19 +18,17 @@ import java.util.stream.Collectors;
 public class ManagerConverterImpl implements Converter<Manager, ManagerDto, ManagerCreateDto> {
 
 
-
     @Override
     public ManagerDto toDto(Manager manager) {
-        ManagerDto managerDto = new ManagerDto(manager.getId(), manager.getFirstName(), manager.getLastName(),
+        return new ManagerDto(manager.getId(), manager.getFirstName(), manager.getLastName(),
                 manager.getStatus(), manager.getClients().stream().map(client ->
-                        new ClientDto(client.getUniqueClientId(), client.getStatus(), client.getFirstName(),
+                        new ClientDto(client.getId(), client.getStatus(), client.getFirstName(),
                                 client.getLastName(), null, null))
                 .collect(Collectors.toList()),
                 manager.getProducts().stream().map(product ->
                                 new ProductDto(product.getId(), product.getName(), product.getStatus(),
                                         product.getLimitValue(), null))
                         .collect(Collectors.toList()));
-        return managerDto;
     }
 
 

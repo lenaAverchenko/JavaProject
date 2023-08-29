@@ -3,13 +3,10 @@ package telran.functionality.com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import telran.functionality.com.entity.Account;
-import telran.functionality.com.entity.Agreement;
 import telran.functionality.com.entity.Client;
 import telran.functionality.com.entity.Manager;
 import telran.functionality.com.enums.Status;
 import telran.functionality.com.exceptions.*;
-import telran.functionality.com.repository.AgreementRepository;
 import telran.functionality.com.repository.ClientRepository;
 import telran.functionality.com.repository.ManagerRepository;
 
@@ -27,10 +24,6 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     private ManagerRepository managerRepository;
-    @Autowired
-    private AgreementRepository agreementRepository;
-    @Autowired
-    private AccountService accountService;
 
     @Override
     public List<Client> getAll() {
@@ -38,16 +31,15 @@ public class ClientServiceImpl implements ClientService {
         if (allClients.isEmpty()) {
             throw new EmptyRequiredListException("There is no one registered client");
         }
-         return allClients;
+        return allClients;
     }
 
     @Override
-    public Client getById(UUID uniqueId) {
-        Client foundClient = getAll().stream().filter(client -> client.getUniqueClientId().equals(uniqueId))
-                .findFirst().orElse(null);
+    public Client getById(UUID id) {
+        Client foundClient = clientRepository.findById(id).orElse(null);
         if (foundClient == null) {
             throw new NotExistingEntityException(
-                    String.format("Client with id %s doesn't exist", uniqueId));
+                    String.format("Client with id %s doesn't exist", id));
         }
         return foundClient;
     }
@@ -74,7 +66,7 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public void delete(UUID id) {
         Client foundClient = getById(id);
-        if (foundClient.getId() == 1){
+        if (foundClient.getId().equals(clientRepository.findAll().get(0).getId())) {
             throw new ForbiddenDeleteAttemptException("Unable to delete bank client. It belongs to the bank.");
         }
 

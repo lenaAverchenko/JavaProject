@@ -21,25 +21,15 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Transaction {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    private UUID id;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID uniqueTransactionId;
+    private UUID id;
 
 
-//    @ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name = "debit_account_id", referencedColumnName = "id")
     private Account debitAccount;
 
-
-//    @ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name = "credit_account_id", referencedColumnName = "id")
     private Account creditAccount;
@@ -53,7 +43,6 @@ public class Transaction {
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
 
     public Transaction(Account debitAccount, Account creditAccount, Type type, double amount, String description) {
-        this.uniqueTransactionId = UUID.randomUUID();
         this.debitAccount = debitAccount;
         this.creditAccount = creditAccount;
         this.type = type;

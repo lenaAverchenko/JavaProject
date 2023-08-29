@@ -20,12 +20,10 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Client {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
 
+    @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID uniqueClientId;
+    private UUID id;
 
     @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
@@ -53,7 +51,6 @@ public class Client {
 
 
     public Client(Manager manager, List<Account> accounts, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {
-        this.uniqueClientId = UUID.randomUUID();
         this.manager = manager;
         this.accounts = accounts;
         this.status = Status.ACTIVE;
@@ -65,21 +62,6 @@ public class Client {
         this.phone = phone;
         this.updatedAt = updatedAt;
     }
-
-//    public Client(Manager manager, List<Account> accounts, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {
-//        this.uniqueClientId = UUID.randomUUID();
-//        this.manager = manager;
-//        this.accounts = accounts;
-//        this.status = Status.ACTIVE;
-//        this.taxCode = taxCode;
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.email = email;
-//        this.address = address;
-//        this.phone = phone;
-//        this.updatedAt = updatedAt;
-//    }
-
 
 
     public void setUpdatedAt(Timestamp updatedAt) {

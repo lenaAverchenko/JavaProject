@@ -21,18 +21,16 @@ public class AccountConverterImpl implements Converter<Account, AccountDto, Acco
 
     @Override
     public AccountDto toDto(Account account) {
-        AccountDto newAccountDto = new AccountDto(account.getUniqueAccountId(), account.getName(), account.getStatus(),
-                new ClientDto(account.getClient().getUniqueClientId(), account.getClient().getStatus(), account.getClient().getFirstName(),
+        return new AccountDto(account.getId(), account.getName(), account.getStatus(),
+                new ClientDto(account.getClient().getId(), account.getClient().getStatus(), account.getClient().getFirstName(),
                         account.getClient().getLastName(), null, null));
-        return newAccountDto;
     }
 
     @Override
     public Account toEntity(AccountCreateDto createdDto) {
-        Account newAccount = new Account(clientService.getById(createdDto.getClientId()),
+        return new Account(clientService.getById(createdDto.getClientId()),
                 createdDto.getName(), createdDto.getType(), createdDto.getBalance(),
                 createdDto.getCurrencyCode(), new Timestamp(new Date().getTime()));
-        return newAccount;
     }
 
 }

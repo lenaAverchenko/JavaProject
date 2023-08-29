@@ -22,25 +22,23 @@ public class AgreementConverterImpl implements Converter<Agreement, AgreementDto
 
     @Override
     public AgreementDto toDto(Agreement agreement) {
-        AgreementDto newAgreementDto = new AgreementDto(
-                new AccountDto(agreement.getAccount().getUniqueAccountId(), agreement.getAccount().getName(),
+        return new AgreementDto(
+                new AccountDto(agreement.getAccount().getId(), agreement.getAccount().getName(),
                         agreement.getAccount().getStatus(),
-                        new ClientDto(agreement.getAccount().getClient().getUniqueClientId(),
+                        new ClientDto(agreement.getAccount().getClient().getId(),
                                 agreement.getAccount().getClient().getStatus(),
                                 agreement.getAccount().getClient().getFirstName(),
                                 agreement.getAccount().getClient().getLastName(), null, null)),
                 new ProductDto(agreement.getProduct().getId(), agreement.getProduct().getName(),
                         agreement.getProduct().getStatus(), agreement.getProduct().getLimitValue(), null),
                 agreement.getInterestRate(), agreement.getStatus(), agreement.getSum());
-        return newAgreementDto;
     }
 
     @Override
     public Agreement toEntity(AgreementCreateDto createdDto) {
-        Agreement agreement = new Agreement(accountService.getByIban(createdDto.getAccountId()),
+        return new Agreement(accountService.getById(createdDto.getAccountId()),
                 productService.getById(createdDto.getProductId()),
                 createdDto.getInterestRate(),
                 createdDto.getSum(), new Timestamp(new Date().getTime()));
-        return agreement;
     }
 }

@@ -11,18 +11,18 @@ public interface ClientService {
 
     List<Client> getAll();
 
-    Client getById(UUID uniqueId);
+    Client getById(UUID id);
 
     Client save(Client client);
 
-    Client updatePersonalInfo(UUID uniqueId, Client client);
+    Client updatePersonalInfo(UUID id, Client client);
 
-    void delete(UUID uniqueId);
+    void delete(UUID id);
 
     void changeManager(UUID clientId, long managerId);
 
     void changeStatus(UUID clientId, Status status);
 
-    void inactivateStatus(UUID uniqueId);
+    void inactivateStatus(UUID id);
 
 }

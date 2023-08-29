@@ -22,17 +22,10 @@ import java.util.UUID;
 @Data
 public class Account {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    private UUID id;
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID uniqueAccountId;
+    private UUID id;
 
-//    @ManyToOne(cascade = CascadeType.ALL)
     @ManyToOne
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ToString.Exclude
@@ -41,7 +34,6 @@ public class Account {
     @NotBlank(message = "Field name is mandatory")
     private String name;
 
-    //
 
     @OneToMany(mappedBy = "debitAccount", cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -55,7 +47,6 @@ public class Account {
 
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     private Agreement agreement;
-//
     @Enumerated(EnumType.STRING)
     private Type type;
     @Enumerated(EnumType.STRING)
@@ -68,7 +59,6 @@ public class Account {
 
 
     public Account(Client client, String name, Type type, double balance, Currency currencyCode, Timestamp updatedAt) {
-        this.uniqueAccountId = UUID.randomUUID();
         this.client = client;
         this.name = name;
         this.type = type;

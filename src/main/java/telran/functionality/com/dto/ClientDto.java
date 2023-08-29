@@ -20,7 +20,7 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientDto {
 
-    private UUID uniqueId;
+    private UUID id;
     @Enumerated(EnumType.STRING)
     private Status status;
     private String firstName;

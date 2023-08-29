@@ -30,7 +30,6 @@ public class AccountController {
     private final Converter<Transaction, TransactionDto, TransactionCreateDto> transactionConverter;
 
 
-
     @GetMapping
     public List<AccountDto> getAll() {
         return accountService.getAll().stream()
@@ -45,9 +44,9 @@ public class AccountController {
                 .toList();
     }
 
-    @GetMapping("/{iban}")
-    public AccountDto getById(@PathVariable(name = "iban") UUID iban) {
-        return accountConverter.toDto(accountService.getByIban(iban));
+    @GetMapping("/{id}")
+    public AccountDto getById(@PathVariable(name = "id") UUID id) {
+        return accountConverter.toDto(accountService.getById(id));
     }
 
     @PostMapping
@@ -55,9 +54,9 @@ public class AccountController {
         return accountConverter.toDto(accountService.save(accountConverter.toEntity(accountCreateDto)));
     }
 
-    @PutMapping("/updateStatus/{iban}/{status}")
-    public AccountDto updateStatus(@PathVariable(name = "iban") UUID iban, @PathVariable(name = "status") Status newStatus) {
-        return accountConverter.toDto(accountService.changeStatus(iban, newStatus));
+    @PutMapping("/updateStatus/{id}/{status}")
+    public AccountDto updateStatus(@PathVariable(name = "id") UUID id, @PathVariable(name = "status") Status newStatus) {
+        return accountConverter.toDto(accountService.changeStatus(id, newStatus));
     }
 
     @DeleteMapping("/delete/{iban}")
@@ -65,37 +64,37 @@ public class AccountController {
         accountService.delete(iban);
     }
 
-    @GetMapping("/getBalanceOf/{iban}")
-    public BalanceDto getBalanceOf(@PathVariable(name = "iban") UUID iban) {
-        return accountService.getBalanceOf(iban);
+    @GetMapping("/getBalanceOf/{id}")
+    public BalanceDto getBalanceOf(@PathVariable(name = "id") UUID id) {
+        return accountService.getBalanceOf(id);
     }
 
-    @GetMapping("/getHistoryOf/{iban}")
-    public List<TransactionDto> getHistoryOfTransactionsByAccountId(@PathVariable(name = "iban") UUID iban) {
-        return accountService.getHistoryOfTransactionsByAccountIban(iban).stream()
+    @GetMapping("/getHistoryOf/{id}")
+    public List<TransactionDto> getHistoryOfTransactionsByAccountId(@PathVariable(name = "id") UUID id) {
+        return accountService.getHistoryOfTransactionsByAccountId(id).stream()
                 .map(transactionConverter::toDto).collect(Collectors.toList());
     }
 
-    @PutMapping("/transferMoneyBetweenAccounts/{debitAccountIban}/{creditAccountIban}/{sum}/{type}/{description}")
-    public void transferMoneyBetweenAccounts(@PathVariable(name = "debitAccountIban") UUID debitAccountIban,
-                                             @PathVariable(name = "creditAccountIban") UUID creditAccountIban,
+    @PutMapping("/transferMoneyBetweenAccounts/{debitAccountId}/{creditAccountId}/{sum}/{type}/{description}")
+    public void transferMoneyBetweenAccounts(@PathVariable(name = "debitAccountId") UUID debitAccountId,
+                                             @PathVariable(name = "creditAccountId") UUID creditAccountId,
                                              @PathVariable(name = "sum") double sum,
                                              @PathVariable(name = "type") Type type,
                                              @PathVariable(name = "description") String description) {
-        accountService.transferMoneyBetweenAccounts(debitAccountIban, creditAccountIban, sum, type, description);
+        accountService.transferMoneyBetweenAccounts(debitAccountId, creditAccountId, sum, type, description);
     }
 
-    @PutMapping("/withdrawMoneyFrom/{clientId}/{accountIban}/{sum}")
+    @PutMapping("/withdrawMoneyFrom/{clientId}/{accountId}/{sum}")
     public AccountDto withdrawMoney(@PathVariable(name = "clientId") UUID clientId,
-                                    @PathVariable(name = "accountIban") UUID accountIban,
+                                    @PathVariable(name = "accountId") UUID accountId,
                                     @PathVariable(name = "sum") double sum) {
-        return accountConverter.toDto(accountService.withdrawMoney(clientId, accountIban, sum));
+        return accountConverter.toDto(accountService.withdrawMoney(clientId, accountId, sum));
     }
 
-    @PutMapping("/putMoneyTo/{accountIban}/{sum}")
-    public AccountDto putMoney(@PathVariable(name = "accountIban") UUID accountIban,
+    @PutMapping("/putMoneyTo/{accountId}/{sum}")
+    public AccountDto putMoney(@PathVariable(name = "accountId") UUID accountId,
                                @PathVariable(name = "sum") double sum) {
-        return accountConverter.toDto(accountService.putMoney(accountIban, sum));
+        return accountConverter.toDto(accountService.putMoney(accountId, sum));
     }
 
     @PostMapping("/agreements/createNewDeal")
@@ -104,14 +103,14 @@ public class AccountController {
         accountService.changeStatus(agreement.getAccountId(), Status.ACTIVE);
     }
 
-    @PutMapping("/inactivateAccount/{accountIban}")
-    public void inactivateAccount(@PathVariable(name = "accountIban") UUID iban) {
-        accountService.inactivateAccount(iban);
+    @PutMapping("/inactivateAccount/{accountId}")
+    public void inactivateAccount(@PathVariable(name = "accountId") UUID id) {
+        accountService.inactivateAccount(id);
     }
 
-    @GetMapping("/accountBelongsToClient/{clientId}/{accountIban}")
-    public boolean accountBelongsToClient(@PathVariable(name = "clientId") UUID clientId, @PathVariable(name = "accountIban") UUID accountIban) {
-        return accountService.accountBelongsToClient(accountIban, clientId);
+    @GetMapping("/accountBelongsToClient/{clientId}/{accountId}")
+    public boolean accountBelongsToClient(@PathVariable(name = "clientId") UUID clientId, @PathVariable(name = "accountId") UUID accountId) {
+        return accountService.accountBelongsToClient(accountId, clientId);
     }
 
     @PutMapping("/agreements/inactivateAgreement/{id}")

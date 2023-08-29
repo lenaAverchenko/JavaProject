@@ -29,7 +29,7 @@ public class ManagerController {
 
     @GetMapping
     public List<ManagerDto> getAll() {
-        return  managerService.getAll().stream()
+        return managerService.getAll().stream()
                 .map(managerConverter::toDto)
                 .collect(Collectors.toList());
     }
@@ -79,6 +79,7 @@ public class ManagerController {
     public void changeManagerOfProduct(@PathVariable(name = "id") long id, @PathVariable(name = "managerId") long managerId) {
         managerService.changeManagerOfProduct(id, managerId);
     }
+
     @PutMapping("/changeStatusOfProduct/{id}/{status}")
     public void changeStatusOfProduct(@PathVariable(name = "id") long id, @PathVariable(name = "status") Status status) {
         managerService.changeStatusOfProduct(id, status);
