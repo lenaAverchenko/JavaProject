@@ -87,4 +87,10 @@ public class ControllerExceptionHandler {
     public ResponseEntity handleConflictIdException(ConflictIdException exception, HttpServletRequest request) {
         return new ResponseEntity(exception.getMessage(), HttpStatus.CONFLICT);
     }
+
+
+    @ExceptionHandler
+    public ResponseEntity handleForbiddenDeleteAttemptException(ForbiddenDeleteAttemptException exception, HttpServletRequest request) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
 }

@@ -47,6 +47,6 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public void delete(UUID id) {
-        transactionRepository.deleteById(getByUniqueId(id).getId());
+        transactionRepository.delete(getByUniqueId(id));
     }
 }

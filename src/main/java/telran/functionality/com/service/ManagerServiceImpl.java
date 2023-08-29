@@ -65,6 +65,9 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     public void delete(long id) {
         Manager foundManager = getById(id);
+        if (foundManager.getId() == 1){
+            throw new ForbiddenDeleteAttemptException("Unable to delete the primary manager.");
+        }
         List<Client> clients = foundManager.getClients();
         List<Product> products = foundManager.getProducts();
         if (!clients.isEmpty()){
@@ -77,7 +80,7 @@ public class ManagerServiceImpl implements ManagerService {
                 product.setManager(managerRepository.getReferenceById(1L));
                 return product;}).toList();
         }
-        managerRepository.deleteById(id);
+        managerRepository.delete(foundManager);
         for (Client client : clients) {
             clientService.save(client);
         }

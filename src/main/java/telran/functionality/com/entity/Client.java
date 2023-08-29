@@ -27,12 +27,13 @@ public class Client {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID uniqueClientId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Manager manager;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+//    @OneToMany(mappedBy = "client")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Account> accounts = new ArrayList<>();

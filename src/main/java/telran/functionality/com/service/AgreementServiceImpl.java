@@ -79,7 +79,7 @@ public class AgreementServiceImpl implements AgreementService {
     @Override
     public void delete(long id) {
         Agreement agreement = getById(id);
-        agreementRepository.deleteById(id);
+        agreementRepository.delete(agreement);
     }
 
     @Override

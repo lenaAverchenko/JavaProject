@@ -7,9 +7,10 @@ import telran.functionality.com.enums.Type;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
+import java.util.List;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
@@ -31,13 +32,30 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID uniqueAccountId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+//    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Client client;
     @NotBlank(message = "Field name is mandatory")
     private String name;
+
+    //
+
+    @OneToMany(mappedBy = "debitAccount", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Transaction> debitTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "creditAccount", cascade = CascadeType.ALL)
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    private List<Transaction> creditTransactions = new ArrayList<>();
+
+    @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
+    private Agreement agreement;
+//
     @Enumerated(EnumType.STRING)
     private Type type;
     @Enumerated(EnumType.STRING)

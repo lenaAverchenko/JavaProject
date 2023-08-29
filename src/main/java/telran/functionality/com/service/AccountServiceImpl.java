@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -89,34 +90,15 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public void delete(UUID iban) {
         Account account = getByIban(iban);
+
+        if (account.getId() == 1){
+            throw new ForbiddenDeleteAttemptException("Unable to delete bank account. It belongs to the bank.");
+        }
         if (account.getBalance() != 0){
             throw new NotEmptyBalanceOfAccountException("Please, withdraw money from your account before deleting.");
         }
-        List<Agreement> agreements = agreementRepository.findAll();
-        List<Transaction> transactions = transactionService.getAll();
-        Agreement agreementToDelete = agreements.stream().filter(agreement -> agreement.getAccount().getUniqueAccountId().equals(iban)).findFirst().orElse(null);
-        List<Transaction> firstListOfTransactionsToDelete = transactions.stream().filter(trans -> trans.getCreditAccount().getUniqueAccountId().equals(iban)).toList();
-        List<Transaction> secondListOfTransactionsToDelete = transactions.stream().filter(trans -> trans.getDebitAccount().getUniqueAccountId().equals(iban)).toList();
 
-        if (!firstListOfTransactionsToDelete.isEmpty()){
-            for (Transaction transaction : firstListOfTransactionsToDelete) {
-                transactionService.delete(transaction.getUniqueTransactionId());
-            }
-        }
-        if(!secondListOfTransactionsToDelete.isEmpty()){
-            for (Transaction transaction : secondListOfTransactionsToDelete) {
-                transactionService.delete(transaction.getUniqueTransactionId());
-            }
-        }
-        if (agreementToDelete != null){
-            agreementRepository.deleteById(agreementToDelete.getId());
-        }
-        Client client = account.getClient();
-        List<Account> accountsOfClient = client.getAccounts().stream()
-                        .filter(acc -> !acc.getUniqueAccountId().equals(iban)).toList();
-        client.setAccounts(accountsOfClient);
-        clientRepository.save(client);
-        accountRepository.deleteById(account.getId());
+        accountRepository.delete(account);
     }
 
     @Override

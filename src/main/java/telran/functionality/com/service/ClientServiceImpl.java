@@ -4,23 +4,19 @@ package telran.functionality.com.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Account;
+import telran.functionality.com.entity.Agreement;
 import telran.functionality.com.entity.Client;
 import telran.functionality.com.entity.Manager;
 import telran.functionality.com.enums.Status;
-import telran.functionality.com.exceptions.EmptyRequiredListException;
-import telran.functionality.com.exceptions.InvalidStatusException;
-import telran.functionality.com.exceptions.NotExistingEntityException;
-import telran.functionality.com.exceptions.WrongValueException;
+import telran.functionality.com.exceptions.*;
+import telran.functionality.com.repository.AgreementRepository;
 import telran.functionality.com.repository.ClientRepository;
 import telran.functionality.com.repository.ManagerRepository;
 
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -32,6 +28,8 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ManagerRepository managerRepository;
     @Autowired
+    private AgreementRepository agreementRepository;
+    @Autowired
     private AccountService accountService;
 
     @Override
@@ -40,7 +38,7 @@ public class ClientServiceImpl implements ClientService {
         if (allClients.isEmpty()) {
             throw new EmptyRequiredListException("There is no one registered client");
         }
-        return allClients;
+         return allClients;
     }
 
     @Override
@@ -76,13 +74,11 @@ public class ClientServiceImpl implements ClientService {
     @Transactional
     public void delete(UUID id) {
         Client foundClient = getById(id);
-        List<Account> accounts = foundClient.getAccounts();
-        if (!accounts.isEmpty()) {
-            for (int i = 0; i < accounts.size(); i++) {
-                accountService.delete(accounts.get(i).getUniqueAccountId());
-            }
+        if (foundClient.getId() == 1){
+            throw new ForbiddenDeleteAttemptException("Unable to delete bank client. It belongs to the bank.");
         }
-        clientRepository.deleteById(foundClient.getId());
+
+        clientRepository.delete(foundClient);
     }
 
     @Override
