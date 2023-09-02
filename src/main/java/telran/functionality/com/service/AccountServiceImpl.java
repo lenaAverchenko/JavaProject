@@ -120,10 +120,13 @@ public class AccountServiceImpl implements AccountService {
         return resultedList;
     }
 
-
+//UUID debitAccountId, UUID creditAccountId, double sum, Type type, String description
     @Override
     @Transactional
-    public void transferMoneyBetweenAccounts(UUID debitAccountId, UUID creditAccountId, double sum, Type type, String description) {
+    public void transferMoneyBetweenAccounts(Transaction transaction) {
+        double sum = transaction.getAmount();
+        UUID debitAccountId = transaction.getDebitAccount().getId();
+        UUID creditAccountId = transaction.getCreditAccount().getId();
         if (sum < 0) {
             throw new WrongValueException("Unable to transfer negative amount");
         }
@@ -150,7 +153,7 @@ public class AccountServiceImpl implements AccountService {
         creditAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
         accountRepository.save(debitAccount);
         accountRepository.save(creditAccount);
-        Transaction newTransaction = new Transaction(debitAccount, creditAccount, type, sum, description);
+        Transaction newTransaction = new Transaction(debitAccount, creditAccount, transaction.getType(), sum, transaction.getDescription());
         transactionService.save(newTransaction);
     }
 

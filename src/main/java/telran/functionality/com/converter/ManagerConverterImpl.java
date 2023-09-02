@@ -34,10 +34,9 @@ public class ManagerConverterImpl implements Converter<Manager, ManagerDto, Mana
 
     @Override
     public Manager toEntity(ManagerCreateDto createdDto) {
-        Manager manager = new Manager(createdDto.getFirstName(),
+        return new Manager(createdDto.getFirstName(),
                 createdDto.getLastName(),
                 new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime()));
-        return manager;
     }
 }
 

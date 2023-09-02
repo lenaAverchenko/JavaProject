@@ -1,6 +1,8 @@
 package telran.functionality.com.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.converter.Converter;
 import telran.functionality.com.dto.ManagerCreateDto;
@@ -8,8 +10,10 @@ import telran.functionality.com.dto.ManagerDto;
 import telran.functionality.com.dto.ProductCreateDto;
 import telran.functionality.com.dto.ProductDto;
 import telran.functionality.com.entity.Manager;
+import telran.functionality.com.entity.ManagerData;
 import telran.functionality.com.entity.Product;
 import telran.functionality.com.enums.Status;
+import telran.functionality.com.service.ManagerDataService;
 import telran.functionality.com.service.ManagerService;
 
 import java.util.List;
@@ -21,10 +25,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ManagerController {
 
-
+    @Autowired
+    private PasswordEncoder encoder;
     private final ManagerService managerService;
     private final Converter<Manager, ManagerDto, ManagerCreateDto> managerConverter;
     private final Converter<Product, ProductDto, ProductCreateDto> productConverter;
+    private final ManagerDataService managerDataService;
 
 
     @GetMapping
@@ -34,14 +40,19 @@ public class ManagerController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public ManagerDto getById(@PathVariable(name = "id") long id) {
+    @GetMapping("/showManager")
+    public ManagerDto getById(@RequestParam long id) {
         return managerConverter.toDto(managerService.getById(id));
     }
 
     @PostMapping
     public ManagerDto save(@RequestBody ManagerCreateDto managerCreateDto) {
-        return managerConverter.toDto(managerService.save(managerConverter.toEntity(managerCreateDto)));
+        Manager manager = managerConverter.toEntity(managerCreateDto);
+        managerDataService.create(new ManagerData(
+                managerCreateDto.getLogin(),
+                encoder.encode(managerCreateDto.getPassword()),
+                manager.getId()));
+        return managerConverter.toDto(managerService.save(manager));
     }
 
     @PutMapping("/updateInformation/{id}")
@@ -54,13 +65,13 @@ public class ManagerController {
         managerService.delete(id);
     }
 
-    @PutMapping("/changeStatus/{id}/{status}")
-    public void changeStatus(@PathVariable(name = "id") long id, @PathVariable(name = "status") Status status) {
+    @PutMapping("/changeStatus")
+    public void changeStatus(@RequestParam long id, @RequestParam Status status) {
         managerService.changeStatus(id, status);
     }
 
-    @PutMapping("/inactivateStatus/{id}")
-    public void inactivateStatus(@PathVariable(name = "id") long id) {
+    @PutMapping("/inactivateStatus")
+    public void inactivateStatus(@RequestParam long id) {
         managerService.inactivateStatus(id);
     }
 
@@ -69,29 +80,29 @@ public class ManagerController {
         return managerConverter.toDto(managerService.addProduct(id, productConverter.toEntity(productDto)));
     }
 
-    @PutMapping("/changeStatusOfProduct/{managerId}/{productId}/{status}")
-    public void changeStatusOfProduct(@PathVariable(name = "managerId") long managerId, @PathVariable(name = "productId") long productId,
-                                      @PathVariable(name = "status") Status status) {
+    @PutMapping("/changeStatusOfProductForManager")
+    public void changeStatusOfProduct(@RequestParam long managerId, @RequestParam long productId,
+                                      @RequestParam Status status) {
         managerService.changeStatusOfProduct(managerId, productId, status);
     }
 
-    @PutMapping("/changeManagerOfProduct/{id}/{managerId}")
-    public void changeManagerOfProduct(@PathVariable(name = "id") long id, @PathVariable(name = "managerId") long managerId) {
+    @PutMapping("/changeManagerOfProduct")
+    public void changeManagerOfProduct(@RequestParam long id, @RequestParam long managerId) {
         managerService.changeManagerOfProduct(id, managerId);
     }
 
-    @PutMapping("/changeStatusOfProduct/{id}/{status}")
-    public void changeStatusOfProduct(@PathVariable(name = "id") long id, @PathVariable(name = "status") Status status) {
+    @PutMapping("/changeStatusOfProduct")
+    public void changeStatusOfProduct(@RequestParam long id, @RequestParam Status status) {
         managerService.changeStatusOfProduct(id, status);
     }
 
-    @PutMapping("/changeLimitValueOfProduct/{id}/{limitValue}")
-    public void changeLimitValueOfProduct(@PathVariable(name = "id") long id, @PathVariable(name = "limitValue") int limitValue) {
+    @PutMapping("/changeLimitValueOfProduct")
+    public void changeLimitValueOfProduct(@RequestParam long id, @RequestParam int limitValue) {
         managerService.changeLimitValueOfProduct(id, limitValue);
     }
 
-    @PutMapping("/inactivateStatusOfProduct/{id}")
-    public void inactivateStatusOfProduct(@PathVariable(name = "id") long productId) {
+    @PutMapping("/inactivateStatusOfProduct")
+    public void inactivateStatusOfProduct(@RequestParam long productId) {
         managerService.inactivateStatusOfProduct(productId);
     }
 

@@ -25,7 +25,7 @@ public interface AccountService {
 
     List<Transaction> getHistoryOfTransactionsByAccountId(UUID id);
 
-    void transferMoneyBetweenAccounts(UUID debitAccountId, UUID creditAccountId, double sum, Type type, String description);
+    void transferMoneyBetweenAccounts(Transaction transaction);
 
     Account withdrawMoney(UUID clientId, UUID accountId, double sum);
 

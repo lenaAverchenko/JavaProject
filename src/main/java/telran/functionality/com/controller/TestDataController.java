@@ -47,5 +47,13 @@ public class TestDataController {
         initialDataService.createTransactionData();
     }
 
+    @PostMapping("/createUserInfoForClient")
+    public void createUserInfoForClient() {
+        initialDataService.createUserInfoForClient();
+    }
 
+    @PostMapping("/createUserInfoForManager")
+    public void createUserInfoForManager() {
+        initialDataService.createUserInfoForManager();
+    }
 }

@@ -136,4 +136,37 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="20230901015100" author="Lena Averchenko">
+        <comment>Add ClientData table with logins</comment>
+        <createTable tableName="clientdata">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="client_data_pkey"/>
+            </column>
+            <column name="login" type="VARCHAR(50)"/>
+            <column name="password" type="VARCHAR(50)"/>
+<!--            <column name="role" type="VARCHAR(10)"/>-->
+            <column name="client_id" type="BINARY(16)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="20230901015101" author="Lena Averchenko">
+        <comment>Add ManagerData table with logins</comment>
+        <createTable tableName="managerdata">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="manager_data_pkey"/>
+            </column>
+            <column name="login" type="VARCHAR(50)"/>
+            <column name="password" type="VARCHAR(50)"/>
+<!--            <column name="role" type="VARCHAR(10)"/>-->
+            <column name="manager_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+
+
+    <changeSet id="20230109231701" author="Lena Averchenko">
+        <comment>Change type of type columns in clientData and managerData tables</comment>
+        <modifyDataType tableName="clientdata" columnName="password" newDataType="VARCHAR(255)"/>
+        <modifyDataType tableName="managerdata" columnName="password" newDataType="VARCHAR(255)"/>
+    </changeSet>
+
 </databaseChangeLog>

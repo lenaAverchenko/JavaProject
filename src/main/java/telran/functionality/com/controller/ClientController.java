@@ -1,14 +1,22 @@
 package telran.functionality.com.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.converter.Converter;
 import telran.functionality.com.dto.ClientCreateDto;
 import telran.functionality.com.dto.ClientDto;
+import org.springframework.security.core.userdetails.User;
 
 import telran.functionality.com.entity.Client;
 
+import telran.functionality.com.entity.ClientData;
+//import telran.functionality.com.entity.Role;
 import telran.functionality.com.enums.Status;
+import telran.functionality.com.service.ClientDataService;
 import telran.functionality.com.service.ClientService;
 
 
@@ -21,10 +29,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClientController {
 
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private ClientDataService clientDataService;
+
 
     private final ClientService clientService;
 
     private final Converter<Client, ClientDto, ClientCreateDto> clientConverter;
+
 
 
     @GetMapping
@@ -33,14 +48,17 @@ public class ClientController {
                 .map(clientConverter::toDto).collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public ClientDto getById(@PathVariable(name = "id") UUID id) {
+    @GetMapping("/showClient")
+    public ClientDto getById(@RequestParam UUID id) {
         return clientConverter.toDto(clientService.getById(id));
     }
 
     @PostMapping
     public ClientDto save(@RequestBody ClientCreateDto clientCreateDto) {
-        return clientConverter.toDto(clientService.save(clientConverter.toEntity(clientCreateDto)));
+        Client client = clientService.save(clientConverter.toEntity(clientCreateDto));
+        clientDataService.create(new ClientData(clientCreateDto.getLogin(),
+                encoder.encode(clientCreateDto.getPassword()), client.getId()));
+        return clientConverter.toDto(client);
     }
 
     @PutMapping("/updateInformation/{id}")
@@ -53,19 +71,21 @@ public class ClientController {
         clientService.delete(id);
     }
 
-    @PutMapping("/changeManagerForClient/{id}/{managerId}")
-    public void changeManager(@PathVariable(name = "id") UUID id, @PathVariable(name = "managerId") long managerId) {
+    @PutMapping("/changeManagerForClient")
+    public void changeManager(@RequestParam UUID id, @RequestParam long managerId) {
         clientService.changeManager(id, managerId);
     }
 
-    @PutMapping("/changeStatus/{id}/{status}")
-    public void changeStatus(@PathVariable(name = "id") UUID id, @PathVariable(name = "status") Status status) {
+    @PutMapping("/changeStatus")
+    public void changeStatus(@RequestParam UUID id, @RequestParam Status status) {
         clientService.changeStatus(id, status);
     }
 
-    @PutMapping("/inactivateStatus/{id}")
-    public void inactivateStatus(@PathVariable(name = "id") UUID id) {
+    @PutMapping("/inactivateStatus")
+    public void inactivateStatus(@RequestParam UUID id) {
         clientService.inactivateStatus(id);
     }
+
+
 
 }

@@ -3,6 +3,8 @@ package telran.functionality.com.handler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -91,6 +93,21 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity handleForbiddenDeleteAttemptException(ForbiddenDeleteAttemptException exception, HttpServletRequest request) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleUsernameNotFoundException(UsernameNotFoundException exception, HttpServletRequest request) {
+        return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleBadCredentialsException(BadCredentialsException exception, HttpServletRequest request) {
+        return new ResponseEntity("Неверный логин или пароль", HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity handleForbiddenAccessException(ForbiddenAccessException exception, HttpServletRequest request) {
         return new ResponseEntity(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 }

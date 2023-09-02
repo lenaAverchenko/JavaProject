@@ -4,6 +4,7 @@ package telran.functionality.com.service;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import telran.functionality.com.entity.*;
 import telran.functionality.com.enums.Currency;
@@ -32,6 +33,12 @@ public class InitialDataService {
     private ProductRepository productRepository;
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private ClientDataRepository clientDataRepository;
+    @Autowired
+    private  ManagerDataRepository managerDataRepository;
+    @Autowired
+    private PasswordEncoder encoder;
 
     public void createManagerData() {
         managerRepository.save(new Manager("Oleh", "Olehov", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())));
@@ -115,6 +122,28 @@ public class InitialDataService {
         transactionRepository.save(new Transaction(accounts.get(1), accounts.get(4), Type.COMMERCIAL, 100, "For access to service"));
     }
 
+    public void createUserInfoForClient(){
+        List<Client> clients = clientRepository.findAll();
+        clientDataRepository.save(new ClientData("First",encoder.encode("First"), clients.get(0).getId()));
+        clientDataRepository.save(new ClientData("Second",encoder.encode("Second"), clients.get(1).getId()));
+        clientDataRepository.save(new ClientData("Third",encoder.encode("Third"), clients.get(2).getId()));
+        clientDataRepository.save(new ClientData("Fourth",encoder.encode("Fourth"), clients.get(3).getId()));
+        clientDataRepository.save(new ClientData("Fifth",encoder.encode("Fifth"), clients.get(4).getId()));
+        clientDataRepository.save(new ClientData("Sixth",encoder.encode("Sixth"), clients.get(5).getId()));
+        clientDataRepository.save(new ClientData("Seventh",encoder.encode("Seventh"), clients.get(6).getId()));
+        clientDataRepository.save(new ClientData("Eighth",encoder.encode("Eighth"), clients.get(7).getId()));
+
+    }
+
+    public void createUserInfoForManager(){
+        List<Manager> managers = managerRepository.findAll();
+        managerDataRepository.save(new ManagerData("ManagerOne", encoder.encode("ManagerOne"), managers.get(0).getId()));
+        managerDataRepository.save(new ManagerData("ManagerTwo", encoder.encode("ManagerTwo"), managers.get(1).getId()));
+        managerDataRepository.save(new ManagerData("ManagerThree", encoder.encode("ManagerThree"), managers.get(2).getId()));
+        managerDataRepository.save(new ManagerData("ManagerFour", encoder.encode("ManagerFour"), managers.get(3).getId()));
+        managerDataRepository.save(new ManagerData("ManagerFive", encoder.encode("ManagerFive"), managers.get(4).getId()));
+    }
+
     public void createData() {
         createManagerData();
         createClientData();
@@ -122,6 +151,8 @@ public class InitialDataService {
         createProductData();
         createAgreementData();
         createTransactionData();
+        createUserInfoForClient();
+        createUserInfoForManager();
     }
 
 

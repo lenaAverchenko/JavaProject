@@ -1,16 +1,24 @@
 package telran.functionality.com.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.converter.Converter;
 import telran.functionality.com.dto.*;
 import telran.functionality.com.entity.Account;
 import telran.functionality.com.entity.Agreement;
+import telran.functionality.com.entity.ClientData;
 import telran.functionality.com.entity.Transaction;
 import telran.functionality.com.enums.Status;
 import telran.functionality.com.enums.Type;
+import telran.functionality.com.exceptions.ForbiddenAccessException;
 import telran.functionality.com.service.AccountService;
 import telran.functionality.com.service.AgreementService;
+import telran.functionality.com.service.ClientDataService;
 
 
 import java.util.List;
@@ -28,6 +36,9 @@ public class AccountController {
     private final Converter<Account, AccountDto, AccountCreateDto> accountConverter;
     private final Converter<Agreement, AgreementDto, AgreementCreateDto> agreementConverter;
     private final Converter<Transaction, TransactionDto, TransactionCreateDto> transactionConverter;
+    private final ClientDataService clientDataService;
+    @Autowired
+    private PasswordEncoder encoder;
 
 
     @GetMapping
@@ -44,56 +55,57 @@ public class AccountController {
                 .toList();
     }
 
-    @GetMapping("/{id}")
-    public AccountDto getById(@PathVariable(name = "id") UUID id) {
+    @GetMapping("/client/show")
+    public AccountDto getById(@RequestParam UUID id) {
+        getAccess(id);
         return accountConverter.toDto(accountService.getById(id));
     }
 
-    @PostMapping
+    @PostMapping("/client")
     public AccountDto save(@RequestBody AccountCreateDto accountCreateDto) {
         return accountConverter.toDto(accountService.save(accountConverter.toEntity(accountCreateDto)));
     }
 
-    @PutMapping("/updateStatus/{id}/{status}")
-    public AccountDto updateStatus(@PathVariable(name = "id") UUID id, @PathVariable(name = "status") Status newStatus) {
+    @PutMapping("/updateStatus")
+    public AccountDto updateStatus(@RequestParam UUID id, @RequestParam Status newStatus) {
         return accountConverter.toDto(accountService.changeStatus(id, newStatus));
     }
 
-    @DeleteMapping("/delete/{iban}")
-    public void delete(@PathVariable(name = "iban") UUID iban) {
+    @DeleteMapping("/delete")
+    public void delete(@RequestParam UUID iban) {
         accountService.delete(iban);
     }
 
-    @GetMapping("/getBalanceOf/{id}")
-    public BalanceDto getBalanceOf(@PathVariable(name = "id") UUID id) {
+    @GetMapping("/client/getBalanceOf")
+    public BalanceDto getBalanceOf(@RequestParam UUID id) {
+        getAccess(id);
         return accountService.getBalanceOf(id);
     }
 
-    @GetMapping("/getHistoryOf/{id}")
-    public List<TransactionDto> getHistoryOfTransactionsByAccountId(@PathVariable(name = "id") UUID id) {
+    @GetMapping("/client/getHistoryOf")
+    public List<TransactionDto> getHistoryOfTransactionsByAccountId(@RequestParam UUID id) {
+        getAccess(id);
         return accountService.getHistoryOfTransactionsByAccountId(id).stream()
                 .map(transactionConverter::toDto).collect(Collectors.toList());
     }
 
-    @PutMapping("/transferMoneyBetweenAccounts/{debitAccountId}/{creditAccountId}/{sum}/{type}/{description}")
-    public void transferMoneyBetweenAccounts(@PathVariable(name = "debitAccountId") UUID debitAccountId,
-                                             @PathVariable(name = "creditAccountId") UUID creditAccountId,
-                                             @PathVariable(name = "sum") double sum,
-                                             @PathVariable(name = "type") Type type,
-                                             @PathVariable(name = "description") String description) {
-        accountService.transferMoneyBetweenAccounts(debitAccountId, creditAccountId, sum, type, description);
+    @PutMapping("/client/transferMoneyBetweenAccounts")
+    public void transferMoneyBetweenAccounts(@RequestBody TransactionCreateDto transactionCreateDto) {
+        getAccess(transactionCreateDto.getDebitAccountId());
+        accountService.transferMoneyBetweenAccounts(transactionConverter.toEntity(transactionCreateDto));
     }
 
-    @PutMapping("/withdrawMoneyFrom/{clientId}/{accountId}/{sum}")
-    public AccountDto withdrawMoney(@PathVariable(name = "clientId") UUID clientId,
-                                    @PathVariable(name = "accountId") UUID accountId,
-                                    @PathVariable(name = "sum") double sum) {
+    @PutMapping("/client/withdrawMoneyFrom")
+    public AccountDto withdrawMoney(@RequestParam UUID clientId,
+                                    @RequestParam UUID accountId,
+                                    @RequestParam double sum) {
+        getAccess(accountId);
         return accountConverter.toDto(accountService.withdrawMoney(clientId, accountId, sum));
     }
 
-    @PutMapping("/putMoneyTo/{accountId}/{sum}")
-    public AccountDto putMoney(@PathVariable(name = "accountId") UUID accountId,
-                               @PathVariable(name = "sum") double sum) {
+    @PutMapping("/client/putMoneyTo")
+    public AccountDto putMoney(@RequestParam UUID accountId,
+                               @RequestParam double sum) {
         return accountConverter.toDto(accountService.putMoney(accountId, sum));
     }
 
@@ -103,29 +115,49 @@ public class AccountController {
         accountService.changeStatus(agreement.getAccountId(), Status.ACTIVE);
     }
 
-    @PutMapping("/inactivateAccount/{accountId}")
-    public void inactivateAccount(@PathVariable(name = "accountId") UUID id) {
+    @PutMapping("/inactivateAccount")
+    public void inactivateAccount(@RequestParam UUID id) {
         accountService.inactivateAccount(id);
     }
 
-    @GetMapping("/accountBelongsToClient/{clientId}/{accountId}")
-    public boolean accountBelongsToClient(@PathVariable(name = "clientId") UUID clientId, @PathVariable(name = "accountId") UUID accountId) {
+    @GetMapping("/accountBelongsToClient")
+    public boolean accountBelongsToClient(@RequestParam UUID clientId, @RequestParam UUID accountId) {
         return accountService.accountBelongsToClient(accountId, clientId);
     }
 
-    @PutMapping("/agreements/inactivateAgreement/{id}")
-    public void inactivateAccountOfAgreement(@PathVariable(name = "id") long id) {
+    @PutMapping("/agreements/inactivateAgreement")
+    public void inactivateAccountOfAgreement(@RequestParam long id) {
         agreementService.inactivateAgreement(id);
     }
 
-    @PutMapping("/agreements/changeStatus/{id}/{status}")
-    public void changeStatusOfAgreement(@PathVariable(name = "id") long id, @PathVariable(name = "status") Status status) {
+    @PutMapping("/agreements/changeStatus")
+    public void changeStatusOfAgreement(@RequestParam long id, @RequestParam Status status) {
         agreementService.changeStatus(id, status);
     }
 
-    @PutMapping("/agreements/changeInterestRate/{id}/{newRate}")
-    public void changeInterestRateForAgreement(@PathVariable(name = "id") long id, @PathVariable(name = "newRate") double newRate) {
+    @PutMapping("/agreements/changeInterestRate")
+    public void changeInterestRateForAgreement(@RequestParam long id, @RequestParam double newRate) {
         agreementService.changeInterestRate(id, newRate);
+    }
+
+    public UUID getCurrentAccountId(){
+        Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = (User) currentAuthentication.getPrincipal();
+        String currentClientLogin = currentUser.getUsername();
+        ClientData clientData = clientDataService.getByLogin(currentClientLogin);
+        if (clientData != null){
+            return clientData.getClientId();
+        }
+        return null;
+    }
+
+    public void getAccess(UUID id) {
+        UUID currentClientId = getCurrentAccountId();
+        if (currentClientId != null) {
+            if (!currentClientId.equals(accountService.getById(id).getClient().getId())) {
+                throw new ForbiddenAccessException("Access to the account " + id + " with the current access is denied.");
+            }
+        }
     }
 
 }
