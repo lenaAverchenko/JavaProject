@@ -57,7 +57,7 @@ public class ClientController {
     public ClientDto save(@RequestBody ClientCreateDto clientCreateDto) {
         Client client = clientService.save(clientConverter.toEntity(clientCreateDto));
         clientDataService.create(new ClientData(clientCreateDto.getLogin(),
-                encoder.encode(clientCreateDto.getPassword()), client.getId()));
+                encoder.encode(clientCreateDto.getPassword()), client));
         return clientConverter.toDto(client);
     }
 

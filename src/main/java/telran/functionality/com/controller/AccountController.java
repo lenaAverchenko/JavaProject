@@ -146,7 +146,7 @@ public class AccountController {
         String currentClientLogin = currentUser.getUsername();
         ClientData clientData = clientDataService.getByLogin(currentClientLogin);
         if (clientData != null){
-            return clientData.getClientId();
+            return clientData.getClient().getId();
         }
         return null;
     }

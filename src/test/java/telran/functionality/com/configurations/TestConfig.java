@@ -7,8 +7,8 @@ import telran.functionality.com.service.AccountServiceImpl;
 
 import static org.mockito.Mockito.mock;
 
-@Configuration
-public class TestConfig {
+//@Configuration
+//public class TestConfig {
 //
 //    @Bean
 //    public AccountServiceImpl accountService() {
@@ -18,4 +18,4 @@ public class TestConfig {
 //    public AccountRepository accountRepository() {
 //        return mock(AccountRepository.class);
 //    }
-}
+//}

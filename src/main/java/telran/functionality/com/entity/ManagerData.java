@@ -23,12 +23,16 @@ public class ManagerData {
     private String login;
     private String password;
 //    private Role role;
-    private long managerId;
+//    private long managerId;
 
-    public ManagerData(String login, String password, long managerId) {
+    @OneToOne
+    @JoinColumn(name = "manager_id", referencedColumnName = "id")
+    private Manager manager;
+
+    public ManagerData(String login, String password, Manager manager) {
         this.login = login;
         this.password = password;
 //        this.role = new Role("ADMIN");
-        this.managerId = managerId;
+        this.manager = manager;
     }
 }

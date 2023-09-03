@@ -51,7 +51,7 @@ public class ManagerController {
         managerDataService.create(new ManagerData(
                 managerCreateDto.getLogin(),
                 encoder.encode(managerCreateDto.getPassword()),
-                manager.getId()));
+                manager));
         return managerConverter.toDto(managerService.save(manager));
     }
 

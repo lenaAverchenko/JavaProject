@@ -3,6 +3,7 @@ package telran.functionality.com.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.ManagerData;
+import telran.functionality.com.exceptions.ForbiddenLoginNameException;
 import telran.functionality.com.repository.ManagerDataRepository;
 
 @Service
@@ -13,6 +14,11 @@ public class ManagerDataServiceImpl implements ManagerDataService {
 
     @Override
     public ManagerData create(ManagerData managerData) {
+        if (managerDataRepository.findAll().stream()
+                .map(ManagerData::getLogin).toList()
+                .contains(managerData.getLogin())){
+            throw new ForbiddenLoginNameException(String.format("Manager with login %s is already exist.", managerData.getLogin()));
+        }
         return managerDataRepository.save(managerData);
     }
 

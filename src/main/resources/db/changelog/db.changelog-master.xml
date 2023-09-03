@@ -169,4 +169,18 @@
         <modifyDataType tableName="managerdata" columnName="password" newDataType="VARCHAR(255)"/>
     </changeSet>
 
+    <changeSet id="20230309231700" author="Lena Averchenko">
+        <comment>Adding foreign keys to clientData and managerData tables</comment>
+        <addForeignKeyConstraint  baseColumnNames="client_id"
+                                  baseTableName="clientData"
+                                  constraintName="client_data_fkey"
+                                  referencedColumnNames="id"
+                                  referencedTableName="clients"/>
+        <addForeignKeyConstraint  baseColumnNames="manager_id"
+                                  baseTableName="managerData"
+                                  constraintName="manager_data_fkey"
+                                  referencedColumnNames="id"
+                                  referencedTableName="managers"/>
+    </changeSet>
+
 </databaseChangeLog>

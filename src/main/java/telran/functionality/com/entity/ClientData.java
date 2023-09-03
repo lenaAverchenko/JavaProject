@@ -23,12 +23,17 @@ public class ClientData {
     private String login;
     private String password;
 //    private Role role;
-    private UUID clientId;
+//    private UUID clientId;
 
-    public ClientData(String login, String password, UUID clientId) {
+    @OneToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client client;
+
+
+    public ClientData(String login, String password, Client client) {
         this.login = login;
         this.password = password;
 //        this.role = new Role("USER");
-        this.clientId = clientId;
+        this.client = client;
     }
 }

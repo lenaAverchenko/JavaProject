@@ -22,7 +22,7 @@ public class UserDetailService implements UserDetailsService {
     private ManagerDataService managerService;
 
     @Override
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException{
         ClientData clientData = clientService.getByLogin(login);
         ManagerData managerData = managerService.getByLogin(login);
         User user = null;
