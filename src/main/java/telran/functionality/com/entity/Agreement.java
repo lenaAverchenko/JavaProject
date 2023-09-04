@@ -1,5 +1,6 @@
 package telran.functionality.com.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -14,6 +15,7 @@ import java.util.Date;
 @Entity
 @Table(name = "agreements")
 @NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Data
 public class Agreement {

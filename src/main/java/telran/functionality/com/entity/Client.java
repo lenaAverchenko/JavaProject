@@ -31,7 +31,6 @@ public class Client {
     @EqualsAndHashCode.Exclude
     private Manager manager;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-//    @OneToMany(mappedBy = "client")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private List<Account> accounts = new ArrayList<>();

@@ -1,6 +1,7 @@
 package telran.functionality.com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.ManagerData;
 import telran.functionality.com.exceptions.ForbiddenLoginNameException;
@@ -24,6 +25,10 @@ public class ManagerDataServiceImpl implements ManagerDataService {
 
     @Override
     public ManagerData getByLogin(String login) {
-        return managerDataRepository.findByLogin(login);
+        ManagerData managerData = managerDataRepository.findByLogin(login);
+        if (managerData == null){
+            throw new UsernameNotFoundException("Manager with login " + login + " " + "not found");
+        }
+        return managerData;
     }
 }

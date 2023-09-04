@@ -214,7 +214,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     public boolean accountIsValid(UUID id) {
-        Account account = accountRepository.findAll().stream().filter(acc -> acc.getId().equals(id)).findFirst().orElse(null);
+        Account account = accountRepository.findById(id).orElse(null);
         ;
         if (accountExists(account)) {
             if (account.getStatus().equals(Status.INACTIVE)) {

@@ -70,11 +70,11 @@ class ManagerServiceImplTest {
         assertEquals(managers.get(0).getCreatedAt(), manager.getCreatedAt());
     }
 
-//    @Test
-//    void getByIdNotExisting() {
-//        Mockito.when(managerRepository.findById(1L)).thenReturn(null);
-//        assertThrows(NotExistingEntityException.class, () -> managerService.getById(1));
-//    }
+    @Test
+    void getByIdNotExisting() {
+        Mockito.when(managerRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        assertThrows(NotExistingEntityException.class, () -> managerService.getById(1));
+    }
 
     @Test
     void save() {
@@ -157,11 +157,11 @@ class ManagerServiceImplTest {
         assertTrue(answer);
     }
 
-//    @Test
-//    void managerNotExists() {
-//        Mockito.when(managerRepository.findById(1L)).thenReturn(null);
-//        assertThrows(NotExistingEntityException.class, () -> managerService.getById(1));
-//    }
+    @Test
+    void managerNotExists() {
+        Mockito.when(managerRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        assertThrows(NotExistingEntityException.class, () -> managerService.getById(1));
+    }
 
     @Test
     void statusIsValid() {

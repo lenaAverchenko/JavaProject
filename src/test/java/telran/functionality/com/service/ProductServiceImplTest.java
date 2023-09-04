@@ -78,11 +78,11 @@ class ProductServiceImplTest {
         assertEquals(100000, product.getLimitValue());
     }
 
-//    @Test
-//    void getByIdNotExisting() {
-//        Mockito.when(productRepository.findById(1L)).thenReturn(null);
-//        assertThrows(NotExistingEntityException.class, () -> productService.getById(1));
-//    }
+    @Test
+    void getByIdNotExisting() {
+        Mockito.when(productRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        assertThrows(NotExistingEntityException.class, () -> productService.getById(1));
+    }
 
     @Test
     void save() {
@@ -142,11 +142,11 @@ class ProductServiceImplTest {
         assertTrue(answer);
     }
 
-//    @Test
-//    void productExistsWithException() {
-//        Mockito.when(productRepository.findById(1L)).thenThrow(new NotExistingEntityException("Product doesn't exist"));
-//        assertThrows(NotExistingEntityException.class, () -> productService.productExists(productService.getById(1L)));
-//    }
+    @Test
+    void productExistsWithException() {
+        Mockito.when(productRepository.findById(1L)).thenReturn(Optional.ofNullable(null));
+        assertThrows(NotExistingEntityException.class, () -> productService.productExists(productService.getById(1L)));
+    }
 
     @Test
     void statusIsValid() {

@@ -83,12 +83,12 @@ class TransactionServiceImplTest {
         assertEquals("Personal transfer", transaction.getDescription());
     }
 
-//    @Test
-//    void getByIdNotExisting() {
-//        UUID someId = UUID.randomUUID();
-//        Mockito.when(transactionRepository.findById(someId)).thenReturn(null);
-//        assertThrows(NotExistingEntityException.class, () -> transactionService.getById(someId));
-//    }
+    @Test
+    void getByIdNotExisting() {
+        UUID someId = UUID.randomUUID();
+        Mockito.when(transactionRepository.findById(someId)).thenReturn(Optional.ofNullable(null));
+        assertThrows(NotExistingEntityException.class, () -> transactionService.getById(someId));
+    }
     @Test
     void save() {
           Transaction newTransaction = new Transaction(
