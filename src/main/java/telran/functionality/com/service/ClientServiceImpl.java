@@ -69,7 +69,6 @@ public class ClientServiceImpl implements ClientService {
         if (foundClient.getId().equals(clientRepository.findAll().get(0).getId())) {
             throw new ForbiddenDeleteAttemptException("Unable to delete bank client. It belongs to the bank.");
         }
-
         clientRepository.delete(foundClient);
     }
 

@@ -51,6 +51,19 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
+    public Product(long id, Manager manager, String name, Currency currencyCode, double interestRate, int limitValue, Timestamp updatedAt) {
+        this.id = id;
+        this.manager = manager;
+        this.name = name;
+        this.status = Status.ACTIVE;
+        this.currencyCode = currencyCode;
+        this.interestRate = interestRate;
+        this.limitValue = limitValue;
+        this.updatedAt = updatedAt;
+    }
+
+
+
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = new Timestamp(new Date().getTime());
     }

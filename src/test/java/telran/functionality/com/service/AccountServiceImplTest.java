@@ -7,12 +7,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
-import telran.functionality.com.configurations.TestConfig;
+//import telran.functionality.com.configurations.TestConfig;
 import telran.functionality.com.repository.AccountRepository;
 
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
+//@ContextConfiguration(classes = TestConfig.class, loader = AnnotationConfigContextLoader.class)
 class AccountServiceImplTest {
 
 //    @Autowired

@@ -46,6 +46,16 @@ public class Manager {
         this.updatedAt = updatedAt;
     }
 
+    public Manager(long id, String firstName, String lastName, List<Client> clients, List<Product> products, Timestamp updatedAt) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.status = Status.ACTIVE;
+        this.clients = clients;
+        this.products = products;
+        this.updatedAt = updatedAt;
+    }
+
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = new Timestamp(new Date().getTime());
     }

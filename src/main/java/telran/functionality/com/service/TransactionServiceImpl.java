@@ -28,7 +28,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Transaction getById(UUID id) {
-        Transaction foundTransaction = getAll().stream().filter(tr -> tr.getId().equals(id)).findFirst().orElse(null);
+        Transaction foundTransaction = transactionRepository.findById(id).orElse(null);
         if (foundTransaction == null) {
             throw new NotExistingEntityException(
                     String.format("Transaction with id %s doesn't exist", id.toString()));

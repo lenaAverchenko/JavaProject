@@ -68,6 +68,17 @@ public class Account {
         this.updatedAt = updatedAt;
     }
 
+    public Account(UUID id, Client client, String name, Type type, Status status, double balance, Currency currencyCode, Timestamp updatedAt) {
+        this.id = id;
+        this.client = client;
+        this.name = name;
+        this.type = type;
+        this.status = status;
+        this.balance = balance;
+        this.currencyCode = currencyCode;
+        this.updatedAt = updatedAt;
+    }
+
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = new Timestamp(new Date().getTime());
     }
