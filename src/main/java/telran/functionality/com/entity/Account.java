@@ -1,5 +1,9 @@
 package telran.functionality.com.entity;
-
+/**
+ * Class Account - to describe an account
+ *
+ * @author Olena Averchenko
+ * */
 import lombok.*;
 import telran.functionality.com.enums.Currency;
 import telran.functionality.com.enums.Status;

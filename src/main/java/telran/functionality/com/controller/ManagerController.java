@@ -1,5 +1,10 @@
 package telran.functionality.com.controller;
-
+/**
+ * Class ManagerController - Rest controller, to give answer to user's request. It contains methods to work
+ * with manager information, including managing information about projects
+ *
+ * @author Olena Averchenko
+ * */
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,13 +30,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ManagerController {
 
-    @Autowired
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
     private final ManagerService managerService;
     private final Converter<Manager, ManagerDto, ManagerCreateDto> managerConverter;
     private final Converter<Product, ProductDto, ProductCreateDto> productConverter;
     private final ManagerDataService managerDataService;
-
 
     @GetMapping
     public List<ManagerDto> getAll() {
@@ -40,8 +43,8 @@ public class ManagerController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/showManager")
-    public ManagerDto getById(@RequestParam long id) {
+    @GetMapping("/{id}")
+    public ManagerDto getById(@PathVariable(name = "id") long id) {
         return managerConverter.toDto(managerService.getById(id));
     }
 
@@ -105,5 +108,4 @@ public class ManagerController {
     public void inactivateStatusOfProduct(@RequestParam long productId) {
         managerService.inactivateStatusOfProduct(productId);
     }
-
 }

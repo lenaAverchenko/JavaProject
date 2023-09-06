@@ -1,6 +1,11 @@
 package telran.functionality.com.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
+/**
+ * Class implementing ManagerService to manage information about Managers and their products
+ * @see telran.functionality.com.service.ManagerService
+ *
+ * @author Olena Averchenko
+ * */
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Client;
 import telran.functionality.com.entity.Manager;
@@ -17,16 +22,20 @@ import java.util.List;
 
 
 @Service
+@RequiredArgsConstructor
 public class ManagerServiceImpl implements ManagerService {
 
+    private final ManagerRepository managerRepository;
 
-    @Autowired
-    private ManagerRepository managerRepository;
-    @Autowired
-    private ProductService productService;
-    @Autowired
-    private ClientService clientService;
+    private final ProductService productService;
 
+    private final ClientService clientService;
+
+    /**
+     * Method to get all the managers from database
+     * @throws EmptyRequiredListException if the returned is empty
+     * @return List<Manager> list of requested managers
+     * */
     @Override
     public List<Manager> getAll() {
         List<Manager> allManagers = managerRepository.findAll();
@@ -103,6 +112,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Transactional
     public Manager addProduct(long managerId, Product product) {
         Manager currentManager = getById(managerId);
         if (product.getManager().getId() != managerId) {

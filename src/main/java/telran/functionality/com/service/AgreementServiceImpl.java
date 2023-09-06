@@ -1,6 +1,11 @@
 package telran.functionality.com.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
+/**
+ * Class implementing AgreementService to manage information of agreements
+ * @see telran.functionality.com.service.AgreementService
+ *
+ * @author Olena Averchenko
+ * */
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Agreement;
 import telran.functionality.com.enums.Status;
@@ -10,6 +15,7 @@ import telran.functionality.com.exceptions.NotExistingEntityException;
 import telran.functionality.com.exceptions.WrongValueException;
 import telran.functionality.com.repository.AgreementRepository;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
@@ -17,14 +23,18 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class AgreementServiceImpl implements AgreementService {
 
+    private final AgreementRepository agreementRepository;
 
-    @Autowired
-    private AgreementRepository agreementRepository;
-    @Autowired
-    private AccountService accountService;
+    private final AccountService accountService;
 
+    /**
+     * Method to get all the agreements from database
+     * @throws EmptyRequiredListException if the returned is empty
+     * @return List<Agreement> list of requested agreements
+     * */
     @Override
     public List<Agreement> getAll() {
         List<Agreement> allAgreements = agreementRepository.findAll();
@@ -37,15 +47,12 @@ public class AgreementServiceImpl implements AgreementService {
 
     @Override
     public Agreement getById(long id) {
-        Agreement foundAgreement = agreementRepository.findById(id).orElse(null);
-        if (foundAgreement == null) {
-            throw new NotExistingEntityException(
-                    String.format("Agreement with id %d doesn't exist", id));
-        }
-        return foundAgreement;
+        return agreementRepository.findById(id).orElseThrow(() -> new NotExistingEntityException(
+                String.format("Agreement with id %d doesn't exist", id)));
     }
 
     @Override
+    @Transactional
     public Agreement save(Agreement agreement) {
         Agreement createdAgreement = agreementRepository.save(agreement);
         UUID accountIban = createdAgreement.getAccount().getId();
@@ -54,27 +61,24 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
-    public void changeStatus(long id, Status status) {
-        if (!Arrays.stream(Status.values()).toList().contains(status)) {
-            throw new WrongValueException("Status hasn't been recognized. Provided value is incorrect.");
-        }
+    public Agreement changeStatus(long id, Status status) {
         Agreement agreement = getById(id);
         agreement.setStatus(status);
         agreement.setUpdatedAt(new Timestamp(new Date().getTime()));
-        save(agreement);
+        return save(agreement);
     }
 
 
     @Override
-    public void changeInterestRate(long id, double newRate) {
+    public Agreement changeInterestRate(long id, double newRate) {
         Agreement agreement = getById(id);
-        if (statusIsValid(id)) {
-            agreement.setInterestRate(newRate);
-            agreement.setUpdatedAt(new Timestamp(new Date().getTime()));
-            save(agreement);
+        if (!statusIsValid(id)) {
+            throw new InvalidStatusException(String.format("Unable to get access to the agreement with id %d.", id));
         }
+        agreement.setInterestRate(newRate);
+        agreement.setUpdatedAt(new Timestamp(new Date().getTime()));
+        return save(agreement);
     }
-
 
     @Override
     public void delete(long id) {
@@ -83,11 +87,11 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     @Override
+    @Transactional
     public void inactivateAgreement(long id) {
         changeStatus(id, Status.INACTIVE);
         accountService.inactivateAccount(getById(id).getAccount().getId());
     }
-
 
     public boolean agreementExists(Agreement agreement) {
         if (agreement == null) {
@@ -97,12 +101,7 @@ public class AgreementServiceImpl implements AgreementService {
     }
 
     public boolean statusIsValid(long id) {
-        Agreement agreement = agreementRepository.findById(id).orElse(null);
-        if (agreementExists(agreement)) {
-            if (agreement.getStatus().equals(Status.INACTIVE)) {
-                throw new InvalidStatusException(String.format("Unable to get access to the agreement with id %d.", id));
-            }
-        }
-        return true;
+        Agreement agreement = getById(id);
+        return Status.ACTIVE.equals(agreement.getStatus());
     }
 }

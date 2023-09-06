@@ -1,5 +1,9 @@
 package telran.functionality.com.entity;
-
+/**
+ * Class Transaction - to describe a transactions
+ *
+ * @author Olena Averchenko
+ * */
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,11 +30,11 @@ public class Transaction {
     private UUID id;
 
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.PERSIST)
     @JoinColumn(name = "debit_account_id", referencedColumnName = "id")
     private Account debitAccount;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.PERSIST)
     @JoinColumn(name = "credit_account_id", referencedColumnName = "id")
     private Account creditAccount;
 

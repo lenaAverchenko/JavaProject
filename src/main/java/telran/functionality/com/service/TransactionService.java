@@ -12,6 +12,6 @@ public interface TransactionService {
     Transaction getById(UUID id);
 
     Transaction save(Transaction transaction);
-    void delete(UUID id);
 
+    void delete(UUID id);
 }

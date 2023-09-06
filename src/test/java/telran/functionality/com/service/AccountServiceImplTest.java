@@ -15,10 +15,7 @@ import telran.functionality.com.entity.*;
 import telran.functionality.com.enums.Currency;
 import telran.functionality.com.enums.Status;
 import telran.functionality.com.enums.Type;
-import telran.functionality.com.exceptions.AccountDoesntBelongToClientException;
-import telran.functionality.com.exceptions.AccountIsNotValidException;
-import telran.functionality.com.exceptions.EmptyRequiredListException;
-import telran.functionality.com.exceptions.NotExistingEntityException;
+import telran.functionality.com.exceptions.*;
 import telran.functionality.com.repository.AccountRepository;
 import telran.functionality.com.repository.AgreementRepository;
 
@@ -49,6 +46,8 @@ class AccountServiceImplTest {
     private List<Account> accounts;
     private List<Client> clients;
     private List<Manager> managers;
+    private List<Transaction> transactions;
+
 
     @BeforeEach
     public void init(){
@@ -65,7 +64,11 @@ class AccountServiceImplTest {
         accounts = Arrays.asList(
                 new Account(UUID.randomUUID(),clients.get(0), "Bank Account", Type.INNERBANK, Status.ACTIVE, 0, Currency.PLN, new Timestamp(new Date().getTime())),
                 new Account(UUID.randomUUID(),clients.get(1), "Personal Account", Type.PERSONAL, Status.ACTIVE, 1000, Currency.PLN, new Timestamp(new Date().getTime())),
-                new Account(UUID.randomUUID(),clients.get(2), "Leo's Account", Type.PERSONAL, Status.ACTIVE, 200, Currency.USD, new Timestamp(new Date().getTime())));
+                new Account(UUID.randomUUID(),clients.get(2), "Leo's Account", Type.PERSONAL, Status.ACTIVE, 200, Currency.PLN, new Timestamp(new Date().getTime())));
+        transactions = Arrays.asList(
+                new Transaction(UUID.randomUUID(), accounts.get(1), accounts.get(2), Type.PERSONAL, 100, "Personal transfer"),
+                new Transaction(UUID.randomUUID(), accounts.get(2), accounts.get(0), Type.COMMERCIAL, 1000, "Payment for service"),
+                new Transaction(UUID.randomUUID(), accounts.get(0), accounts.get(2), Type.COMMERCIAL, 5000, "Salary payment"));
 
     }
 
@@ -125,28 +128,21 @@ class AccountServiceImplTest {
 
     @Test
     void changeStatus() {
-        UUID accountId = accounts.get(0).getId();
-        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.ofNullable(accounts.get(0)));
+        Account accountInit = accounts.get(0);
+        UUID accountId = accountInit.getId();
+        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.ofNullable(accountInit));
         Agreement agreement = new Agreement(1, accounts.get(0),
-                new Product(5, managers.get(2), "mortgage", Currency.UAH, 20.00,
+                new Product(5, managers.get(2), "mortgage", Currency.PLN, 20.00,
                         1000000, new Timestamp(new Date().getTime())),
                 3.00, Status.ACTIVE, 100000, new Timestamp(new Date().getTime()));
-        Account account = accountService.getById(accountId);
-        Mockito.when(agreementRepository.findAll()).thenReturn(Arrays.asList(agreement));
+        accountInit.setAgreement(agreement);
+        Account account = accountService.getById(accountInit.getId());
+//        Mockito.when(agreementRepository.findAll()).thenReturn(Arrays.asList(agreement));
         accountService.changeStatus(accountId, Status.WAITING);
         assertEquals(Status.WAITING, account.getStatus());
     }
 
 
-
-//    @Test
-//    void delete() {
-//        UUID accountId = accounts.get(1).getId();
-//        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.ofNullable(accounts.get(1)));
-//        Account account = accountService.getById(accountId);
-//        accountService.delete(accountId);
-//        Mockito.verify(accountRepository).delete(account);
-//    }
 
     @Test
     void getBalanceOf() {
@@ -159,102 +155,66 @@ class AccountServiceImplTest {
         assertEquals(Currency.PLN, balanceDto.getCurrencyCode());
      }
 
-//    @Override
-//    public List<Transaction> getHistoryOfTransactionsByAccountId(UUID id) {
-//        Account account = getById(id);
-//        List<Transaction> allTransactions = transactionService.getAll();
-//        List<Transaction> creditTransactions = allTransactions.stream()
-//                .filter(transaction -> transaction.getCreditAccount()
-//                        .getId().equals(id)).toList();
-//        List<Transaction> debitTransactions = allTransactions.stream()
-//                .filter(transaction -> transaction.getDebitAccount()
-//                        .getId().equals(id)).toList();
-//        List<Transaction> resultedList = Stream.concat(debitTransactions.stream(), creditTransactions.stream()).collect(Collectors.toList());
-//        if (resultedList.isEmpty()) {
-//            throw new EmptyRequiredListException("There is no one registered transaction for account with id " + id);
-//        }
-//        return resultedList;
-//    }
-//
-////UUID debitAccountId, UUID creditAccountId, double sum, Type type, String description
-//    @Override
-//    @Transactional
-//    public void transferMoneyBetweenAccounts(Transaction transaction) {
-//        double sum = transaction.getAmount();
-//        UUID debitAccountId = transaction.getDebitAccount().getId();
-//        UUID creditAccountId = transaction.getCreditAccount().getId();
-//        if (sum < 0) {
-//            throw new WrongValueException("Unable to transfer negative amount");
-//        }
-//        if (!accountIsValid(debitAccountId)) {
-//            throw new InvalidStatusException("Debit account is not allowed to sent money.");
-//        }
-//        if (!accountIsValid(creditAccountId)) {
-//            throw new InvalidStatusException("Credit account is not allowed to accept money.");
-//        }
-//        Account debitAccount = getById(debitAccountId);
-//        Account creditAccount = getById(creditAccountId);
-//        double convertedSum = sum;
-//        if (needsToBeConverted(debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode())) {
-//            convertedSum = converter.convertCurrency(sum, debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode());
-//        }
-//        ;
-//        if ((debitAccount.getBalance() - sum) < 0) {
-//            throw new NotEnoughMoneyException(String.format(
-//                    "There is not enough money to transfer on the chosen account: %s", debitAccountId));
-//        }
-//        debitAccount.setBalance(debitAccount.getBalance() - sum);
-//        debitAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-//        creditAccount.setBalance(creditAccount.getBalance() + convertedSum);
-//        creditAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-//        accountRepository.save(debitAccount);
-//        accountRepository.save(creditAccount);
-//        Transaction newTransaction = new Transaction(debitAccount, creditAccount, transaction.getType(), sum, transaction.getDescription());
-//        transactionService.save(newTransaction);
-//    }
-//
-
-//
-//
-//    @Override
-//    @Transactional
-//    public Account withdrawMoney(UUID clientUniqueId, UUID accountId, double sum) {
-//        double initSum = sum;
-//        Account foundAccount = getById(accountId);
-//        if (accountBelongsToClient(clientUniqueId, accountId) && accountIsValid(accountId)) {
-//            if ((foundAccount.getBalance() - sum) < 0) {
-//                throw new NotEnoughMoneyException("There is not enough money to withdraw.");
-//            }
-//            sum = foundAccount.getBalance() - sum;
-//            foundAccount.setBalance(sum);
-//            foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-//            accountRepository.save(foundAccount);
-//            Transaction newTransaction = new Transaction(getById(accountId), accountRepository.findAll().get(0), Type.INNERBANK, initSum, "bank account withdrawal");
-//            transactionService.save(newTransaction);
-//        }
-//        return foundAccount;
-//    }
-//
-//    @Override
-//    @Transactional
-//    public Account putMoney(UUID accountId, double sum) {
-//        Account foundAccount = getById(accountId);
-//        if (accountIsValid(accountId)) {
-//            foundAccount.setBalance(sum + foundAccount.getBalance());
-//            foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-//            accountRepository.save(foundAccount);
-//            Transaction newTransaction = new Transaction(accountRepository.findAll().get(0), getById(accountId), Type.INNERBANK, sum, "bank account replenishment");
-//            transactionService.save(newTransaction);
-//        }
-//        return foundAccount;
-//    }
 
     @Test
     void getHistoryOfTransactionsByAccountId() {
+        UUID accountId = accounts.get(0).getId();
+        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.ofNullable(accounts.get(0)));
+        Mockito.when(transactionService.getAll()).thenReturn(transactions);
+        List<Transaction> foundTransactions = accountService.getHistoryOfTransactionsByAccountId(accountId);
+        assertEquals(2, foundTransactions.size());
     }
 
     @Test
+    void transferMoneyBetweenAccountsSumNegative() {
+        Transaction transaction = new Transaction(UUID.randomUUID(), accounts.get(2), accounts.get(0), Type.COMMERCIAL, -1000, "Payment for service");
+        assertThrows(WrongValueException.class, () -> accountService.transferMoneyBetweenAccounts(transaction));
+    }
+
+    @Test
+    void transferMoneyBetweenAccountsInactiveDebitAccount() {
+        Account account =  new Account(UUID.randomUUID(),clients.get(0), "Bank Account", Type.INNERBANK, Status.INACTIVE, 0, Currency.PLN, new Timestamp(new Date().getTime()));
+        Transaction transaction = new Transaction(UUID.randomUUID(), account, accounts.get(0), Type.COMMERCIAL, 100, "Payment for service");
+        Account debitAccount = account;
+        Mockito.when(accountRepository.findById(accounts.get(0).getId())).thenReturn(Optional.ofNullable(debitAccount));
+        Account creditAccount = accountService.getById(accounts.get(0).getId());
+        Mockito.when(accountRepository.findById(debitAccount.getId())).thenReturn(Optional.ofNullable(debitAccount));
+        Mockito.when(accountRepository.findById(creditAccount.getId())).thenReturn(Optional.ofNullable(creditAccount));
+        assertThrows(InvalidStatusException.class, () -> accountService.transferMoneyBetweenAccounts(transaction));
+    }
+
+    @Test
+    void transferMoneyBetweenAccountsInactiveCreditAccount() {
+        Account account =  new Account(UUID.randomUUID(),clients.get(0), "Bank Account", Type.INNERBANK, Status.INACTIVE, 0, Currency.PLN, new Timestamp(new Date().getTime()));
+        Transaction transaction = new Transaction(UUID.randomUUID(), accounts.get(2), account, Type.COMMERCIAL, 100, "Payment for service");
+        Mockito.when(accountRepository.findById(accounts.get(2).getId())).thenReturn(Optional.ofNullable(accounts.get(2)));
+        Account debitAccount = accountService.getById(accounts.get(2).getId());
+        Account creditAccount = account;
+        Mockito.when(accountRepository.findById(debitAccount.getId())).thenReturn(Optional.ofNullable(debitAccount));
+        Mockito.when(accountRepository.findById(creditAccount.getId())).thenReturn(Optional.ofNullable(creditAccount));
+        assertThrows(InvalidStatusException.class, () -> accountService.transferMoneyBetweenAccounts(transaction));
+    }
+    @Test
     void transferMoneyBetweenAccounts() {
+        Mockito.when(accountRepository.findById(accounts.get(2).getId())).thenReturn(Optional.ofNullable(accounts.get(2)));
+        Mockito.when(accountRepository.findById(accounts.get(0).getId())).thenReturn(Optional.ofNullable(accounts.get(0)));
+        Account debitAccount = accountService.getById(accounts.get(2).getId());
+        Account creditAccount = accountService.getById(accounts.get(0).getId());
+        Transaction transaction = new Transaction(UUID.randomUUID(), debitAccount, creditAccount, Type.COMMERCIAL, 150, "Payment for service");
+        Transaction createdTransaction = accountService.transferMoneyBetweenAccounts(transaction);
+        assertEquals(50, createdTransaction.getDebitAccount().getBalance());
+        assertEquals(150, createdTransaction.getCreditAccount().getBalance());
+        assertEquals(150, createdTransaction.getAmount());
+
+    }
+
+    void transferMoneyBetweenAccountsNotEnoughMoney() {
+        Transaction transaction = new Transaction(UUID.randomUUID(), accounts.get(2), accounts.get(0), Type.COMMERCIAL, 1000, "Payment for service");
+        Account debitAccount = accountService.getById(accounts.get(2).getId());
+        Account creditAccount = accountService.getById(accounts.get(0).getId());
+        Mockito.when(accountRepository.findById(debitAccount.getId())).thenReturn(Optional.ofNullable(debitAccount));
+        Mockito.when(accountRepository.findById(creditAccount.getId())).thenReturn(Optional.ofNullable(creditAccount));
+        assertThrows(NotEnoughMoneyException.class, () -> accountService.transferMoneyBetweenAccounts(transaction));
     }
 
     @Test
@@ -277,21 +237,43 @@ class AccountServiceImplTest {
 
     @Test
     void withdrawMoney() {
+        Mockito.when(accountRepository.findById(accounts.get(2).getId())).thenReturn(Optional.ofNullable(accounts.get(2)));
+        Mockito.when(accountRepository.findAll()).thenReturn(accounts);
+        Account account = accountService.getById(accounts.get(2).getId());
+        Account newAccount = accountService.withdrawMoney(account.getClient().getId(), account.getId(),150);
+        assertEquals(50, newAccount.getBalance());
     }
 
     @Test
+    void withdrawTooMuchMoney() {
+        Mockito.when(accountRepository.findById(accounts.get(2).getId())).thenReturn(Optional.ofNullable(accounts.get(2)));
+//        Mockito.when(accountRepository.findById(accounts.get(0).getId())).thenReturn(Optional.ofNullable(accounts.get(0)));
+        Account account = accountService.getById(accounts.get(2).getId());
+        assertThrows(NotEnoughMoneyException.class, () -> accountService.withdrawMoney(account.getClient().getId(), account.getId(),1000));
+    }
+
+
+    @Test
     void putMoney() {
+        UUID accountId = accounts.get(0).getId();
+        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.ofNullable(accounts.get(0)));
+        Mockito.when(accountRepository.findAll()).thenReturn(accounts);
+        Account account = accountService.putMoney(accountId, 1000);
+        assertEquals(accountId, account.getId());
+        assertEquals(1000, account.getBalance());
     }
 
     @Test
     void inactivateAccount() {
-        UUID accountId = accounts.get(0).getId();
-        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.ofNullable(accounts.get(0)));
+        Account accountInit = accounts.get(0);
+        UUID accountId = accountInit.getId();
+        Mockito.when(accountRepository.findById(accountId)).thenReturn(Optional.ofNullable(accountInit));
         Agreement agreement = new Agreement(1, accounts.get(0),
-                new Product(5, managers.get(2), "mortgage", Currency.UAH, 20.00,
+                new Product(5, managers.get(2), "mortgage", Currency.PLN, 20.00,
                         1000000, new Timestamp(new Date().getTime())),
                 3.00, Status.ACTIVE, 100000, new Timestamp(new Date().getTime()));
-        Mockito.when(agreementRepository.findAll()).thenReturn(Arrays.asList(agreement));
+        accountInit.setAgreement(agreement);
+        Account account = accountService.getById(accountInit.getId());
         accountService.inactivateAccount(accountId);
         assertEquals(Status.INACTIVE, accountService.getById(accountId).getStatus());
     }

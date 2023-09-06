@@ -4,7 +4,6 @@ import telran.functionality.com.dto.BalanceDto;
 import telran.functionality.com.entity.Account;
 import telran.functionality.com.entity.Transaction;
 import telran.functionality.com.enums.Status;
-import telran.functionality.com.enums.Type;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +24,7 @@ public interface AccountService {
 
     List<Transaction> getHistoryOfTransactionsByAccountId(UUID id);
 
-    void transferMoneyBetweenAccounts(Transaction transaction);
+    Transaction transferMoneyBetweenAccounts(Transaction transaction);
 
     Account withdrawMoney(UUID clientId, UUID accountId, double sum);
 
@@ -36,6 +35,4 @@ public interface AccountService {
     void inactivateAccount(UUID id);
 
     boolean accountBelongsToClient(UUID clientId, UUID accountId);
-
-
 }

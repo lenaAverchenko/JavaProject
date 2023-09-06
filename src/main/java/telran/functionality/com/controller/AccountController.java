@@ -1,11 +1,16 @@
 package telran.functionality.com.controller;
 
+/**
+ * Class AccountController - Rest controller, to give answer to user's request. It contains work with transactions,
+ * accounts and agreements.
+ *
+ * @author Olena Averchenko
+ * */
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.converter.Converter;
 import telran.functionality.com.dto.*;
@@ -14,12 +19,10 @@ import telran.functionality.com.entity.Agreement;
 import telran.functionality.com.entity.ClientData;
 import telran.functionality.com.entity.Transaction;
 import telran.functionality.com.enums.Status;
-import telran.functionality.com.enums.Type;
 import telran.functionality.com.exceptions.ForbiddenAccessException;
 import telran.functionality.com.service.AccountService;
 import telran.functionality.com.service.AgreementService;
 import telran.functionality.com.service.ClientDataService;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -30,16 +33,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class AccountController {
 
-
     private final AccountService accountService;
     private final AgreementService agreementService;
     private final Converter<Account, AccountDto, AccountCreateDto> accountConverter;
     private final Converter<Agreement, AgreementDto, AgreementCreateDto> agreementConverter;
     private final Converter<Transaction, TransactionDto, TransactionCreateDto> transactionConverter;
     private final ClientDataService clientDataService;
-    @Autowired
-    private PasswordEncoder encoder;
-
 
     @GetMapping
     public List<AccountDto> getAll() {
@@ -55,8 +54,8 @@ public class AccountController {
                 .toList();
     }
 
-    @GetMapping("/client/show")
-    public AccountDto getById(@RequestParam UUID id) {
+    @GetMapping("/{id}")
+    public AccountDto getById(@PathVariable(name = "id") UUID id) {
         getAccess(id);
         return accountConverter.toDto(accountService.getById(id));
     }
@@ -90,9 +89,9 @@ public class AccountController {
     }
 
     @PutMapping("/client/transferMoneyBetweenAccounts")
-    public void transferMoneyBetweenAccounts(@RequestBody TransactionCreateDto transactionCreateDto) {
+    public UUID transferMoneyBetweenAccounts(@RequestBody TransactionCreateDto transactionCreateDto) {
         getAccess(transactionCreateDto.getDebitAccountId());
-        accountService.transferMoneyBetweenAccounts(transactionConverter.toEntity(transactionCreateDto));
+        return accountService.transferMoneyBetweenAccounts(transactionConverter.toEntity(transactionCreateDto)).getId();
     }
 
     @PutMapping("/client/withdrawMoneyFrom")
@@ -140,12 +139,12 @@ public class AccountController {
         agreementService.changeInterestRate(id, newRate);
     }
 
-    public UUID getCurrentAccountId(){
+    public UUID getCurrentAccountId() {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) currentAuthentication.getPrincipal();
         String currentClientLogin = currentUser.getUsername();
         ClientData clientData = clientDataService.getByLogin(currentClientLogin);
-        if (clientData != null){
+        if (clientData != null) {
             return clientData.getClient().getId();
         }
         return null;

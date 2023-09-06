@@ -1,7 +1,12 @@
 package telran.functionality.com.service;
+/**
+ * Class implementing ProductService to manage information for products
+ * @see telran.functionality.com.service.ProductService
+ *
+ * @author Olena Averchenko
+ * */
 
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Manager;
 import telran.functionality.com.entity.Product;
@@ -13,22 +18,25 @@ import telran.functionality.com.exceptions.WrongValueException;
 import telran.functionality.com.repository.ManagerRepository;
 import telran.functionality.com.repository.ProductRepository;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
 
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ManagerRepository managerRepository;
 
-    @Autowired
-    private ManagerRepository managerRepository;
-
-
+    /**
+     * Method to get all the products from database
+     * @throws EmptyRequiredListException if the returned is empty
+     * @return List<Product> list of requested products
+     * */
     @Override
     public List<Product> getAll() {
         List<Product> allProducts = productRepository.findAll();
@@ -37,23 +45,37 @@ public class ProductServiceImpl implements ProductService {
         }
         return allProducts;
     }
-
+    /**
+     * Method to get the product by it's id
+     * @throws NotExistingEntityException if it doesn't exist
+     * @param id unique id for the product
+     * @return Product found transaction
+     * */
     @Override
     public Product getById(long id) {
-        Product foundProduct = productRepository.findById(id).orElse(null);
-        if (foundProduct == null) {
-            throw new NotExistingEntityException(
-                    String.format("Product with id %d doesn't exist", id));
-        }
-        return foundProduct;
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NotExistingEntityException(String.format("Product with id %d doesn't exist", id)));
     }
 
+    /**
+     * Method to save a new product
+     * @param product new product
+     * @return Product saved product
+     * */
     @Override
     public Product save(Product product) {
         return productRepository.save(product);
     }
 
+    /**
+     * Method to change manager for the chosen product
+     * @param id product id
+     * @param managerId id of the new manager to the product
+     * @throws NotExistingEntityException if this new manager doesn't exist
+     * @throws InvalidStatusException if new Manager is not active
+     * */
     @Override
+    @Transactional
     public void changeManager(long id, long managerId) {
         if (statusIsValid(id)) {
             Product foundProduct = getById(id);
@@ -65,26 +87,33 @@ public class ProductServiceImpl implements ProductService {
                 throw new InvalidStatusException(String.format("Impossible to set manager with id %d to a product, " +
                         "because this manager is no longer available", managerId));
             }
-            foundProduct.setManager(foundManager);
             Timestamp time = new Timestamp(new Date().getTime());
             foundProduct.setUpdatedAt(time);
             foundManager.setUpdatedAt(time);
+            foundProduct.setManager(foundManager);
             productRepository.save(foundProduct);
-            managerRepository.save(foundManager);
+//            managerRepository.save(foundManager);
         }
     }
 
+    /**
+     * Method to change status for the chosen product
+     * @param id product id
+     * @param status new Status
+     * */
     @Override
     public void changeStatus(long id, Status status) {
-        if (!Arrays.stream(Status.values()).toList().contains(status)) {
-            throw new WrongValueException("Status hasn't been recognized. Provided value is incorrect.");
-        }
         Product product = getById(id);
         product.setStatus(status);
         product.setUpdatedAt(new Timestamp(new Date().getTime()));
         productRepository.save(product);
     }
 
+    /**
+     * Method to change limit for the chosen product
+     * @param id product id
+     * @param limitValue new limit
+     * */
     @Override
     public void changeLimitValue(long id, int limitValue) {
         if (statusIsValid(id)) {
@@ -95,18 +124,31 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
+    /**
+     * Method to delete product by it's id
+     * @param id unique id for the product
+     * */
     @Override
     public void delete(long id) {
         Product foundProduct = getById(id);
         productRepository.delete(foundProduct);
     }
 
+    /**
+     * Method to inactivate the chosen product
+     * @param id product id
+     * @throws NotExistingEntityException if product doesn't exist
+     * */
     @Override
     public void inactivateStatus(long id) {
         changeStatus(id, Status.INACTIVE);
     }
 
+    /**
+     * Method to check if the chosen product exists
+     * @param product product
+     * @throws NotExistingEntityException if product doesn't exist
+     * */
     public boolean productExists(Product product) {
         if (product == null) {
             throw new NotExistingEntityException("Product doesn't exist");
@@ -114,6 +156,11 @@ public class ProductServiceImpl implements ProductService {
         return true;
     }
 
+    /**
+     * Method to check if the status of the chosen product is valid
+     * @param id product id
+     * @throws InvalidStatusException if the product has inactive status
+     * */
     public boolean statusIsValid(long id) {
         Product product = productRepository.findById(id).orElse(null);
         if (productExists(product)) {

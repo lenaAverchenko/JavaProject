@@ -1,5 +1,9 @@
 package telran.functionality.com.entity;
-
+/**
+ * Class Product - to describe a product
+ *
+ * @author Olena Averchenko
+ * */
 
 import lombok.*;
 import telran.functionality.com.enums.Currency;
@@ -23,7 +27,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.PERSIST)
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

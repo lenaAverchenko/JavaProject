@@ -1,5 +1,11 @@
 package telran.functionality.com.converter;
 
+/**
+ * Class - Converter for the Client entities
+ *
+ * @author Olena Averchenko
+ * */
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,12 +23,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClientConverterImpl implements Converter<Client, ClientDto, ClientCreateDto> {
 
-
-    @Autowired
     private final Converter<Account, AccountDto, AccountCreateDto> accountConverter;
-    @Autowired
-    private ManagerRepository managerRepository;
 
+    private final ManagerRepository managerRepository;
+
+    /**
+     * Method to convert Client entity to ClientDto, showed to user.
+     * @param client entity from database
+     * @return ClientDto object
+     * */
     @Override
     public ClientDto toDto(Client client) {
         return new ClientDto(client.getId(), client.getStatus(),
@@ -36,6 +45,11 @@ public class ClientConverterImpl implements Converter<Client, ClientDto, ClientC
                         .collect(Collectors.toList()));
     }
 
+    /**
+     * Method to convert ClientCreateDto (data provided by user) to entity Client, stored in database.
+     * @param createdDto provided data
+     * @return Client entity
+     * */
     @Override
     public Client toEntity(ClientCreateDto createdDto) {
         return new Client(managerRepository.getReferenceById(createdDto.getManagerId()),

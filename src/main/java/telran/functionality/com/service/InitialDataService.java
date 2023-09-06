@@ -1,5 +1,10 @@
 package telran.functionality.com.service;
-
+/**
+ * Class to help providing The FunctionalityApp with the initial test data
+ * @see telran.functionality.com.service.InitialDataService
+ *
+ * @author Olena Averchenko
+ * */
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;

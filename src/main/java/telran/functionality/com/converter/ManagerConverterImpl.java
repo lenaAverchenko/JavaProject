@@ -1,5 +1,10 @@
 package telran.functionality.com.converter;
 
+/**
+ * Class - Converter for the Manager entities
+ *
+ * @author Olena Averchenko
+ * */
 
 import org.springframework.stereotype.Component;
 import telran.functionality.com.dto.ClientDto;
@@ -17,7 +22,11 @@ import java.util.stream.Collectors;
 @Component
 public class ManagerConverterImpl implements Converter<Manager, ManagerDto, ManagerCreateDto> {
 
-
+    /**
+     * Method to convert Manager entity to ManagerDto, showed to user.
+     * @param manager entity from database
+     * @return ManagerDto object
+     * */
     @Override
     public ManagerDto toDto(Manager manager) {
         return new ManagerDto(manager.getId(), manager.getFirstName(), manager.getLastName(),
@@ -31,7 +40,11 @@ public class ManagerConverterImpl implements Converter<Manager, ManagerDto, Mana
                         .collect(Collectors.toList()));
     }
 
-
+    /**
+     * Method to convert ManagerCreateDto (data provided by user) to entity Manager, stored in database.
+     * @param createdDto provided data
+     * @return Manager entity
+     * */
     @Override
     public Manager toEntity(ManagerCreateDto createdDto) {
         return new Manager(createdDto.getFirstName(),
@@ -39,4 +52,3 @@ public class ManagerConverterImpl implements Converter<Manager, ManagerDto, Mana
                 new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime()));
     }
 }
-

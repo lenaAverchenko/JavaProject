@@ -1,6 +1,11 @@
 package telran.functionality.com.service;
 
-
+/**
+ * Class implementing ClientService to manage information about Clients
+ * @see telran.functionality.com.service.ClientService
+ *
+ * @author Olena Averchenko
+ * */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Client;
@@ -25,6 +30,11 @@ public class ClientServiceImpl implements ClientService {
     @Autowired
     private ManagerRepository managerRepository;
 
+    /**
+     * Method to get all the clients from database
+     * @throws EmptyRequiredListException if the returned is empty
+     * @return List<Client> list of requested clients
+     * */
     @Override
     public List<Client> getAll() {
         List<Client> allClients = clientRepository.findAll();
@@ -73,6 +83,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
+    @Transactional
     public void changeManager(UUID clientId, long managerId) {
         if (statusIsValid(clientId)) {
             Client foundClient = getById(clientId);

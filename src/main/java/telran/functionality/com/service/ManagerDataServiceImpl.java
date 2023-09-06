@@ -1,5 +1,10 @@
 package telran.functionality.com.service;
-
+/**
+ * Class implementing ManagerDataService to manage information about Managers' access to the App
+ * @see telran.functionality.com.service.ManagerDataService
+ *
+ * @author Olena Averchenko
+ * */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

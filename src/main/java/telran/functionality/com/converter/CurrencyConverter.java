@@ -1,16 +1,28 @@
 package telran.functionality.com.converter;
 
-import org.springframework.stereotype.Component;
+/**
+ * Class - Converter for the Currency
+ *
+ * @author Olena Averchenko
+ * */
+
 import telran.functionality.com.enums.ConvertingValue;
 import telran.functionality.com.enums.Currency;
 import telran.functionality.com.exceptions.UnsupportedConvertingTypesOfCurrencyException;
 
 import java.util.Arrays;
 
-@Component
 public class CurrencyConverter {
 
-    public double convertCurrency(double amount, Currency fromCurrency, Currency toCurrency) {
+    /**
+     * Method for currency conversion from one type to another according to the current exchange rate
+     * @param amount sum to convert
+     * @param fromCurrency initial currency
+     * @param fromCurrency currency to convert
+     * @return double amount - converted value
+     * */
+
+    public static double convertCurrency(double amount, Currency fromCurrency, Currency toCurrency) {
         String toConvert = fromCurrency.name() + "TO" + toCurrency.name();
         if (!Arrays.stream(ConvertingValue.values()).map(Enum::name).toList().contains(toConvert)) {
             throw new UnsupportedConvertingTypesOfCurrencyException(
@@ -20,5 +32,4 @@ public class CurrencyConverter {
         double currentCoefficient = ConvertingValue.valueOf(toConvert).getCoefficient();
         return amount * currentCoefficient;
     }
-
 }

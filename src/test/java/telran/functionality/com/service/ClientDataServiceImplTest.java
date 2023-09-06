@@ -1,6 +1,7 @@
 package telran.functionality.com.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -70,7 +71,8 @@ class ClientDataServiceImplTest {
     }
 
     @Test
-    void getByLoginNotExistingManager() {
+//    @Disabled
+    void getByLoginNotExistingClient() {
         Mockito.when(clientDataRepository.findByLogin("One")).thenReturn(null);
         assertThrows(UsernameNotFoundException.class, () -> clientDataService.getByLogin("One"));
     }

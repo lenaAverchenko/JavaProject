@@ -1,7 +1,11 @@
 package telran.functionality.com.converter;
+/**
+ * Class - Converter for the Account entities
+ *
+ * @author Olena Averchenko
+ * */
 
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import telran.functionality.com.dto.AccountCreateDto;
 import telran.functionality.com.dto.AccountDto;
@@ -13,12 +17,16 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class AccountConverterImpl implements Converter<Account, AccountDto, AccountCreateDto> {
 
+    private final ClientService clientService;
 
-    @Autowired
-    private ClientService clientService;
-
+    /**
+     * Method to convert Account entity to AccountDto, showed to user.
+     * @param account entity from database
+     * @return AccountDto object
+     * */
     @Override
     public AccountDto toDto(Account account) {
         return new AccountDto(account.getId(), account.getName(), account.getStatus(),
@@ -26,6 +34,11 @@ public class AccountConverterImpl implements Converter<Account, AccountDto, Acco
                         account.getClient().getLastName(), null, null));
     }
 
+    /**
+     * Method to convert AccountCreateDto (data provided by user) to entity Account, stored in database.
+     * @param createdDto provided data
+     * @return Account entity
+     * */
     @Override
     public Account toEntity(AccountCreateDto createdDto) {
         return new Account(clientService.getById(createdDto.getClientId()),

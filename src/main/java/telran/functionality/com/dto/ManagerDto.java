@@ -1,5 +1,9 @@
 package telran.functionality.com.dto;
-
+/**
+ * Class ManagerDto - to create object from Manager entity, which will be shown to user
+ *
+ * @author Olena Averchenko
+ * */
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +31,4 @@ public class ManagerDto {
     private Status status;
     private List<ClientDto> clients = new ArrayList<>();
     private List<ProductDto> products = new ArrayList<>();
-
-
 }

@@ -111,14 +111,6 @@ class ClientServiceImplTest {
         assertEquals("999888999666", client.getPhone());
     }
 
-//    @Test
-//    void delete() {
-//        UUID clientId = clients.get(1).getId();
-//        Mockito.when(clientRepository.findById(clientId)).thenReturn(Optional.ofNullable(clients.get(1)));
-//        Client client = clientService.getById(clientId);
-//        clientService.delete(clientId);
-//        Mockito.verify(clientRepository).delete(client);
-//    }
 
     @Test
     void changeManager() {

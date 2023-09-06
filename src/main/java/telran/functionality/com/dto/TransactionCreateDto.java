@@ -1,6 +1,10 @@
 package telran.functionality.com.dto;
-
-
+/**
+ * Class TransactionCreateDto - provided by user object, given to convert into Transaction entity
+ *
+ * @author Olena Averchenko
+ * */
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +19,7 @@ import java.util.UUID;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionCreateDto {
 
     private UUID debitAccountId;

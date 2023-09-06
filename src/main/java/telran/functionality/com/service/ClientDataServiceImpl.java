@@ -1,6 +1,11 @@
 package telran.functionality.com.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
+/**
+ * Class implementing ClientDataService to manage information about Clients' access to the App
+ * @see telran.functionality.com.service.ClientDataService
+ *
+ * @author Olena Averchenko
+ * */
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.ClientData;
@@ -8,10 +13,11 @@ import telran.functionality.com.exceptions.ForbiddenLoginNameException;
 import telran.functionality.com.repository.ClientDataRepository;
 
 @Service
-public class ClientDataServiceImpl implements ClientDataService{
+@RequiredArgsConstructor
+public class ClientDataServiceImpl implements ClientDataService {
 
-    @Autowired
-    private ClientDataRepository clientDataRepository;
+    private final ClientDataRepository clientDataRepository;
+
     @Override
     public ClientData create(ClientData clientData) {
         if (clientDataRepository.findAll().stream()

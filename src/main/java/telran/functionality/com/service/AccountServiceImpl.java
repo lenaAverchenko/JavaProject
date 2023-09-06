@@ -1,6 +1,11 @@
 package telran.functionality.com.service;
-
-import org.springframework.beans.factory.annotation.Autowired;
+/**
+ * Class implementing AccountService to manage information for accounts including transactions
+ * @see telran.functionality.com.service.AccountService
+ *
+ * @author Olena Averchenko
+ * */
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.converter.CurrencyConverter;
 import telran.functionality.com.dto.BalanceDto;
@@ -11,7 +16,6 @@ import telran.functionality.com.enums.Type;
 import telran.functionality.com.exceptions.*;
 import telran.functionality.com.repository.AccountRepository;
 import telran.functionality.com.repository.AgreementRepository;
-
 
 
 import javax.transaction.Transactional;
@@ -25,21 +29,20 @@ import java.util.stream.Stream;
 
 
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements AccountService {
 
+    private final AccountRepository accountRepository;
 
-    @Autowired
-    private CurrencyConverter converter;
+    private final AgreementRepository agreementRepository;
 
-    @Autowired
-    private AccountRepository accountRepository;
+    private final TransactionService transactionService;
 
-    @Autowired
-    private AgreementRepository agreementRepository;
-
-    @Autowired
-    private TransactionService transactionService;
-
+    /**
+     * Method to get all the accounts from database
+     * @throws EmptyRequiredListException if the returned is empty
+     * @return List<Account> list of requested accounts
+     * */
     @Override
     public List<Account> getAll() {
         List<Account> allAccounts = accountRepository.findAll();
@@ -51,12 +54,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account getById(UUID id) {
-        Account foundAccount = accountRepository.findById(id).orElse(null);
-        if (foundAccount == null) {
-            throw new NotExistingEntityException(
-                    String.format("Account with id %s doesn't exist", id));
-        }
-        return foundAccount;
+        return accountRepository.findById(id)
+                .orElseThrow(() -> new NotExistingEntityException(
+                        String.format("Account with id %s doesn't exist", id)));
     }
 
     @Override
@@ -68,13 +68,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account changeStatus(UUID id, Status newStatus) {
         Account currentAccount = getById(id);
-        if (!agreementRepository.findAll().stream()
-                .map(agreement -> agreement.getAccount().getId())
-                .toList().contains(id)) {
+        Agreement agreement = currentAccount.getAgreement();
+        if(agreement == null) {
             throw new AccountIsNotValidException("Account has not activated yet. There is no active agreement.");
-        }
-        if (!Arrays.stream(Status.values()).toList().contains(newStatus)) {
-            throw new WrongValueException("Status hasn't been recognized. Provided value is incorrect.");
         }
         currentAccount.setStatus(newStatus);
         currentAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
@@ -120,10 +116,10 @@ public class AccountServiceImpl implements AccountService {
         return resultedList;
     }
 
-//UUID debitAccountId, UUID creditAccountId, double sum, Type type, String description
+
     @Override
     @Transactional
-    public void transferMoneyBetweenAccounts(Transaction transaction) {
+    public Transaction transferMoneyBetweenAccounts(Transaction transaction) {
         double sum = transaction.getAmount();
         UUID debitAccountId = transaction.getDebitAccount().getId();
         UUID creditAccountId = transaction.getCreditAccount().getId();
@@ -140,7 +136,7 @@ public class AccountServiceImpl implements AccountService {
         Account creditAccount = getById(creditAccountId);
         double convertedSum = sum;
         if (needsToBeConverted(debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode())) {
-            convertedSum = converter.convertCurrency(sum, debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode());
+            convertedSum = CurrencyConverter.convertCurrency(sum, debitAccount.getCurrencyCode(), creditAccount.getCurrencyCode());
         }
         ;
         if ((debitAccount.getBalance() - sum) < 0) {
@@ -151,10 +147,9 @@ public class AccountServiceImpl implements AccountService {
         debitAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
         creditAccount.setBalance(creditAccount.getBalance() + convertedSum);
         creditAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-        accountRepository.save(debitAccount);
-        accountRepository.save(creditAccount);
         Transaction newTransaction = new Transaction(debitAccount, creditAccount, transaction.getType(), sum, transaction.getDescription());
         transactionService.save(newTransaction);
+        return newTransaction;
     }
 
     @Override
@@ -179,8 +174,8 @@ public class AccountServiceImpl implements AccountService {
             sum = foundAccount.getBalance() - sum;
             foundAccount.setBalance(sum);
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-            accountRepository.save(foundAccount);
-            Transaction newTransaction = new Transaction(getById(accountId), accountRepository.findAll().get(0), Type.INNERBANK, initSum, "bank account withdrawal");
+//            accountRepository.save(foundAccount);
+            Transaction newTransaction = new Transaction(foundAccount, accountRepository.findAll().get(0), Type.INNERBANK, initSum, "bank account withdrawal");
             transactionService.save(newTransaction);
         }
         return foundAccount;
@@ -193,8 +188,8 @@ public class AccountServiceImpl implements AccountService {
         if (accountIsValid(accountId)) {
             foundAccount.setBalance(sum + foundAccount.getBalance());
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-            accountRepository.save(foundAccount);
-            Transaction newTransaction = new Transaction(accountRepository.findAll().get(0), getById(accountId), Type.INNERBANK, sum, "bank account replenishment");
+//            accountRepository.save(foundAccount);
+            Transaction newTransaction = new Transaction(accountRepository.findAll().get(0), foundAccount, Type.INNERBANK, sum, "bank account replenishment");
             transactionService.save(newTransaction);
         }
         return foundAccount;

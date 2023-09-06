@@ -13,11 +13,11 @@ public interface AgreementService {
 
     Agreement save(Agreement agreement);
 
-    void changeStatus(long id, Status status);
+    Agreement changeStatus(long id, Status status);
 
     void inactivateAgreement(long id);
 
-    void changeInterestRate(long id, double newRate);
+    Agreement changeInterestRate(long id, double newRate);
 
     void delete(long id);
 }

@@ -22,5 +22,4 @@ public interface ProductService {
     void delete(long id);
 
     void inactivateStatus(long id);
-
 }

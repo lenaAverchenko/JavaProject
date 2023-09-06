@@ -1,5 +1,10 @@
 package telran.functionality.com.controller;
-
+/**
+ * Class ClientController - Rest controller, to give answer to user's request. It contains methods to work
+ * with client information.
+ *
+ * @author Olena Averchenko
+ * */
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,18 +34,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClientController {
 
-    @Autowired
-    private PasswordEncoder encoder;
+    private final PasswordEncoder encoder;
 
-    @Autowired
-    private ClientDataService clientDataService;
-
+    private final ClientDataService clientDataService;
 
     private final ClientService clientService;
 
     private final Converter<Client, ClientDto, ClientCreateDto> clientConverter;
-
-
 
     @GetMapping
     public List<ClientDto> getAll() {
@@ -66,7 +66,7 @@ public class ClientController {
         return clientConverter.toDto(clientService.updatePersonalInfo(id, clientConverter.toEntity(clientCreateDto)));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable(name = "id") UUID id) {
         clientService.delete(id);
     }
@@ -85,7 +85,4 @@ public class ClientController {
     public void inactivateStatus(@RequestParam UUID id) {
         clientService.inactivateStatus(id);
     }
-
-
-
 }

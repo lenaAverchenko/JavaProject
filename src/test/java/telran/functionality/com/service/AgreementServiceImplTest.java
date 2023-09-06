@@ -108,16 +108,20 @@ class AgreementServiceImplTest {
 
 //    @Test
 //    void changeStatus() {
-//        Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreements.get(0)));
-//        agreementService.changeStatus(1, Status.WAITING);
-//        assertEquals(Status.WAITING, agreementService.getById(1).getStatus());
+//        Agreement agreementToChange = agreements.get(0);
+//        agreementToChange.setAccount(accounts.get(0));
+//        Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreementToChange));
+//        Agreement agreement = agreementService.changeStatus(1, Status.WAITING);
+//        assertEquals(Status.WAITING, agreement.getStatus());
 //    }
 
 //    @Test
 //    void changeInterestRate() {
-//        Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreements.get(0)));
-//        agreementService.changeInterestRate(1, 50);
-//        assertEquals(50, agreementService.getById(1).getInterestRate());
+//        Agreement agreementToChange = agreements.get(0);
+//        agreementToChange.setAccount(accounts.get(0));
+//        Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreementToChange));
+//        Agreement agreement = agreementService.changeInterestRate(1, 50);
+//        assertEquals(50, agreement.getInterestRate());
 //    }
 
     @Test
@@ -130,10 +134,9 @@ class AgreementServiceImplTest {
 
 //    @Test
 //    void inactivateAgreement() {
-//        Agreement agreement = agreements.get(0);
-//        Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreement));
-//        assert agreement != null;
-//        Mockito.when(accountService.getById(agreement.getAccount().getId())).thenReturn(accounts.get(0));
+//        Agreement agreementToChange = agreements.get(0);
+//        agreementToChange.setAccount(accounts.get(1));
+//        Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreementToChange));
 //        agreementService.inactivateAgreement(1);
 //        assertEquals(Status.INACTIVE, agreementService.getById(1).getStatus());
 //    }

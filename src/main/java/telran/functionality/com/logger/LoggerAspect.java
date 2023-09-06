@@ -8,12 +8,22 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.List;
-
+/**
+ * Class to log every step of using the app with AOP
+ *
+ * @author Olena Averchenko
+ * */
 @Component
 @Aspect
 @Slf4j
 public class LoggerAspect {
 
+    /**
+     * Method surrounded "around" annotation for logging in packages "controller" and "converter"
+     * @param joinPoint place to use aspect
+     * @throws Throwable
+     * @return Object result of tryProceedingMethod(joinPoint) method
+     * */
     @Around(value = "execution(* telran.functionality.com.controller..*.*(..)) ||" +
             "execution(* telran.functionality.com.converter..*.*(..))")
     public  Object adviceAround(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -22,6 +32,12 @@ public class LoggerAspect {
         return tryProceedingMethod(joinPoint);
     }
 
+    /**
+     * Method surrounded "around" annotation for logging in package "service"
+     * @param joinPoint place to use aspect
+     * @throws Throwable
+     * @return Object result of tryProceedingMethod(joinPoint) method
+     * */
     @Around(value = "execution(* telran.functionality.com.service..*.*(..))")
     public  Object adviceAroundService(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
@@ -34,6 +50,12 @@ public class LoggerAspect {
         return tryProceedingMethod(joinPoint);
     }
 
+    /**
+     * Method surrounded "around" annotation for logging in packages "controller" and "converter"
+     * @param joinPoint place to use aspect
+     * @throws Throwable
+     * @return Object result of executing any method
+     * */
     public  Object tryProceedingMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         Object returnValue = null;
         try{

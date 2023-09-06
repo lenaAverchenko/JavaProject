@@ -1,5 +1,9 @@
 package telran.functionality.com.entity;
-
+/**
+ * Class Agreement - to describe an agreement
+ *
+ * @author Olena Averchenko
+ * */
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
