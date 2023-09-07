@@ -3,7 +3,7 @@ package telran.functionality.com.handler;
  * Class to handle different Exceptions, which could occur in different places of any Controller
  *
  * @author Olena Averchenko
- * */
+ */
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;

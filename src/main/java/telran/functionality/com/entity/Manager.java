@@ -3,7 +3,7 @@ package telran.functionality.com.entity;
  * Class Manager - to describe a manager
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.*;
 import telran.functionality.com.enums.Status;
 

@@ -5,7 +5,7 @@ package telran.functionality.com.service;
  * @see org.springframework.security.core.userdetails.UserDetailsService
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -29,8 +29,9 @@ public class UserDetailService implements UserDetailsService {
     /**
      * Method to check provided login with existing in database
      * @param login user's login
-     * @return UserDetails user object to future comparison
-     * */
+     * @throws UsernameNotFoundException if user with login doesn't exist in database
+     * @return user object to future compare
+     */
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         ClientData clientData = clientService.getByLogin(login);

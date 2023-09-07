@@ -1,5 +1,9 @@
 package telran.functionality.com.controller;
-
+/**
+ * Class TestDataController - Rest controller, to create test data
+ *
+ * @author Olena Averchenko
+ */
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

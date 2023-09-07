@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * by creating an agreement
  *
  * @author Olena Averchenko
- * */
+ */
 public class AccountIsNotValidException extends RuntimeException{
     public AccountIsNotValidException(String message) {
         super(message);

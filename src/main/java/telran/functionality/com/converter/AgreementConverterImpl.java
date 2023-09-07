@@ -4,7 +4,7 @@ package telran.functionality.com.converter;
  * Class - Converter for the Agreement entities
  *
  * @author Olena Averchenko
- * */
+ */
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class AgreementConverterImpl implements Converter<Agreement, AgreementDto
      * Method to convert Agreement entity to AgreementDto, showed to user.
      * @param agreement entity from database
      * @return AgreementDto object
-     * */
+     */
     @Override
     public AgreementDto toDto(Agreement agreement) {
         return new AgreementDto(
@@ -46,7 +46,7 @@ public class AgreementConverterImpl implements Converter<Agreement, AgreementDto
      * Method to convert AgreementCreateDto (data provided by user) to entity Agreement, stored in database.
      * @param createdDto provided data
      * @return Agreement entity
-     * */
+     */
     @Override
     public Agreement toEntity(AgreementCreateDto createdDto) {
         return new Agreement(accountService.getById(createdDto.getAccountId()),

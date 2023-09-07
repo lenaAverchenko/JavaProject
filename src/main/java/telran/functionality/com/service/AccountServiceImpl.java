@@ -4,7 +4,7 @@ package telran.functionality.com.service;
  * @see telran.functionality.com.service.AccountService
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.converter.CurrencyConverter;
@@ -41,8 +41,8 @@ public class AccountServiceImpl implements AccountService {
     /**
      * Method to get all the accounts from database
      * @throws EmptyRequiredListException if the returned is empty
-     * @return List<Account> list of requested accounts
-     * */
+     * @return list of requested accounts
+     */
     @Override
     public List<Account> getAll() {
         List<Account> allAccounts = accountRepository.findAll();
@@ -52,6 +52,12 @@ public class AccountServiceImpl implements AccountService {
         return allAccounts;
     }
 
+    /**
+     * Method to get the account by its id
+     * @param id unique id for the account
+     * @throws NotExistingEntityException if it doesn't exist
+     * @return found account
+     */
     @Override
     public Account getById(UUID id) {
         return accountRepository.findById(id)
@@ -59,12 +65,22 @@ public class AccountServiceImpl implements AccountService {
                         String.format("Account with id %s doesn't exist", id)));
     }
 
+    /**
+     * Method to save a new account
+     * @param account new client
+     * @return Account saved account
+     */
     @Override
     public Account save(Account account) {
         return accountRepository.save(account);
     }
 
-
+    /**
+     * Method to change status for the chosen account
+     * @param id unique account id
+     * @param newStatus new Status
+     * @return account with changed status
+     */
     @Override
     public Account changeStatus(UUID id, Status newStatus) {
         Account currentAccount = getById(id);
@@ -78,7 +94,10 @@ public class AccountServiceImpl implements AccountService {
         return currentAccount;
     }
 
-
+    /**
+     * Method to delete account by its id
+     * @param id unique id for the account
+     */
     @Override
     @Transactional
     public void delete(UUID id) {
@@ -93,12 +112,23 @@ public class AccountServiceImpl implements AccountService {
         accountRepository.delete(account);
     }
 
+    /**
+     * Method to get a balance of the found by id account
+     * @param id unique id for the account
+     * @return BalanceDto the object containing the necessary information
+     */
     @Override
     public BalanceDto getBalanceOf(UUID id) {
         Account currentAccount = getById(id);
         return new BalanceDto(id, currentAccount.getBalance(), currentAccount.getCurrencyCode());
     }
 
+    /**
+     * Method to get the history of Transactions for the account, found by the id
+     * @param id unique id for the account
+     * @throws EmptyRequiredListException if there is no one transaction for this account
+     * @return list of income and outcome transfers for the certain account
+     */
     @Override
     public List<Transaction> getHistoryOfTransactionsByAccountId(UUID id) {
         Account account = getById(id);
@@ -116,7 +146,14 @@ public class AccountServiceImpl implements AccountService {
         return resultedList;
     }
 
-
+    /**
+     * Method to transfer money between accounts
+     * @param transaction provided by user information about debit account, credit account, sum to transfer, type of transaction and the description
+     * @throws WrongValueException if user is trying to transfer a negative amount of money
+     * @throws InvalidStatusException if debit account or credit account has an invalid status
+     * @throws NotEnoughMoneyException if there is not enough money to transfer
+     * @return new transaction, describing current transfer
+     */
     @Override
     @Transactional
     public Transaction transferMoneyBetweenAccounts(Transaction transaction) {
@@ -152,20 +189,39 @@ public class AccountServiceImpl implements AccountService {
         return newTransaction;
     }
 
+    /**
+     * Method to check if the account belongs to the client
+     * @param clientId id of the client, expected to be the owner of the following account
+     * @param accountId id of the account
+     * @throws AccountDoesntBelongToClientException if this client is not the owner of the account
+     * @return true if the account belongs to the client
+     */
     @Override
-    public boolean accountBelongsToClient(UUID clientUniqueId, UUID accountIban) {
-        Account foundAccount = getById(accountIban);
-        if (!foundAccount.getClient().getId().equals(clientUniqueId)) {
-            throw new AccountDoesntBelongToClientException(String.format("Account with id %s doesn't belong to client with id %s", accountIban, clientUniqueId));
+    public boolean accountBelongsToClient(UUID clientId, UUID accountId) {
+        Account foundAccount = getById(accountId);
+        if (!foundAccount.getClient().getId().equals(clientId)) {
+            throw new AccountDoesntBelongToClientException(String.format("Account with id %s doesn't belong to client with id %s", accountId, clientId));
         }
         return true;
     }
 
-
+    /**
+     * Method to withdraw money from the account
+     * @param clientUniqueId id of the client, expected to be the owner of the following account
+     * @param accountId id of the account to withdraw money from
+     * @param sum amount of money to withdraw
+     * @throws WrongValueException if user is trying to withdraw a negative amount of money
+     * @throws InvalidStatusException if the account has an invalid status
+     * @throws NotEnoughMoneyException if there is not enough money to transfer
+     * @return the updated account with updated sum
+     */
     @Override
     @Transactional
     public Account withdrawMoney(UUID clientUniqueId, UUID accountId, double sum) {
         double initSum = sum;
+        if (sum < 0) {
+            throw new WrongValueException("Unable to withdraw a negative amount");
+        }
         Account foundAccount = getById(accountId);
         if (accountBelongsToClient(clientUniqueId, accountId) && accountIsValid(accountId)) {
             if ((foundAccount.getBalance() - sum) < 0) {
@@ -181,6 +237,12 @@ public class AccountServiceImpl implements AccountService {
         return foundAccount;
     }
 
+    /**
+     * Method to put money to the account
+     * @param accountId id of the account to put money to
+     * @param sum amount of money to put
+     * @return the updated account with the updated sum
+     */
     @Override
     @Transactional
     public Account putMoney(UUID accountId, double sum) {
@@ -195,12 +257,21 @@ public class AccountServiceImpl implements AccountService {
         return foundAccount;
     }
 
+    /**
+     * Method to make the account inactive
+     * @param id unique account id
+     */
     @Override
     public void inactivateAccount(UUID id) {
         changeStatus(id, Status.INACTIVE);
     }
 
-
+    /**
+     * Method to check if the required account exists
+     * @param account account object to be checked
+     * @throws NotExistingEntityException if account doesn't exist
+     * @return true, if the account exists
+     */
     public boolean accountExists(Account account) {
         if (account == null) {
             throw new NotExistingEntityException("Account doesn't exist");
@@ -208,6 +279,12 @@ public class AccountServiceImpl implements AccountService {
         return true;
     }
 
+    /**
+     * Method to check if the status of the chosen account is active
+     * @param id account id
+     * @throws InvalidStatusException if the account has an inactive status
+     * @return true if the account has an active status
+     */
     public boolean accountIsValid(UUID id) {
         Account account = accountRepository.findById(id).orElse(null);
         ;
@@ -219,6 +296,12 @@ public class AccountServiceImpl implements AccountService {
         return true;
     }
 
+    /**
+     * Method to check if the currency needs to be converted during the transaction attempt
+     * @param from currency of debit account
+     * @param to currency of credit account
+     * @return true if the currencies are not the same, or false, if they are different
+     */
     public boolean needsToBeConverted(Currency from, Currency to) {
         if (from.name().equals(to.name())) {
             return false;

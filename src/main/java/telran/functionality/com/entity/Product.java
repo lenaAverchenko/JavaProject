@@ -3,7 +3,7 @@ package telran.functionality.com.entity;
  * Class Product - to describe a product
  *
  * @author Olena Averchenko
- * */
+ */
 
 import lombok.*;
 import telran.functionality.com.enums.Currency;

@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * it's expected to have some information
  *
  * @author Olena Averchenko
- * */
+ */
 public class EmptyRequiredListException extends RuntimeException {
     public EmptyRequiredListException(String message) {
         super(message);

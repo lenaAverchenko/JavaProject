@@ -3,7 +3,7 @@ package telran.functionality.com.entity;
  * Class Transaction - to describe a transactions
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

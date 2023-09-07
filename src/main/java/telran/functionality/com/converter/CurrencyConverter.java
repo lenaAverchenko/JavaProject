@@ -4,7 +4,7 @@ package telran.functionality.com.converter;
  * Class - Converter for the Currency
  *
  * @author Olena Averchenko
- * */
+ */
 
 import telran.functionality.com.enums.ConvertingValue;
 import telran.functionality.com.enums.Currency;
@@ -20,7 +20,7 @@ public class CurrencyConverter {
      * @param fromCurrency initial currency
      * @param fromCurrency currency to convert
      * @return double amount - converted value
-     * */
+     */
 
     public static double convertCurrency(double amount, Currency fromCurrency, Currency toCurrency) {
         String toConvert = fromCurrency.name() + "TO" + toCurrency.name();

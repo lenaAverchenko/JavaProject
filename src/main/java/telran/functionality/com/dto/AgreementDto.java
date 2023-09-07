@@ -3,7 +3,7 @@ package telran.functionality.com.dto;
  * Class AgreementDto - to create object from Agreement entity, which will be shown to user
  *
  * @author Olena Averchenko
- * */
+ */
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;

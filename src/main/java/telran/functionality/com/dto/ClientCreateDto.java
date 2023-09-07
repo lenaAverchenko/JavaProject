@@ -3,7 +3,7 @@ package telran.functionality.com.dto;
  * Class ClientCreateDto - provided by user object, given to convert into Client entity
  *
  * @author Olena Averchenko
- * */
+ */
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 

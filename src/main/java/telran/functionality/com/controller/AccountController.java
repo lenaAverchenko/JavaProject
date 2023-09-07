@@ -1,11 +1,9 @@
 package telran.functionality.com.controller;
-
 /**
- * Class AccountController - Rest controller, to give answer to user's request. It contains work with transactions,
- * accounts and agreements.
+ * Class AccountController - Rest controller, to give answer to user's request. It contains work with transactions, accounts and agreements.
  *
  * @author Olena Averchenko
- * */
+ */
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

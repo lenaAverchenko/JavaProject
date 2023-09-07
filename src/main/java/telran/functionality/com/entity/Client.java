@@ -3,7 +3,7 @@ package telran.functionality.com.entity;
  * Class Client - to describe a clients
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.*;
 import telran.functionality.com.enums.Status;
 

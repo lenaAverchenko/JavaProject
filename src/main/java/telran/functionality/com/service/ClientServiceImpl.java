@@ -5,7 +5,7 @@ package telran.functionality.com.service;
  * @see telran.functionality.com.service.ClientService
  *
  * @author Olena Averchenko
- * */
+ */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Client;
@@ -33,8 +33,8 @@ public class ClientServiceImpl implements ClientService {
     /**
      * Method to get all the clients from database
      * @throws EmptyRequiredListException if the returned is empty
-     * @return List<Client> list of requested clients
-     * */
+     * @return list of requested clients
+     */
     @Override
     public List<Client> getAll() {
         List<Client> allClients = clientRepository.findAll();
@@ -44,6 +44,12 @@ public class ClientServiceImpl implements ClientService {
         return allClients;
     }
 
+    /**
+     * Method to get the client by its id
+     * @param id unique id for the client
+     * @throws NotExistingEntityException if it doesn't exist
+     * @return found client
+     */
     @Override
     public Client getById(UUID id) {
         Client foundClient = clientRepository.findById(id).orElse(null);
@@ -54,11 +60,22 @@ public class ClientServiceImpl implements ClientService {
         return foundClient;
     }
 
+    /**
+     * Method to save a new client
+     * @param client new client
+     * @return saved client
+     */
     @Override
     public Client save(Client client) {
         return clientRepository.save(client);
     }
 
+    /**
+     * Method to update existing client
+     * @param id unique id for the client
+     * @param client updated client information
+     * @return updated client saved in the database
+     */
     @Override
     public Client updatePersonalInfo(UUID id, Client client) {
         Client currentClient = getById(id);
@@ -72,6 +89,10 @@ public class ClientServiceImpl implements ClientService {
         return currentClient;
     }
 
+    /**
+     * Method to delete client by its id
+     * @param id unique id for the client
+     */
     @Override
     @Transactional
     public void delete(UUID id) {
@@ -82,6 +103,13 @@ public class ClientServiceImpl implements ClientService {
         clientRepository.delete(foundClient);
     }
 
+    /**
+     * Method to change manager for the chosen client
+     * @param clientId unique if of the client
+     * @param managerId id of the new manager to the client
+     * @throws NotExistingEntityException if this new manager doesn't exist
+     * @throws InvalidStatusException if new Manager is not active
+     */
     @Override
     @Transactional
     public void changeManager(UUID clientId, long managerId) {
@@ -105,22 +133,34 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
+    /**
+     * Method to change status for the chosen client
+     * @param clientId unique client id
+     * @param status new Status
+     */
     @Override
     public void changeStatus(UUID clientId, Status status) {
-        if (!Arrays.stream(Status.values()).toList().contains(status)) {
-            throw new WrongValueException("Status hasn't been recognized. Provided value is incorrect.");
-        }
         Client client = getById(clientId);
         client.setStatus(status);
         client.setUpdatedAt(new Timestamp(new Date().getTime()));
         save(client);
     }
 
+    /**
+     * Method to make the client inactive
+     * @param id unique client id
+     */
     @Override
     public void inactivateStatus(UUID id) {
         changeStatus(id, Status.INACTIVE);
     }
 
+    /**
+     * Method to check if the required client exists
+     * @param client client object to be checked
+     * @throws NotExistingEntityException if client doesn't exist
+     * @return true, if the client exists
+     */
     public boolean clientExists(Client client) {
         if (client == null) {
             throw new NotExistingEntityException("Client doesn't exist");
@@ -128,6 +168,12 @@ public class ClientServiceImpl implements ClientService {
         return true;
     }
 
+    /**
+     * Method to check if the status of the chosen client is active
+     * @param id client id
+     * @throws InvalidStatusException if the client has inactive status
+     * @return true if the client has an active status
+     */
     public boolean statusIsValid(UUID id) {
         Client client = getById(id);
         if (clientExists(client)) {

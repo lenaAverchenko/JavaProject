@@ -3,7 +3,7 @@ package telran.functionality.com.converter;
  * Class - Converter for the Account entities
  *
  * @author Olena Averchenko
- * */
+ */
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class AccountConverterImpl implements Converter<Account, AccountDto, Acco
      * Method to convert Account entity to AccountDto, showed to user.
      * @param account entity from database
      * @return AccountDto object
-     * */
+     */
     @Override
     public AccountDto toDto(Account account) {
         return new AccountDto(account.getId(), account.getName(), account.getStatus(),
@@ -38,7 +38,7 @@ public class AccountConverterImpl implements Converter<Account, AccountDto, Acco
      * Method to convert AccountCreateDto (data provided by user) to entity Account, stored in database.
      * @param createdDto provided data
      * @return Account entity
-     * */
+     */
     @Override
     public Account toEntity(AccountCreateDto createdDto) {
         return new Account(clientService.getById(createdDto.getClientId()),

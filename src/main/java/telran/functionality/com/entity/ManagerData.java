@@ -3,7 +3,7 @@ package telran.functionality.com.entity;
  * Class ManagerData - to describe Manager's authorization data
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

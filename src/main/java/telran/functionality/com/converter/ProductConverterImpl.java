@@ -4,7 +4,7 @@ package telran.functionality.com.converter;
  * Class - Converter for the Manager entities
  *
  * @author Olena Averchenko
- * */
+ */
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public class ProductConverterImpl implements Converter<Product, ProductDto, Prod
      * Method to convert Product entity to ProductDto, showed to user.
      * @param product entity from database
      * @return ProductDto object
-     * */
+     */
     @Override
     public ProductDto toDto(Product product) {
         return new ProductDto(product.getId(), product.getName(),
@@ -42,7 +42,7 @@ public class ProductConverterImpl implements Converter<Product, ProductDto, Prod
      * Method to convert ProductCreateDto (data provided by user) to entity Product, stored in database.
      * @param createdDto provided data
      * @return Product entity
-     * */
+     */
     @Override
     public Product toEntity(ProductCreateDto createdDto) {
         return new Product(managerService.getById(createdDto.getManagerId()),

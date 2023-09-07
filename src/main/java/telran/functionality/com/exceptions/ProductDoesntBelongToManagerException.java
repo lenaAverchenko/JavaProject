@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * the claimed manager
  *
  * @author Olena Averchenko
- * */
+ */
 public class ProductDoesntBelongToManagerException extends RuntimeException {
     public ProductDoesntBelongToManagerException(String message) {
         super(message);

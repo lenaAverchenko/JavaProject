@@ -1,5 +1,9 @@
 package telran.functionality.com.service;
-
+/**
+ * Interface ClientService
+ *
+ * @author Olena Averchenko
+ */
 
 import telran.functionality.com.entity.Client;
 import telran.functionality.com.enums.Status;

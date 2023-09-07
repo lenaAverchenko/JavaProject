@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * this type of converting is not supported
  *
  * @author Olena Averchenko
- * */
+ */
 public class UnsupportedConvertingTypesOfCurrencyException extends RuntimeException{
     public UnsupportedConvertingTypesOfCurrencyException(String message) {
         super(message);

@@ -4,7 +4,7 @@ package telran.functionality.com.controller;
  * with client information.
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

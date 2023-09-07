@@ -1,5 +1,9 @@
 package telran.functionality.com.service;
-
+/**
+ * Interface TransactionService
+ *
+ * @author Olena Averchenko
+ */
 import telran.functionality.com.entity.Transaction;
 
 import java.util.List;

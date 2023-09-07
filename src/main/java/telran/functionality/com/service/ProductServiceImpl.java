@@ -4,7 +4,7 @@ package telran.functionality.com.service;
  * @see telran.functionality.com.service.ProductService
  *
  * @author Olena Averchenko
- * */
+ */
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -35,8 +35,8 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Method to get all the products from database
      * @throws EmptyRequiredListException if the returned is empty
-     * @return List<Product> list of requested products
-     * */
+     * @return list of requested products
+     */
     @Override
     public List<Product> getAll() {
         List<Product> allProducts = productRepository.findAll();
@@ -46,11 +46,11 @@ public class ProductServiceImpl implements ProductService {
         return allProducts;
     }
     /**
-     * Method to get the product by it's id
+     * Method to get the product by its id
      * @throws NotExistingEntityException if it doesn't exist
      * @param id unique id for the product
-     * @return Product found transaction
-     * */
+     * @return found product
+     */
     @Override
     public Product getById(long id) {
         return productRepository.findById(id)
@@ -60,8 +60,8 @@ public class ProductServiceImpl implements ProductService {
     /**
      * Method to save a new product
      * @param product new product
-     * @return Product saved product
-     * */
+     * @return saved product
+     */
     @Override
     public Product save(Product product) {
         return productRepository.save(product);
@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService {
      * @param managerId id of the new manager to the product
      * @throws NotExistingEntityException if this new manager doesn't exist
      * @throws InvalidStatusException if new Manager is not active
-     * */
+     */
     @Override
     @Transactional
     public void changeManager(long id, long managerId) {
@@ -100,7 +100,7 @@ public class ProductServiceImpl implements ProductService {
      * Method to change status for the chosen product
      * @param id product id
      * @param status new Status
-     * */
+     */
     @Override
     public void changeStatus(long id, Status status) {
         Product product = getById(id);
@@ -113,7 +113,7 @@ public class ProductServiceImpl implements ProductService {
      * Method to change limit for the chosen product
      * @param id product id
      * @param limitValue new limit
-     * */
+     */
     @Override
     public void changeLimitValue(long id, int limitValue) {
         if (statusIsValid(id)) {
@@ -125,9 +125,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     /**
-     * Method to delete product by it's id
+     * Method to delete product by its id
      * @param id unique id for the product
-     * */
+     */
     @Override
     public void delete(long id) {
         Product foundProduct = getById(id);
@@ -138,7 +138,7 @@ public class ProductServiceImpl implements ProductService {
      * Method to inactivate the chosen product
      * @param id product id
      * @throws NotExistingEntityException if product doesn't exist
-     * */
+     */
     @Override
     public void inactivateStatus(long id) {
         changeStatus(id, Status.INACTIVE);
@@ -148,7 +148,7 @@ public class ProductServiceImpl implements ProductService {
      * Method to check if the chosen product exists
      * @param product product
      * @throws NotExistingEntityException if product doesn't exist
-     * */
+     */
     public boolean productExists(Product product) {
         if (product == null) {
             throw new NotExistingEntityException("Product doesn't exist");
@@ -160,7 +160,8 @@ public class ProductServiceImpl implements ProductService {
      * Method to check if the status of the chosen product is valid
      * @param id product id
      * @throws InvalidStatusException if the product has inactive status
-     * */
+     * @return true if status is active
+     */
     public boolean statusIsValid(long id) {
         Product product = productRepository.findById(id).orElse(null);
         if (productExists(product)) {

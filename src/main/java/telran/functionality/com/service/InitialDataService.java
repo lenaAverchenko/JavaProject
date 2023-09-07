@@ -4,7 +4,7 @@ package telran.functionality.com.service;
  * @see telran.functionality.com.service.InitialDataService
  *
  * @author Olena Averchenko
- * */
+ */
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +45,9 @@ public class InitialDataService {
     @Autowired
     private PasswordEncoder encoder;
 
+    /**
+     * Method to create Manager data for tests
+     */
     public void createManagerData() {
         managerRepository.save(new Manager("Oleh", "Olehov", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())));
         managerRepository.save(new Manager("Dalim", "Dalimow", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())));
@@ -53,6 +56,9 @@ public class InitialDataService {
         managerRepository.save(new Manager("Antonina", "Anisimova", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())));
     }
 
+    /**
+     * Method to create Client data for tests
+     */
     public void createClientData() {
         List<Manager> managers = managerRepository.findAll();
         clientRepository.save(new Client(managers.get(0), new ArrayList<>(), "0000000", "Bank", "Bank", "bank@mail.com", "Banking Street", "000000000000", new Timestamp(new Date().getTime())));
@@ -65,6 +71,9 @@ public class InitialDataService {
         clientRepository.save(new Client(managers.get(2), new ArrayList<>(), "FT77777", "Halina", "Halinova", "hala@mail.com", "99/3 Excellent Street", "666777444111", new Timestamp(new Date().getTime())));
     }
 
+    /**
+     * Method to create Account data for tests
+     */
     public void createAccountData() {
         List<Client> clients = clientRepository.findAll();
         accountRepository.save(new Account(clients.get(0), "Bank Account", Type.INNERBANK, 0, Currency.PLN, new Timestamp(new Date().getTime())));
@@ -78,6 +87,9 @@ public class InitialDataService {
         accountRepository.save(new Account(clients.get(7), "Best company Personal", Type.COMMERCIAL, 0, Currency.USD, new Timestamp(new Date().getTime())));
     }
 
+    /**
+     * Method to create Product data for tests
+     */
     public void createProductData() {
         List<Manager> managers = managerRepository.findAll();
         productRepository.save(new Product(managers.get(1), "credit", Currency.PLN, 7.00, 100000, new Timestamp(new Date().getTime())));
@@ -94,6 +106,9 @@ public class InitialDataService {
         productRepository.save(new Product(managers.get(4), "classic", Currency.EUR, 1.00, 8000, new Timestamp(new Date().getTime())));
     }
 
+    /**
+     * Method to create Agreements data for tests
+     */
     public void createAgreementData() {
         List<Account> accounts = accountRepository.findAll();
         List<Product> products = productRepository.findAll();
@@ -118,6 +133,9 @@ public class InitialDataService {
         accountRepository.save(tempAccount);
     }
 
+    /**
+     * Method to create Transactions data for tests
+     */
     public void createTransactionData() {
         List<Account> accounts = accountRepository.findAll();
         transactionRepository.save(new Transaction(accounts.get(1), accounts.get(2), Type.PERSONAL, 100, "Personal transfer"));
@@ -127,6 +145,9 @@ public class InitialDataService {
         transactionRepository.save(new Transaction(accounts.get(1), accounts.get(4), Type.COMMERCIAL, 100, "For access to service"));
     }
 
+    /**
+     * Method to create Clients authorisation data for tests
+     */
     public void createUserInfoForClient(){
         List<Client> clients = clientRepository.findAll();
         clientDataRepository.save(new ClientData("First",encoder.encode("First"), clients.get(0)));
@@ -139,7 +160,9 @@ public class InitialDataService {
         clientDataRepository.save(new ClientData("Eighth",encoder.encode("Eighth"), clients.get(7)));
 
     }
-
+    /**
+     * Method to create Managers authorisation data for tests
+     */
     public void createUserInfoForManager(){
         List<Manager> managers = managerRepository.findAll();
         managerDataRepository.save(new ManagerData("ManagerOne", encoder.encode("ManagerOne"), managers.get(0)));
@@ -149,6 +172,9 @@ public class InitialDataService {
         managerDataRepository.save(new ManagerData("ManagerFive", encoder.encode("ManagerFive"), managers.get(4)));
     }
 
+    /**
+     * Method to create all the necessary data to test the FunctionalityApp
+     */
     public void createData() {
         createManagerData();
         createClientData();

@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * is impossible, because of the lack of access rights
  *
  * @author Olena Averchenko
- * */
+ */
 public class ForbiddenAccessException extends RuntimeException {
     public ForbiddenAccessException(String message) {
         super(message);

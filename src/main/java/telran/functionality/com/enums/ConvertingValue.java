@@ -3,7 +3,7 @@ package telran.functionality.com.enums;
  * Class - enum, for storing coefficients to convert currencies
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

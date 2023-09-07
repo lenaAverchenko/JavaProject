@@ -4,7 +4,7 @@ package telran.functionality.com.service;
  * @see telran.functionality.com.service.ManagerDataService
  *
  * @author Olena Averchenko
- * */
+ */
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,12 @@ public class ManagerDataServiceImpl implements ManagerDataService {
     @Autowired
     private ManagerDataRepository managerDataRepository;
 
+    /**
+     * Method to create ManagerData entity
+     * @param managerData the entity to save
+     * @throws ForbiddenLoginNameException if the login, which user is trying to save already exists
+     * @return ManagerData object, saved in database
+     */
     @Override
     public ManagerData create(ManagerData managerData) {
         if (managerDataRepository.findAll().stream()
@@ -28,6 +34,12 @@ public class ManagerDataServiceImpl implements ManagerDataService {
         return managerDataRepository.save(managerData);
     }
 
+    /**
+     * Method to get ManagerData object by the login, stored in datrabase
+     * @param login provided login
+     * @throws UsernameNotFoundException if the manager with provided login hasn't been found
+     * @return ManagerData object
+     */
     @Override
     public ManagerData getByLogin(String login) {
         ManagerData managerData = managerDataRepository.findByLogin(login);

@@ -3,7 +3,7 @@ package telran.functionality.com.dto;
  * Class TransactionDto - to create object from Transaction entity, which will be shown to user
  *
  * @author Olena Averchenko
- * */
+ */
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 

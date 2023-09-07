@@ -3,7 +3,7 @@ package telran.functionality.com.entity;
  * Class ClientData - to describe Client's authorization data
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

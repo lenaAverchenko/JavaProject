@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * that doesn't exist
  *
  * @author Olena Averchenko
- * */
+ */
 public class NotExistingEntityException extends RuntimeException {
     public NotExistingEntityException(String message) {
         super(message);

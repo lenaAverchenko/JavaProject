@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * more money then there is on the account
  *
  * @author Olena Averchenko
- * */
+ */
 public class NotEnoughMoneyException extends RuntimeException {
     public NotEnoughMoneyException(String message) {
         super(message);

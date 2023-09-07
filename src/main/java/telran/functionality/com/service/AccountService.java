@@ -1,4 +1,9 @@
 package telran.functionality.com.service;
+/**
+ * Interface AccountService.
+ *
+ * @author Olena Averchenko
+ */
 
 import telran.functionality.com.dto.BalanceDto;
 import telran.functionality.com.entity.Account;

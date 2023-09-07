@@ -4,7 +4,7 @@ package telran.functionality.com.service;
  * @see telran.functionality.com.service.ClientDataService
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -18,6 +18,12 @@ public class ClientDataServiceImpl implements ClientDataService {
 
     private final ClientDataRepository clientDataRepository;
 
+    /**
+     * Method to create ClientData entity
+     * @param clientData the entity to save
+     * @throws ForbiddenLoginNameException if the login, which user is trying to save already exists
+     * @return ClientData object, saved in database
+     */
     @Override
     public ClientData create(ClientData clientData) {
         if (clientDataRepository.findAll().stream()
@@ -28,6 +34,12 @@ public class ClientDataServiceImpl implements ClientDataService {
         return clientDataRepository.save(clientData);
     }
 
+    /**
+     * Method to get ClientData object by the login, stored in datrabase
+     * @param login provided login
+     * @throws UsernameNotFoundException if the client with provided login hasn't been found
+     * @return ClientData object
+     */
     @Override
     public ClientData getByLogin(String login) {
         ClientData clientData = clientDataRepository.findByLogin(login);

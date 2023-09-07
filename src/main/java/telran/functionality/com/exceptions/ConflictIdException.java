@@ -4,7 +4,7 @@ package telran.functionality.com.exceptions;
  * are expected to be the same, but they are not
  *
  * @author Olena Averchenko
- * */
+ */
 public class ConflictIdException extends RuntimeException {
     public ConflictIdException(String message) {
         super(message);

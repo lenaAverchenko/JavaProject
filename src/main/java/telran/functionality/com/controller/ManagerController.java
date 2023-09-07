@@ -4,7 +4,7 @@ package telran.functionality.com.controller;
  * with manager information, including managing information about projects
  *
  * @author Olena Averchenko
- * */
+ */
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

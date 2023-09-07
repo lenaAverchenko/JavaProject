@@ -1,5 +1,9 @@
 package telran.functionality.com.service;
-
+/**
+ * Interface ProductService
+ *
+ * @author Olena Averchenko
+ */
 import telran.functionality.com.entity.Product;
 import telran.functionality.com.enums.Status;
 

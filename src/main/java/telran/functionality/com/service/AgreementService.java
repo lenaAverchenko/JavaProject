@@ -1,5 +1,9 @@
 package telran.functionality.com.service;
-
+/**
+ * Interface AgreementService
+ *
+ * @author Olena Averchenko
+ */
 import telran.functionality.com.entity.Agreement;
 import telran.functionality.com.enums.Status;
 
