@@ -2,7 +2,6 @@ package telran.functionality.com.service;
 /**
  * Class implementing TransactionService to manage information about transactions
  * @see telran.functionality.com.service.TransactionService
- *
  * @author Olena Averchenko
  */
 import lombok.RequiredArgsConstructor;
