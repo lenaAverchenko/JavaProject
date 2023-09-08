@@ -5,7 +5,8 @@ package telran.functionality.com.controller;
  * @author Olena Averchenko
  */
 
-import io.swagger.annotations.ApiOperation;
+//import io.swagger.annotations.Api;
+//import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/accounts")
 @RequiredArgsConstructor
+//@Api(value = "Account Controller")
 public class AccountController {
 
     private final AccountService accountService;
@@ -40,7 +42,7 @@ public class AccountController {
     private final ClientDataService clientDataService;
 
     @GetMapping
-    @ApiOperation(value = "Получение", notes = "Получает все счета")
+//    @ApiOperation(value = "Getting all the accounts", response = AccountDto.class, responseContainer = "List")
     public List<AccountDto> getAll() {
         return accountService.getAll().stream()
                 .map(accountConverter::toDto)

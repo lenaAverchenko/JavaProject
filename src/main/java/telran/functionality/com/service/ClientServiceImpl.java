@@ -52,13 +52,11 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public Client getById(UUID id) {
-        Client foundClient = clientRepository.findById(id).orElse(null);
-        if (foundClient == null) {
-            throw new NotExistingEntityException(
-                    String.format("Client with id %s doesn't exist", id));
-        }
-        return foundClient;
+        return clientRepository.findById(id).orElseThrow(() -> new NotExistingEntityException(
+                String.format("Client with id %s doesn't exist", id)));
+
     }
+
 
     /**
      * Method to save a new client

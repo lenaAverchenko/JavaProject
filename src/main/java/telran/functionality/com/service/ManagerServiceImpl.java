@@ -53,12 +53,8 @@ public class ManagerServiceImpl implements ManagerService {
      */
     @Override
     public Manager getById(long id) {
-        Manager foundManager = managerRepository.findById(id).orElse(null);
-        if (foundManager == null) {
-            throw new NotExistingEntityException(
-                    String.format("Manager with id %d doesn't exist", id));
-        }
-        return foundManager;
+        return managerRepository.findById(id).orElseThrow(() -> new NotExistingEntityException(
+                String.format("Manager with id %d doesn't exist", id)));
     }
 
     /**
@@ -103,12 +99,15 @@ public class ManagerServiceImpl implements ManagerService {
         if (!clients.isEmpty()) {
             clients = clients.stream().map(client -> {
                 client.setManager(managerRepository.getReferenceById(1L));
+//                client.setManager(managerRepository.getById(1L));
+
                 return client;
             }).toList();
         }
         if (!products.isEmpty()) {
             products = products.stream().map(product -> {
                 product.setManager(managerRepository.getReferenceById(1L));
+//                product.setManager(managerRepository.getById(1L));
                 return product;
             }).toList();
         }

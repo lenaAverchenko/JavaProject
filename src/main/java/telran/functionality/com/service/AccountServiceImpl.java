@@ -287,7 +287,6 @@ public class AccountServiceImpl implements AccountService {
      */
     public boolean accountIsValid(UUID id) {
         Account account = accountRepository.findById(id).orElse(null);
-        ;
         if (accountExists(account)) {
             if (account.getStatus().equals(Status.INACTIVE)) {
                 throw new InvalidStatusException(String.format("Unable to get access to the account with id %s. It's not active.", id));

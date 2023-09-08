@@ -42,10 +42,6 @@ public class ManagerDataServiceImpl implements ManagerDataService {
      */
     @Override
     public ManagerData getByLogin(String login) {
-        ManagerData managerData = managerDataRepository.findByLogin(login);
-        if (managerData == null){
-            throw new UsernameNotFoundException("Manager with login " + login + " " + "not found");
-        }
-        return managerData;
+        return managerDataRepository.findByLogin(login);
     }
 }

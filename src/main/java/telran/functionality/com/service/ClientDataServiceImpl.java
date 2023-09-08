@@ -35,17 +35,13 @@ public class ClientDataServiceImpl implements ClientDataService {
     }
 
     /**
-     * Method to get ClientData object by the login, stored in datrabase
+     * Method to get ClientData object by the login, stored in database
      * @param login provided login
      * @throws UsernameNotFoundException if the client with provided login hasn't been found
      * @return ClientData object
      */
     @Override
     public ClientData getByLogin(String login) {
-        ClientData clientData = clientDataRepository.findByLogin(login);
-        if (clientData == null){
-            throw new UsernameNotFoundException("Client with login " + login + " " + "not found");
-        }
-        return clientData;
+        return clientDataRepository.findByLogin(login);
     }
 }

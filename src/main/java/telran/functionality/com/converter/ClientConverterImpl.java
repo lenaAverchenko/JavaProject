@@ -53,6 +53,7 @@ public class ClientConverterImpl implements Converter<Client, ClientDto, ClientC
     @Override
     public Client toEntity(ClientCreateDto createdDto) {
         return new Client(managerRepository.getReferenceById(createdDto.getManagerId()),
+//        return new Client(managerRepository.getById(createdDto.getManagerId()),
                 new ArrayList<>(), createdDto.getTaxCode(),
                 createdDto.getFirstName(), createdDto.getLastName(), createdDto.getEmail(),
                 createdDto.getAddress(), createdDto.getPhone(), new Timestamp(new Date().getTime()));
