@@ -7,6 +7,7 @@ package telran.functionality.com.controller;
  */
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,15 +15,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import telran.functionality.com.converter.Converter;
 import telran.functionality.com.dto.*;
-import telran.functionality.com.entity.ClientData;
-import telran.functionality.com.entity.Manager;
-import telran.functionality.com.entity.ManagerData;
-import telran.functionality.com.entity.Product;
+import telran.functionality.com.entity.*;
 import telran.functionality.com.enums.Status;
+import telran.functionality.com.exceptions.ForbiddenLoginNameException;
 import telran.functionality.com.repository.ManagerDataRepository;
 import telran.functionality.com.service.ManagerDataService;
 import telran.functionality.com.service.ManagerService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -41,15 +41,15 @@ public class ManagerController {
     private final Converter<Product, ProductDto, ProductCreateDto> productConverter;
     private final ManagerDataService managerDataService;
 
-//    @Operation(summary = "Getting the list of the existing managers")
-//    @ApiResponses({
-//            @ApiResponse(responseCode = "401", description = "Access denied"),
-//            @ApiResponse(responseCode = "404", description = "There is no one registered manager")
-//    })
-//    @SecurityRequirement(name = "BasicAuth")
     @Operation(
             summary = "Getting managers",
-            description = "It allows us to get the list of all existing in database managers"
+            description = "It allows us to get the list of all existing in database managers",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Empty lst of managers")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping
@@ -59,16 +59,16 @@ public class ManagerController {
                 .collect(Collectors.toList());
     }
 
-//    @ApiOperation(value = "Getting the manager by its id", response = ManagerDto.class)
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParam(name = "id", value = "Identificator for the manager", required = true, dataTypeClass = Long.class, paramType = "path")
     @Operation(
             summary = "Getting the manager",
-            description = "It allows us to get a certain manager by its id, if it exists"
+            description = "It allows us to get a certain manager by its id, if it exists",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping("/{id}")
@@ -76,64 +76,71 @@ public class ManagerController {
         return managerConverter.toDto(managerService.getById(id));
     }
 
-//    @ApiOperation(value = "Save the manager", response = ManagerDto.class)
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//            @ApiResponse(code = 406, message = "Manager with login ... already exists.")
-//    })
-//    @ApiImplicitParam(name = "managerCreateDto", value = "New manager to save", required = true, dataTypeClass = ManagerCreateDto.class, paramType = "body")
     @Operation(
             summary = "Saving the manager",
-            description = "It allows us to save a new manager"
+            description = "It allows us to save a new manager",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "406", description = "Login is already exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PostMapping
     public ManagerDto save(@RequestBody @Parameter(description = "New manager to save") ManagerCreateDto managerCreateDto) {
         Manager manager = managerService.save(managerConverter.toEntity(managerCreateDto));
-        if (!managerDataRepository.findAll()
-                .stream().map(ManagerData::getLogin).toList()
-                .contains(managerCreateDto.getLogin())){
             managerDataService.create(new ManagerData(
                     managerCreateDto.getLogin(),
                     encoder.encode(managerCreateDto.getPassword()),
                     manager));
-        }
         return managerConverter.toDto(manager);
     }
 
-//    @ApiOperation(value = "Update the manager", response = ManagerDto.class)
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist")    ,
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "Id of the existing manager", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "managerCreateDto", value = "New information about the manager", required = true, dataTypeClass = ManagerCreateDto.class, paramType = "body")
-//    })
+
     @Operation(
             summary = "Update information",
-            description = "It allows us to update personal information about the manager"
+            description = "It allows us to update personal information about the manager",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
+    @Transactional
     @PutMapping("/updateInformation/{id}")
     public ManagerDto updateInformation(
             @PathVariable (name = "id") @Parameter(description = "Identifier of the manager") long id,
             @RequestBody @Parameter(description = "New information for manager to update") ManagerCreateDto managerCreateDto) {
-        return managerConverter.toDto(managerService.update(id, managerConverter.toEntity(managerCreateDto)));
+        Manager manager = null;
+        try{
+            ManagerData foundManagerData = managerDataRepository.findAll()
+                    .stream().filter(mn -> mn.getManager().getId() == id)
+                    .findFirst().orElse(null);
+            if(foundManagerData != null){
+                managerCreateDto.setLogin(foundManagerData.getLogin());
+            }
+            manager = managerService.update(id, managerConverter.toEntity(managerCreateDto));
+        } catch (ForbiddenLoginNameException ex){
+            //
+        }
+        return managerConverter.toDto(manager);
     }
 
-//    @ApiOperation(value = "Deleting manager by its id")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParam(name = "id", value = "Identificator for the manager", required = true, dataTypeClass = Long.class, paramType = "path")
     @Operation(
             summary = "Deleting the manager",
-            description = "It allows us to delete the manager by its id, if it exists"
+            description = "It allows us to delete the manager by its id, if it exists",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @DeleteMapping("/delete/{id}")
@@ -141,19 +148,16 @@ public class ManagerController {
         managerService.delete(id);
     }
 
-//    @ApiOperation(value = "Change status of the manager")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "Id of the existing manager", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "status", value = "New status for the manager", required = true, dataTypeClass = Status.class, paramType = "path")
-//    })
     @Operation(
             summary = "Change status",
-            description = "It allows us to change status of the manager."
+            description = "It allows us to change status of the manager.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/changeStatus/{id}/{status}")
@@ -162,15 +166,15 @@ public class ManagerController {
         managerService.changeStatus(id, status);
     }
 
-//    @ApiOperation(value = "Inactivate status of the manager")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist")
-//    })
-//    @ApiImplicitParam(name = "id", value = "Id of the existing manager", required = true, dataTypeClass = Long.class, paramType = "path")
     @Operation(
             summary = "Inactivate the manager",
-            description = "It allows us to change status of the manager to 'INACTIVE'."
+            description = "It allows us to change status of the manager to 'INACTIVE'.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/inactivateStatus/{id}")
@@ -178,21 +182,18 @@ public class ManagerController {
         managerService.inactivateStatus(id);
     }
 
-//    @ApiOperation(value = "Add a new product to the manager", response = ManagerDto.class)
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//            @ApiResponse(code = 409, message = "Provided id's are not the same. Check the data."),
-//            @ApiResponse(code = 451, message = "Unable to get access to the manager with id %d.")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "Id of the existing manager", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "productDto", value = "New product for the manager", required = true, dataTypeClass = ProductDto.class, paramType = "body")
-//    })
     @Operation(
             summary = "Adding the product",
-            description = "It allows us to add a new product to the manager"
+            description = "It allows us to add a new product to the manager",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
+                    @ApiResponse(responseCode = "409", description = "Conflicted data - not the same"),
+                    @ApiResponse(responseCode = "451", description = "Manager is not active.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/addProductTo/{id}")
@@ -201,22 +202,18 @@ public class ManagerController {
         return managerConverter.toDto(managerService.addProduct(id, productConverter.toEntity(productDto)));
     }
 
-//    @ApiOperation(value = "Change status of the product, if it belongs to the manager")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist"),
-//            @ApiResponse(code = 404, message = "Product with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//            @ApiResponse(code = 409, message = "Product with id ... doesn't belong to manager with id ...")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "managerId", value = "Id of the manager", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "productId", value = "Id of the product", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "status", value = "New status for the product", required = true, dataTypeClass = Status.class, paramType = "path")
-//    })
     @Operation(
             summary = "Change status of the product",
-            description = "It allows us to change status of the product, if it belongs to the manager."
+            description = "It allows us to change status of the product, if it belongs to the manager.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
+                    @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
+                    @ApiResponse(responseCode = "409", description = "Product doesn't belong to manager")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/changeStatusOfProductForManager/{managerId}/{productId}/{status}")
@@ -227,20 +224,17 @@ public class ManagerController {
         managerService.changeStatusOfProduct(managerId, productId, status);
     }
 
-//    @ApiOperation(value = "Change manager for the product")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Manager with id ... doesn't exist"),
-//            @ApiResponse(code = 404, message = "Product with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "Id of the product", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "managerId", value = "Id of the manager", required = true, dataTypeClass = Long.class, paramType = "path")
-//    })
     @Operation(
             summary = "Change manager",
-            description = "It allows us to change a manager for the product, if it's acceptable"
+            description = "It allows us to change a manager for the product, if it's acceptable",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
+                    @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/changeManagerOfProduct/{id}/{managerId}")
@@ -250,19 +244,16 @@ public class ManagerController {
         managerService.changeManagerOfProduct(id, managerId);
     }
 
-//    @ApiOperation(value = "Change status of the product")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Product with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "productId", value = "Id of the product", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "status", value = "New status for the product", required = true, dataTypeClass = Status.class, paramType = "path")
-//    })
     @Operation(
             summary = "Change status of the product",
-            description = "It allows us to change status of the product"
+            description = "It allows us to change status of the product",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/changeStatusOfProduct/{id}/{status}")
@@ -271,20 +262,16 @@ public class ManagerController {
         managerService.changeStatusOfProduct(id, status);
     }
 
-//    @Api(value = "Change the limit for the product")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Product with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiParam
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "Id of the product", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "limitValue", value = "New value of the limit", required = true, dataTypeClass = Integer.class, paramType = "path")
-//    })
     @Operation(
             summary = "Change limit",
-            description = "It allows us to change the limit for the product"
+            description = "It allows us to change the limit for the product",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/changeLimitValueOfProduct/{id}/{limitValue}")
@@ -294,15 +281,16 @@ public class ManagerController {
         managerService.changeLimitValueOfProduct(id, limitValue);
     }
 
-//    @ApiOperation(value = "Inactivate status of the product")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Product with id ... doesn't exist")
-//    })
-//    @ApiImplicitParam(name = "id", value = "Id of the existing product", required = true, dataTypeClass = Long.class, paramType = "path")
     @Operation(
             summary = "Inactivate the product",
-            description = "It allows us to change status of the product to 'INACTIVE'."
+            description = "It allows us to change status of the product to 'INACTIVE'.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @PutMapping("/inactivateStatusOfProduct/{productId}")
     public void inactivateStatusOfProduct(@PathVariable(name = "productId") @Parameter(description = "Identifier of the product") long productId) {

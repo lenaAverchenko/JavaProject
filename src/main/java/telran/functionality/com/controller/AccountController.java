@@ -8,6 +8,7 @@ package telran.functionality.com.controller;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -45,13 +46,14 @@ public class AccountController {
     private final ClientDataService clientDataService;
 
 
-//    @ApiResponses({
-//        @ApiResponse(code = 401, message = "Access denied"),
-//        @ApiResponse(code = 404, message = "There is no one registered account")
-//    })
     @Operation(
             summary = "Getting accounts",
-            description = "It allows us to get the list of all existing in database accounts"
+            description = "It allows us to get the list of all existing in database accounts",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Empty list of accounts")}
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping
@@ -61,13 +63,14 @@ public class AccountController {
                 .collect(Collectors.toList());
     }
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "There is no one registered agreement")
-//    })
     @Operation(
             summary = "Getting agreements",
-            description = "It allows us to get the list of all existing in database agreements"
+            description = "It allows us to get the list of all existing in database agreements",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Empty list of agreements")}
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping("/allAgreements")
@@ -78,13 +81,14 @@ public class AccountController {
     }
 
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist")
-//    })
     @Operation(
             summary = "Getting the account",
-            description = "It allows us to get a certain account by its id, if it exists"
+            description = "It allows us to get a certain account by its id, if it exists",
+            responses = {
+                @ApiResponse(responseCode = "200", description = "Successfull request"),
+                @ApiResponse(responseCode = "500", description = "Internal error"),
+                @ApiResponse(responseCode = "401", description = "Access denied"),
+                @ApiResponse(responseCode = "404", description = "Account doesn't exist")}
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping("/client/{id}")
@@ -93,10 +97,14 @@ public class AccountController {
         return accountConverter.toDto(accountService.getById(id));
     }
 
-//    @ApiResponse(code = 401, message = "Access denied")
     @Operation(
             summary = "Saving the account",
-            description = "It allows us to save a new account"
+            description = "It allows us to save a new account",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PostMapping("/client")
@@ -104,15 +112,18 @@ public class AccountController {
         return accountConverter.toDto(accountService.save(accountConverter.toEntity(accountCreateDto)));
     }
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 403, message = "Account has not activated yet. There is no active agreement."),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
+
     @Operation(
             summary = "Update status of the account",
-            description = "It allows us to update status of the account"
+            description = "It allows us to update status of the account",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "403", description = "Account has not been activated yet. There is no active agreement."),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/updateStatus/{id}/{newStatus}")
@@ -121,17 +132,21 @@ public class AccountController {
         return accountConverter.toDto(accountService.changeStatus(id, newStatus));
     }
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//            @ApiResponse(code = 403, message = "Unable to delete bank account. It belongs to the bank."),
-//            @ApiResponse(code = 403, message = "Please, withdraw money from your account before deleting.")
-//    })
+
+
 
     @Operation(
             summary = "Deleting the account",
-            description = "It allows us to delete the account by its id, if it exists, and if the balance is empty"
+            description = "It allows us to delete the account by its id, if it exists, and if the balance is empty",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "403", description = "Unable to delete bank account. It belongs to the bank."),
+                    @ApiResponse(responseCode = "403", description = "Not empty balance"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @DeleteMapping("/delete/{id}")
@@ -140,14 +155,16 @@ public class AccountController {
     }
 
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
     @Operation(
             summary = "Getting the balance",
-            description = "It allows us to get the balance information about account by its id"
+            description = "It allows us to get the balance information about account by its id",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping("/client/getBalanceOf/{id}")
@@ -156,15 +173,17 @@ public class AccountController {
         return accountService.getBalanceOf(id);
     }
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//            @ApiResponse(code = 404, message = "There is no one registered transaction for account with id ...")
-//    })
+
     @Operation(
             summary = "Getting the history of transaction",
-            description = "It allows us to get the history of transactions by the account id, if there is at least one of them stored in database"
+            description = "It allows us to get the history of transactions by the account id, if there is at least one of them stored in database",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping("/client/getHistoryOf/{id}")
@@ -174,17 +193,21 @@ public class AccountController {
                 .map(transactionConverter::toDto).collect(Collectors.toList());
     }
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//            @ApiResponse(code = 451, message = "account is not allowed to sent money."),
-//            @ApiResponse(code = 403, message = "Unable to transfer negative amount"),
-//            @ApiResponse(code = 409, message = "There is not enough money to transfer on the chosen account: ...")
-//    })
+
+
     @Operation(
             summary = "Transferring money",
-            description = "It allows us to transfer money between two accounts,if there is no other restrains"
+            description = "It allows us to transfer money between two accounts,if there is no other restrains",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
+                    @ApiResponse(responseCode = "451", description = "Account is not allowed to sent money."),
+                    @ApiResponse(responseCode = "403", description = "Unable to transfer negative amount"),
+                    @ApiResponse(responseCode = "409", description = "There is not enough money to transfer")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/client/transferMoneyBetweenAccounts")
@@ -193,19 +216,22 @@ public class AccountController {
         return accountService.transferMoneyBetweenAccounts(transactionConverter.toEntity(transactionCreateDto)).getId();
     }
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 404, message = "Client with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//            @ApiResponse(code = 403, message = "Unable to transfer negative amount"),
-//            @ApiResponse(code = 409, message = "There is not enough money to withdraw."),
-//            @ApiResponse(code = 403, message = "Account with id ... doesn't belong to client with id ...")
-//
-//    })
+
+
     @Operation(
             summary = "Withdraw money",
-            description = "It allows us to withdraw money from the account, if there is no other restrains"
+            description = "It allows us to withdraw money from the account, if there is no other restrains",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
+                    @ApiResponse(responseCode = "403", description = "Account with id doesn't belong to the client."),
+                    @ApiResponse(responseCode = "403", description = "Unable to transfer negative amount"),
+                    @ApiResponse(responseCode = "409", description = "There is not enough money to transfer")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/client/withdrawMoneyFrom")
@@ -216,14 +242,16 @@ public class AccountController {
         return accountConverter.toDto(accountService.withdrawMoney(clientId, accountId, sum));
     }
 
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data."),
-//    })
     @Operation(
             summary = "Putting money",
-            description = "It allows us to put money to the account, if it exists"
+            description = "It allows us to put money to the account, if it exists",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/client/putMoneyTo")
@@ -232,10 +260,14 @@ public class AccountController {
         return accountConverter.toDto(accountService.putMoney(accountId, sum));
     }
 
-//    @ApiResponse(code = 401, message = "Access denied")
     @Operation(
             summary = "Create new agreement",
-            description = "It allows us to create a new agreement for the existing account, and activates the last one."
+            description = "It allows us to create a new agreement for the existing account, and activates the last one.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PostMapping("/agreements/createNewDeal")
@@ -244,15 +276,15 @@ public class AccountController {
         accountService.changeStatus(agreement.getAccountId(), Status.ACTIVE);
     }
 
-//    @ApiOperation(value = "Inactivate status of the account")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//    })
-//    @ApiImplicitParam(name = "id", value = "Id of the existing account", required = true, dataTypeClass = UUID.class, paramType = "path")
     @Operation(
             summary = "Inactivate the account",
-            description = "It allows us to change status of the account to 'INACTIVE'."
+            description = "It allows us to change status of the account to 'INACTIVE'.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/inactivateAccount/{id}")
@@ -260,20 +292,17 @@ public class AccountController {
         accountService.inactivateAccount(id);
     }
 
-//    @ApiOperation(value = "Check if the account belongs to the client", response = boolean.class)
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Account with id ... doesn't exist"),
-//            @ApiResponse(code = 404, message = "Client with id ... doesn't exist"),
-//            @ApiResponse(code = 403, message = "Account with id ... doesn't belong to client with id ...")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "clientId", value = "Id of the client", required = true, dataTypeClass = UUID.class, paramType = "path"),
-//            @ApiImplicitParam(name = "accountId", value = "Id of the account", required = true, dataTypeClass = UUID.class, paramType = "path")
-//    })
     @Operation(
             summary = "Account belongs to client",
-            description = "It allows us to check if the account belongs to the client"
+            description = "It allows us to check if the account belongs to the client",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
+                    @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
+                    @ApiResponse(responseCode = "403", description = "Account doesn't belong to the client.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping("/accountBelongsToClient/{clientId}/{accountId}")
@@ -282,15 +311,15 @@ public class AccountController {
         return accountService.accountBelongsToClient(accountId, clientId);
     }
 
-//    @ApiOperation(value = "Inactivate status of the agreement")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Agreement with id ... doesn't exist"),
-//    })
-//    @ApiImplicitParam(name = "id", value = "Id of the existing agreement", required = true, dataTypeClass = Long.class, paramType = "path")
     @Operation(
             summary = "Inactivate the agreement",
-            description = "It allows us to change status of the agreement to 'INACTIVE'."
+            description = "It allows us to change status of the agreement to 'INACTIVE'.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Agreement doesn't exist")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/agreements/inactivateAgreement/{id}")
@@ -298,19 +327,16 @@ public class AccountController {
         agreementService.inactivateAgreement(id);
     }
 
-//    @ApiOperation(value = "Change status of the agreement")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Agreement with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "Id of the existing agreement", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "status", value = "New status for the agreement", required = true, dataTypeClass = Status.class, paramType = "path")
-//    })
     @Operation(
             summary = "Change status of the agreement",
-            description = "It allows us to change status of the agreement."
+            description = "It allows us to change status of the agreement.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Agreement doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/agreements/changeStatus/{id}/{status}")
@@ -319,19 +345,16 @@ public class AccountController {
         agreementService.changeStatus(id, status);
     }
 
-//    @ApiOperation(value = "Change interest rate for the agreement")
-//    @ApiResponses({
-//            @ApiResponse(code = 401, message = "Access denied"),
-//            @ApiResponse(code = 404, message = "Agreement with id ... doesn't exist"),
-//            @ApiResponse(code = 400, message = "Wrong type of provided data.")
-//    })
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "id", value = "Id of the existing agreement", required = true, dataTypeClass = Long.class, paramType = "path"),
-//            @ApiImplicitParam(name = "newRate", value = "New interest rate for the agreement", required = true, dataTypeClass = Double.class, paramType = "path")
-//    })
     @Operation(
             summary = "Change interest rate",
-            description = "It allows us to change interest rate for the agreement."
+            description = "It allows us to change interest rate for the agreement.",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Agreement doesn't exist"),
+                    @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
+            }
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/agreements/changeInterestRate/{id}/{newRate}")
