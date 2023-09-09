@@ -29,7 +29,7 @@ public class ManagerDataServiceImpl implements ManagerDataService {
         if (managerDataRepository.findAll().stream()
                 .map(ManagerData::getLogin).toList()
                 .contains(managerData.getLogin())){
-            throw new ForbiddenLoginNameException(String.format("Manager with login %s is already exist.", managerData.getLogin()));
+            throw new ForbiddenLoginNameException(String.format("Manager with login %s already exists.", managerData.getLogin()));
         }
         return managerDataRepository.save(managerData);
     }

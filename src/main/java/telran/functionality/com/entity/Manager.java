@@ -16,7 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "managers")
 @NoArgsConstructor
-@ToString
+//@ToString
 @Data
 @AllArgsConstructor
 public class Manager {
@@ -64,4 +64,15 @@ public class Manager {
         this.updatedAt = new Timestamp(new Date().getTime());
     }
 
+    @Override
+    public String toString() {
+        return "Manager{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", status=" + status +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

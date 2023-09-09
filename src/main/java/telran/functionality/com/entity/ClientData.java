@@ -15,7 +15,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "clientdata")
 @NoArgsConstructor
-@ToString
+//@ToString
 @Data
 @AllArgsConstructor
 public class ClientData {
@@ -39,5 +39,14 @@ public class ClientData {
         this.password = password;
 //        this.role = new Role("USER");
         this.client = client;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientData{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

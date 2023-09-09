@@ -20,7 +20,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "transactions")
 @NoArgsConstructor
-@ToString
+//@ToString
 @Data
 @AllArgsConstructor
 public class Transaction {
@@ -54,4 +54,14 @@ public class Transaction {
         this.description = description;
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", type=" + type +
+                ", amount=" + amount +
+                ", description='" + description + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

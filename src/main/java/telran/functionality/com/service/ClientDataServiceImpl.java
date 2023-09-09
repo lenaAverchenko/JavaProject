@@ -29,7 +29,7 @@ public class ClientDataServiceImpl implements ClientDataService {
         if (clientDataRepository.findAll().stream()
                 .map(ClientData::getLogin).toList()
                 .contains(clientData.getLogin())){
-            throw new ForbiddenLoginNameException(String.format("Client with login %s is already exist.", clientData.getLogin()));
+            throw new ForbiddenLoginNameException(String.format("Client with login %s already exists.", clientData.getLogin()));
         }
         return clientDataRepository.save(clientData);
     }

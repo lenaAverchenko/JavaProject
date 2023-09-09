@@ -19,7 +19,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "clients")
 @NoArgsConstructor
-@ToString
+//@ToString
 @Data
 @AllArgsConstructor
 public class Client {
@@ -71,4 +71,19 @@ public class Client {
         this.updatedAt = new Timestamp(new Date().getTime());
     }
 
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", status=" + status +
+                ", taxCode='" + taxCode + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", phone='" + phone + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

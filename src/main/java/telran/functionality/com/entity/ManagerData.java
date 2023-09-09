@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "managerdata")
 @NoArgsConstructor
-@ToString
+//@ToString
 @Data
 @AllArgsConstructor
 public class ManagerData {
@@ -38,5 +38,14 @@ public class ManagerData {
         this.password = password;
 //        this.role = new Role("ADMIN");
         this.manager = manager;
+    }
+
+    @Override
+    public String toString() {
+        return "ManagerData{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                '}';
     }
 }

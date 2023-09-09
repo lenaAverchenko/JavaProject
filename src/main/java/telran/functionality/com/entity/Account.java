@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
-@ToString
+//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -87,4 +87,17 @@ public class Account {
         this.updatedAt = new Timestamp(new Date().getTime());
     }
 
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", status=" + status +
+                ", balance=" + balance +
+                ", currencyCode=" + currencyCode +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

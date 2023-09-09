@@ -18,7 +18,7 @@ import java.util.Date;
 @Entity
 @Table(name = "products")
 @NoArgsConstructor
-@ToString
+//@ToString
 @Data
 @AllArgsConstructor
 public class Product {
@@ -72,4 +72,17 @@ public class Product {
         this.updatedAt = new Timestamp(new Date().getTime());
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", status=" + status +
+                ", currencyCode=" + currencyCode +
+                ", interestRate=" + interestRate +
+                ", limitValue=" + limitValue +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

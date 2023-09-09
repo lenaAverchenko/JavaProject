@@ -20,7 +20,7 @@ import java.util.Date;
 @Table(name = "agreements")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+//@ToString
 @Data
 public class Agreement {
 
@@ -56,4 +56,15 @@ public class Agreement {
         this.updatedAt = new Timestamp(new Date().getTime());
     }
 
+    @Override
+    public String toString() {
+        return "Agreement{" +
+                "id=" + id +
+                ", interestRate=" + interestRate +
+                ", status=" + status +
+                ", sum=" + sum +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }
