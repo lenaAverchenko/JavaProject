@@ -4,10 +4,10 @@ package telran.functionality.com.entity;
  *
  * @author Olena Averchenko
  */
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import telran.functionality.com.enums.Type;
 
 import javax.persistence.*;
@@ -20,7 +20,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "transactions")
 @NoArgsConstructor
-//@ToString
 @Data
 @AllArgsConstructor
 public class Transaction {
@@ -30,11 +29,11 @@ public class Transaction {
     private UUID id;
 
 
-    @ManyToOne (cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "debit_account_id", referencedColumnName = "id")
     private Account debitAccount;
 
-    @ManyToOne (cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "credit_account_id", referencedColumnName = "id")
     private Account creditAccount;
 

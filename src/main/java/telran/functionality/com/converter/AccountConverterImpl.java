@@ -24,6 +24,7 @@ public class AccountConverterImpl implements Converter<Account, AccountDto, Acco
 
     /**
      * Method to convert Account entity to AccountDto, showed to user.
+     *
      * @param account entity from database
      * @return AccountDto object
      */
@@ -36,6 +37,7 @@ public class AccountConverterImpl implements Converter<Account, AccountDto, Acco
 
     /**
      * Method to convert AccountCreateDto (data provided by user) to entity Account, stored in database.
+     *
      * @param createdDto provided data
      * @return Account entity
      */

@@ -23,8 +23,10 @@ public class AgreementConverterImpl implements Converter<Agreement, AgreementDto
     private final AccountService accountService;
 
     private final ProductService productService;
+
     /**
      * Method to convert Agreement entity to AgreementDto, showed to user.
+     *
      * @param agreement entity from database
      * @return AgreementDto object
      */
@@ -44,6 +46,7 @@ public class AgreementConverterImpl implements Converter<Agreement, AgreementDto
 
     /**
      * Method to convert AgreementCreateDto (data provided by user) to entity Agreement, stored in database.
+     *
      * @param createdDto provided data
      * @return Agreement entity
      */

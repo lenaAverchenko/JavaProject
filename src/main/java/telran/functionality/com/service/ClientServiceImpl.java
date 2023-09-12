@@ -2,10 +2,11 @@ package telran.functionality.com.service;
 
 /**
  * Class implementing ClientService to manage information about Clients
- * @see telran.functionality.com.service.ClientService
  *
  * @author Olena Averchenko
+ * @see telran.functionality.com.service.ClientService
  */
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Client;

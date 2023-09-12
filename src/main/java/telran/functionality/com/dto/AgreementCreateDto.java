@@ -4,6 +4,7 @@ package telran.functionality.com.dto;
  *
  * @author Olena Averchenko
  */
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -20,15 +21,15 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AgreementCreateDto {
 
-    @Schema(description = "Account identifier",defaultValue = "246bc91b-613d-4d0b-bb1d-ad9837190000")
+    @Schema(description = "Account identifier", defaultValue = "246bc91b-613d-4d0b-bb1d-ad9837190000")
     private UUID accountId;
 
-    @Schema(description = "Product identifier",defaultValue = "1")
+    @Schema(description = "Product identifier", defaultValue = "1")
     private long productId;
 
-    @Schema(description = "Interest rate",defaultValue = "1.0")
+    @Schema(description = "Interest rate", defaultValue = "1.0")
     private double interestRate;
 
-    @Schema(description = "Sum",defaultValue = "1000.00")
+    @Schema(description = "Sum", defaultValue = "1000.00")
     private double sum;
 }

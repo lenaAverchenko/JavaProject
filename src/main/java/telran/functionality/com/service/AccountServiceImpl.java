@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.converter.CurrencyConverter;
 import telran.functionality.com.dto.BalanceDto;
+import telran.functionality.com.dto.TransactionCreateDto;
 import telran.functionality.com.entity.*;
 import telran.functionality.com.enums.Currency;
 import telran.functionality.com.enums.Status;
@@ -84,7 +85,10 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account changeStatus(UUID id, Status newStatus) {
         Account currentAccount = getById(id);
-        Agreement agreement = currentAccount.getAgreement();
+        Agreement agreement = agreementRepository.findAll()
+                .stream()
+                .filter(agr -> agr.getAccount().getId().equals(id))
+                .findFirst().orElse(null);
         if(agreement == null) {
             throw new AccountIsNotValidException("Account has not activated yet. There is no active agreement.");
         }
@@ -156,10 +160,12 @@ public class AccountServiceImpl implements AccountService {
      */
     @Override
     @Transactional
-    public Transaction transferMoneyBetweenAccounts(Transaction transaction) {
+    public Transaction transferMoneyBetweenAccounts(TransactionCreateDto transaction) {
         double sum = transaction.getAmount();
-        UUID debitAccountId = transaction.getDebitAccount().getId();
-        UUID creditAccountId = transaction.getCreditAccount().getId();
+//        UUID debitAccountId = transaction.getDebitAccount().getId();
+//        UUID creditAccountId = transaction.getCreditAccount().getId();
+        UUID debitAccountId = transaction.getDebitAccountId();
+        UUID creditAccountId = transaction.getCreditAccountId();
         if (sum < 0) {
             throw new WrongValueException("Unable to transfer negative amount");
         }

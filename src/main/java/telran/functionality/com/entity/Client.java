@@ -4,6 +4,7 @@ package telran.functionality.com.entity;
  *
  * @author Olena Averchenko
  */
+
 import lombok.*;
 import telran.functionality.com.enums.Status;
 
@@ -19,7 +20,6 @@ import java.util.UUID;
 @Entity
 @Table(name = "clients")
 @NoArgsConstructor
-//@ToString
 @Data
 @AllArgsConstructor
 public class Client {
@@ -52,6 +52,9 @@ public class Client {
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt = new Timestamp(new Date().getTime());
 
+    @OneToOne(mappedBy = "client", cascade = CascadeType.REMOVE)
+    private ClientData clientData;
+
 
     public Client(Manager manager, List<Account> accounts, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {
         this.manager = manager;
@@ -66,6 +69,19 @@ public class Client {
         this.updatedAt = updatedAt;
     }
 
+    public Client(UUID id, Manager manager, List<Account> accounts, Status status, String taxCode, String firstName, String lastName, String email, String address, String phone, Timestamp updatedAt) {
+        this.id = id;
+        this.manager = manager;
+        this.accounts = accounts;
+        this.status = status;
+        this.taxCode = taxCode;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.address = address;
+        this.phone = phone;
+        this.updatedAt = updatedAt;
+    }
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = new Timestamp(new Date().getTime());

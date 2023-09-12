@@ -1,4 +1,5 @@
 package telran.functionality.com.converter;
+
 /**
  * Interface - Converter with generics for the different entities
  *

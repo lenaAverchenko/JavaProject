@@ -29,6 +29,7 @@ public class ClientConverterImpl implements Converter<Client, ClientDto, ClientC
 
     /**
      * Method to convert Client entity to ClientDto, showed to user.
+     *
      * @param client entity from database
      * @return ClientDto object
      */
@@ -47,13 +48,13 @@ public class ClientConverterImpl implements Converter<Client, ClientDto, ClientC
 
     /**
      * Method to convert ClientCreateDto (data provided by user) to entity Client, stored in database.
+     *
      * @param createdDto provided data
      * @return Client entity
      */
     @Override
     public Client toEntity(ClientCreateDto createdDto) {
         return new Client(managerRepository.getReferenceById(createdDto.getManagerId()),
-//        return new Client(managerRepository.getById(createdDto.getManagerId()),
                 new ArrayList<>(), createdDto.getTaxCode(),
                 createdDto.getFirstName(), createdDto.getLastName(), createdDto.getEmail(),
                 createdDto.getAddress(), createdDto.getPhone(), new Timestamp(new Date().getTime()));

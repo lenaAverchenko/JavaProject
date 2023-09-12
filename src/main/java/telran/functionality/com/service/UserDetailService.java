@@ -2,9 +2,9 @@ package telran.functionality.com.service;
 /**
  * Class implementing UserDetailsService, is used to provide the answer - User, found by login
  * for a future user's authentication and authorisation attempt
- * @see org.springframework.security.core.userdetails.UserDetailsService
  *
  * @author Olena Averchenko
+ * @see org.springframework.security.core.userdetails.UserDetailsService
  */
 
 import lombok.RequiredArgsConstructor;

@@ -4,6 +4,7 @@ package telran.functionality.com.enums;
  *
  * @author Olena Averchenko
  */
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

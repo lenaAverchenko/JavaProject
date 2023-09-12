@@ -4,12 +4,12 @@ package telran.functionality.com.dto;
  *
  * @author Olena Averchenko
  */
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import telran.functionality.com.enums.Status;
 
 import javax.persistence.EnumType;
@@ -19,16 +19,15 @@ import java.util.List;
 import java.util.UUID;
 
 @Data
-//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ClientDto {
 
-    @Schema(description = "Client identifier",defaultValue = "246bc91b-613d-4d0b-bb1d-000037199fcc")
+    @Schema(description = "Client identifier", defaultValue = "246bc91b-613d-4d0b-bb1d-000037199fcc")
     private UUID id;
 
-    @Schema(description = "Status of client",defaultValue = "ACTIVE")
+    @Schema(description = "Status of client", defaultValue = "ACTIVE")
     @Enumerated(EnumType.STRING)
     private Status status;
 

@@ -24,6 +24,7 @@ public class ManagerConverterImpl implements Converter<Manager, ManagerDto, Mana
 
     /**
      * Method to convert Manager entity to ManagerDto, showed to user.
+     *
      * @param manager entity from database
      * @return ManagerDto object
      */
@@ -42,6 +43,7 @@ public class ManagerConverterImpl implements Converter<Manager, ManagerDto, Mana
 
     /**
      * Method to convert ManagerCreateDto (data provided by user) to entity Manager, stored in database.
+     *
      * @param createdDto provided data
      * @return Manager entity
      */

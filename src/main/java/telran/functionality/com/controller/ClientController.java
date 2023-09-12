@@ -94,11 +94,12 @@ public class ClientController {
             }
     )
     @SecurityRequirement(name = "basicauth")
+    @Transactional
     @PostMapping
     public ClientDto save(@RequestBody @Parameter(description = "New client to save") ClientCreateDto clientCreateDto) {
         Client client = clientService.save(clientConverter.toEntity(clientCreateDto));
-            clientDataService.create(new ClientData(clientCreateDto.getLogin(),
-                    encoder.encode(clientCreateDto.getPassword()), client));
+        clientDataService.create(new ClientData(clientCreateDto.getLogin(),
+                encoder.encode(clientCreateDto.getPassword()), client));
         return clientConverter.toDto(client);
     }
 
@@ -119,21 +120,21 @@ public class ClientController {
     public ClientDto updateInformation(@PathVariable(name = "id") @Parameter(description = "Identifier of the client") UUID id,
                                        @RequestBody @Parameter(description = "New data for the client to update information") ClientCreateDto clientCreateDto) {
         Client client = null;
-        try{
+        try {
             ClientData foundClientData = clientDataRepository.findAll()
                     .stream().filter(cl -> cl.getClient().getId().equals(id))
                     .findFirst().orElse(null);
-            if(foundClientData != null){
+            if (foundClientData != null) {
                 clientCreateDto.setLogin(foundClientData.getLogin());
             }
             client = clientService.updatePersonalInfo(id, clientConverter.toEntity(clientCreateDto));
-        } catch (ForbiddenLoginNameException ex){
+        } catch (ForbiddenLoginNameException ex) {
             //
         }
         return clientConverter.toDto(client);
     }
 
-      @Operation(
+    @Operation(
             summary = "Deleting the client",
             description = "It allows us to delete the client by its id, if it exists, and if the balances of its accounts are empty",
             responses = {

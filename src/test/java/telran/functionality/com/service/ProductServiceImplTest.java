@@ -40,7 +40,7 @@ class ProductServiceImplTest {
     private List<Product> products;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         managers = Arrays.asList(
                 new Manager(1, "Oleh", "Olehov", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
                 new Manager(2, "Dalim", "Dalimow", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),

@@ -85,10 +85,10 @@ public class AccountController {
             summary = "Getting the account",
             description = "It allows us to get a certain account by its id, if it exists",
             responses = {
-                @ApiResponse(responseCode = "200", description = "Successfull request"),
-                @ApiResponse(responseCode = "500", description = "Internal error"),
-                @ApiResponse(responseCode = "401", description = "Access denied"),
-                @ApiResponse(responseCode = "404", description = "Account doesn't exist")}
+                    @ApiResponse(responseCode = "200", description = "Successfull request"),
+                    @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "401", description = "Access denied"),
+                    @ApiResponse(responseCode = "404", description = "Account doesn't exist")}
     )
     @SecurityRequirement(name = "basicauth")
     @GetMapping("/client/{id}")
@@ -131,8 +131,6 @@ public class AccountController {
                                    @PathVariable(name = "newStatus") @Parameter(description = "New status of the account") Status newStatus) {
         return accountConverter.toDto(accountService.changeStatus(id, newStatus));
     }
-
-
 
 
     @Operation(
@@ -194,7 +192,6 @@ public class AccountController {
     }
 
 
-
     @Operation(
             summary = "Transferring money",
             description = "It allows us to transfer money between two accounts,if there is no other restrains",
@@ -213,9 +210,8 @@ public class AccountController {
     @PutMapping("/client/transferMoneyBetweenAccounts")
     public UUID transferMoneyBetweenAccounts(@RequestBody @Parameter(description = "Data to transfer money between accounts as a0 new transaction") TransactionCreateDto transactionCreateDto) {
         getAccess(transactionCreateDto.getDebitAccountId());
-        return accountService.transferMoneyBetweenAccounts(transactionConverter.toEntity(transactionCreateDto)).getId();
+        return accountService.transferMoneyBetweenAccounts(transactionCreateDto).getId();
     }
-
 
 
     @Operation(
@@ -266,6 +262,7 @@ public class AccountController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
                     @ApiResponse(responseCode = "500", description = "Internal error"),
+                    @ApiResponse(responseCode = "406", description = "Excessive agreement for the activated account"),
                     @ApiResponse(responseCode = "401", description = "Access denied")
             }
     )
@@ -273,7 +270,6 @@ public class AccountController {
     @PostMapping("/agreements/createNewDeal")
     public void createNewDeal(@RequestBody @Parameter(description = "New agreement to create") AgreementCreateDto agreement) {
         agreementService.save(agreementConverter.toEntity(agreement));
-        accountService.changeStatus(agreement.getAccountId(), Status.ACTIVE);
     }
 
     @Operation(
@@ -323,7 +319,7 @@ public class AccountController {
     )
     @SecurityRequirement(name = "basicauth")
     @PutMapping("/agreements/inactivateAgreement/{id}")
-    public void inactivateAccountOfAgreement(@PathVariable(name = "id")  @Parameter(description = "Identifier of the agreement") long id) {
+    public void inactivateAccountOfAgreement(@PathVariable(name = "id") @Parameter(description = "Identifier of the agreement") long id) {
         agreementService.inactivateAgreement(id);
     }
 

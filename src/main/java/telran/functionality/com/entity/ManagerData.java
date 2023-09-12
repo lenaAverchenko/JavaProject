@@ -4,10 +4,10 @@ package telran.functionality.com.entity;
  *
  * @author Olena Averchenko
  */
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "managerdata")
 @NoArgsConstructor
-//@ToString
 @Data
 @AllArgsConstructor
 public class ManagerData {
@@ -26,8 +25,6 @@ public class ManagerData {
 
     private String login;
     private String password;
-//    private Role role;
-//    private long managerId;
 
     @OneToOne
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
@@ -36,7 +33,6 @@ public class ManagerData {
     public ManagerData(String login, String password, Manager manager) {
         this.login = login;
         this.password = password;
-//        this.role = new Role("ADMIN");
         this.manager = manager;
     }
 

@@ -1,9 +1,9 @@
 package telran.functionality.com.service;
 /**
  * Class to help providing The FunctionalityApp with the initial test data
- * @see telran.functionality.com.service.InitialDataService
  *
  * @author Olena Averchenko
+ * @see telran.functionality.com.service.InitialDataService
  */
 
 import lombok.AllArgsConstructor;
@@ -41,7 +41,7 @@ public class InitialDataService {
     @Autowired
     private ClientDataRepository clientDataRepository;
     @Autowired
-    private  ManagerDataRepository managerDataRepository;
+    private ManagerDataRepository managerDataRepository;
     @Autowired
     private PasswordEncoder encoder;
 
@@ -148,22 +148,23 @@ public class InitialDataService {
     /**
      * Method to create Clients authorisation data for tests
      */
-    public void createUserInfoForClient(){
+    public void createUserInfoForClient() {
         List<Client> clients = clientRepository.findAll();
-        clientDataRepository.save(new ClientData("First",encoder.encode("First"), clients.get(0)));
-        clientDataRepository.save(new ClientData("Second",encoder.encode("Second"), clients.get(1)));
-        clientDataRepository.save(new ClientData("Third",encoder.encode("Third"), clients.get(2)));
-        clientDataRepository.save(new ClientData("Fourth",encoder.encode("Fourth"), clients.get(3)));
-        clientDataRepository.save(new ClientData("Fifth",encoder.encode("Fifth"), clients.get(4)));
-        clientDataRepository.save(new ClientData("Sixth",encoder.encode("Sixth"), clients.get(5)));
-        clientDataRepository.save(new ClientData("Seventh",encoder.encode("Seventh"), clients.get(6)));
-        clientDataRepository.save(new ClientData("Eighth",encoder.encode("Eighth"), clients.get(7)));
+        clientDataRepository.save(new ClientData("First", encoder.encode("First"), clients.get(0)));
+        clientDataRepository.save(new ClientData("Second", encoder.encode("Second"), clients.get(1)));
+        clientDataRepository.save(new ClientData("Third", encoder.encode("Third"), clients.get(2)));
+        clientDataRepository.save(new ClientData("Fourth", encoder.encode("Fourth"), clients.get(3)));
+        clientDataRepository.save(new ClientData("Fifth", encoder.encode("Fifth"), clients.get(4)));
+        clientDataRepository.save(new ClientData("Sixth", encoder.encode("Sixth"), clients.get(5)));
+        clientDataRepository.save(new ClientData("Seventh", encoder.encode("Seventh"), clients.get(6)));
+        clientDataRepository.save(new ClientData("Eighth", encoder.encode("Eighth"), clients.get(7)));
 
     }
+
     /**
      * Method to create Managers authorisation data for tests
      */
-    public void createUserInfoForManager(){
+    public void createUserInfoForManager() {
         List<Manager> managers = managerRepository.findAll();
         managerDataRepository.save(new ManagerData("ManagerOne", encoder.encode("ManagerOne"), managers.get(0)));
         managerDataRepository.save(new ManagerData("ManagerTwo", encoder.encode("ManagerTwo"), managers.get(1)));

@@ -4,12 +4,12 @@ package telran.functionality.com.dto;
  *
  * @author Olena Averchenko
  */
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import telran.functionality.com.enums.Status;
 
 
@@ -17,16 +17,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Data
-//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ManagerDto {
 
-    @Schema(description = "Manager identifier",defaultValue = "1")
+    @Schema(description = "Manager identifier", defaultValue = "1")
     private long id;
 
     @Schema(description = "Name", defaultValue = "Filip")
@@ -35,7 +33,7 @@ public class ManagerDto {
     @Schema(description = "Surname", defaultValue = "Mashkovski")
     private String lastName;
 
-    @Schema(description = "Status of the manager",defaultValue = "ACTIVE")
+    @Schema(description = "Status of the manager", defaultValue = "ACTIVE")
     @Enumerated(EnumType.STRING)
     private Status status;
 

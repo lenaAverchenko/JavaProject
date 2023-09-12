@@ -4,6 +4,7 @@ package telran.functionality.com.converter;
  *
  * @author Olena Averchenko
  */
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import telran.functionality.com.dto.AccountDto;
@@ -20,6 +21,7 @@ public class TransactionConverterImpl implements Converter<Transaction, Transact
 
     /**
      * Method to convert Transaction entity to TransactionDto, showed to user.
+     *
      * @param transaction entity from database
      * @return TransactionDto object
      */
@@ -39,6 +41,7 @@ public class TransactionConverterImpl implements Converter<Transaction, Transact
 
     /**
      * Method to convert TransactionCreateDto (data provided by user) to entity Transaction, stored in database.
+     *
      * @param createdDto provided data
      * @return Transaction entity
      */

@@ -4,6 +4,7 @@ package telran.functionality.com.entity;
  *
  * @author Olena Averchenko
  */
+
 import lombok.*;
 import telran.functionality.com.enums.Currency;
 import telran.functionality.com.enums.Status;
@@ -20,7 +21,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "accounts")
-//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

@@ -1,4 +1,5 @@
 package telran.functionality.com.enums;
+
 /**
  * Enum - existing currencies
  *

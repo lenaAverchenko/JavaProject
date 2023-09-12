@@ -4,6 +4,7 @@ package telran.functionality.com.dto;
  *
  * @author Olena Averchenko
  */
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -23,19 +24,19 @@ import java.util.UUID;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TransactionCreateDto {
 
-    @Schema(description = "Debit account identifier",defaultValue = "246bc91b-613d-4d0b-bb1d-ad9837191111")
+    @Schema(description = "Debit account identifier", defaultValue = "246bc91b-613d-4d0b-bb1d-ad9837191111")
     private UUID debitAccountId;
 
-    @Schema(description = "Credit account identifier",defaultValue = "246bc91b-613d-4d0b-bb1d-ad9837192222")
+    @Schema(description = "Credit account identifier", defaultValue = "246bc91b-613d-4d0b-bb1d-ad9837192222")
     private UUID creditAccountId;
 
-    @Schema(description = "Type of account",defaultValue = "PERSONAL")
+    @Schema(description = "Type of account", defaultValue = "PERSONAL")
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    @Schema(description = "Amount",defaultValue = "1000.00")
+    @Schema(description = "Amount", defaultValue = "1000.00")
     private double amount;
 
-    @Schema(description = "Description",defaultValue = "Internal transfer")
+    @Schema(description = "Description", defaultValue = "Internal transfer")
     private String description;
 }

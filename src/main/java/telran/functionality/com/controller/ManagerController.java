@@ -5,6 +5,7 @@ package telran.functionality.com.controller;
  *
  * @author Olena Averchenko
  */
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -88,13 +89,14 @@ public class ManagerController {
             }
     )
     @SecurityRequirement(name = "basicauth")
+    @Transactional
     @PostMapping
     public ManagerDto save(@RequestBody @Parameter(description = "New manager to save") ManagerCreateDto managerCreateDto) {
         Manager manager = managerService.save(managerConverter.toEntity(managerCreateDto));
-            managerDataService.create(new ManagerData(
-                    managerCreateDto.getLogin(),
-                    encoder.encode(managerCreateDto.getPassword()),
-                    manager));
+        managerDataService.create(new ManagerData(
+                managerCreateDto.getLogin(),
+                encoder.encode(managerCreateDto.getPassword()),
+                manager));
         return managerConverter.toDto(manager);
     }
 
@@ -114,18 +116,18 @@ public class ManagerController {
     @Transactional
     @PutMapping("/updateInformation/{id}")
     public ManagerDto updateInformation(
-            @PathVariable (name = "id") @Parameter(description = "Identifier of the manager") long id,
+            @PathVariable(name = "id") @Parameter(description = "Identifier of the manager") long id,
             @RequestBody @Parameter(description = "New information for manager to update") ManagerCreateDto managerCreateDto) {
         Manager manager = null;
-        try{
+        try {
             ManagerData foundManagerData = managerDataRepository.findAll()
                     .stream().filter(mn -> mn.getManager().getId() == id)
                     .findFirst().orElse(null);
-            if(foundManagerData != null){
+            if (foundManagerData != null) {
                 managerCreateDto.setLogin(foundManagerData.getLogin());
             }
             manager = managerService.update(id, managerConverter.toEntity(managerCreateDto));
-        } catch (ForbiddenLoginNameException ex){
+        } catch (ForbiddenLoginNameException ex) {
             //
         }
         return managerConverter.toDto(manager);

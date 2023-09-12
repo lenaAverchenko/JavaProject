@@ -6,6 +6,7 @@ package telran.functionality.com.service;
  */
 
 import telran.functionality.com.dto.BalanceDto;
+import telran.functionality.com.dto.TransactionCreateDto;
 import telran.functionality.com.entity.Account;
 import telran.functionality.com.entity.Transaction;
 import telran.functionality.com.enums.Status;
@@ -29,7 +30,7 @@ public interface AccountService {
 
     List<Transaction> getHistoryOfTransactionsByAccountId(UUID id);
 
-    Transaction transferMoneyBetweenAccounts(Transaction transaction);
+    Transaction transferMoneyBetweenAccounts(TransactionCreateDto transaction);
 
     Account withdrawMoney(UUID clientId, UUID accountId, double sum);
 

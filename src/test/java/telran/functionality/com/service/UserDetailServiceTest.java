@@ -37,7 +37,7 @@ class UserDetailServiceTest {
     private List<ManagerData> managerDataList;
 
     @BeforeEach
-    void init(){
+    void init() {
         List<Manager> managers = Arrays.asList(
                 new Manager(1, "Oleh", "Olehov", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
                 new Manager(2, "Dalim", "Dalimow", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
@@ -45,8 +45,8 @@ class UserDetailServiceTest {
 
         List<Client> clients = Arrays.asList(
                 new Client(UUID.randomUUID(), managers.get(0), new ArrayList<>(), Status.ACTIVE, "0000000", "Bank", "Bank", "bank@mail.com", "Banking Street", "000000000000", new Timestamp(new Date().getTime())),
-                new Client(UUID.randomUUID(), managers.get(1), new ArrayList<>(),Status.ACTIVE, "FT11111", "Michail", "Michailov", "michail@mail.com", "12/7 Long Street", "111222333444", new Timestamp(new Date().getTime())),
-                new Client(UUID.randomUUID(), managers.get(2), new ArrayList<>(),Status.ACTIVE, "FT22222", "Leo", "Leonov", "leo@mail.com", "2 Down Street", "777888999666", new Timestamp(new Date().getTime())));
+                new Client(UUID.randomUUID(), managers.get(1), new ArrayList<>(), Status.ACTIVE, "FT11111", "Michail", "Michailov", "michail@mail.com", "12/7 Long Street", "111222333444", new Timestamp(new Date().getTime())),
+                new Client(UUID.randomUUID(), managers.get(2), new ArrayList<>(), Status.ACTIVE, "FT22222", "Leo", "Leonov", "leo@mail.com", "2 Down Street", "777888999666", new Timestamp(new Date().getTime())));
 
         clientDataList = Arrays.asList(
                 new ClientData(1, "One", "One", clients.get(0)),
@@ -66,7 +66,7 @@ class UserDetailServiceTest {
         Mockito.when(clientService.getByLogin(login)).thenReturn(clientDataList.get(0));
         Mockito.when(managerService.getByLogin(login)).thenReturn(null);
         User expectedUser = new User(client.getLogin(), client.getPassword(),
-            Arrays.asList(new SimpleGrantedAuthority("USER")));
+                Arrays.asList(new SimpleGrantedAuthority("USER")));
         assertEquals(expectedUser, userDetailService.loadUserByUsername(login));
     }
 

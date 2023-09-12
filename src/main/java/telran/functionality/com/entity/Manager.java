@@ -4,6 +4,7 @@ package telran.functionality.com.entity;
  *
  * @author Olena Averchenko
  */
+
 import lombok.*;
 import telran.functionality.com.enums.Status;
 
@@ -16,7 +17,6 @@ import java.util.List;
 @Entity
 @Table(name = "managers")
 @NoArgsConstructor
-//@ToString
 @Data
 @AllArgsConstructor
 public class Manager {
@@ -40,6 +40,9 @@ public class Manager {
     private List<Product> products = new ArrayList<>();
     private final Timestamp createdAt = new Timestamp(new Date().getTime());
     private Timestamp updatedAt = new Timestamp(new Date().getTime());
+
+    @OneToOne(mappedBy = "manager", cascade = CascadeType.REMOVE)
+    private ManagerData managerData;
 
     public Manager(String firstName, String lastName, List<Client> clients, List<Product> products, Timestamp updatedAt) {
         this.firstName = firstName;

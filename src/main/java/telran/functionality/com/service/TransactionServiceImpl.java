@@ -1,9 +1,11 @@
 package telran.functionality.com.service;
 /**
  * Class implementing TransactionService to manage information about transactions
- * @see telran.functionality.com.service.TransactionService
+ *
  * @author Olena Averchenko
+ * @see telran.functionality.com.service.TransactionService
  */
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Transaction;
@@ -22,8 +24,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     /**
      * Method to get all the transactions from database
-     * @throws EmptyRequiredListException if the returned is empty
+     *
      * @return list of requested transactions
+     * @throws EmptyRequiredListException if the returned is empty
      */
     @Override
     public List<Transaction> getAll() {
@@ -36,9 +39,10 @@ public class TransactionServiceImpl implements TransactionService {
 
     /**
      * Method to get the transaction by its id
+     *
      * @param id unique id for the transaction
-     * @throws NotExistingEntityException if it doesn't exist
      * @return found transaction
+     * @throws NotExistingEntityException if it doesn't exist
      */
     @Override
     public Transaction getById(UUID id) {
@@ -48,6 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     /**
      * Method to save some new transaction
+     *
      * @param transaction new transaction
      * @return saved transaction
      */
@@ -58,6 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     /**
      * Method to delete transaction by its id
+     *
      * @param id unique id for the transaction
      */
     @Override

@@ -1,7 +1,5 @@
 package telran.functionality.com.configuration;
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -17,11 +15,10 @@ import telran.functionality.com.service.UserDetailService;
  * Class - Configuration for authorisation of user and access permission
  *
  * @author Olena Averchenko
- * */
+ */
 
 @Configuration
 @EnableConfigurationProperties
-//@EnableWebSecurity
 public class SecurityConfigBasicAuth extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -33,8 +30,7 @@ public class SecurityConfigBasicAuth extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers( "/test/**", "/v3/api-docs/**","/swagger-ui/**","/swagger-ui.html").permitAll()
-//                .antMatchers("/test/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
+                .antMatchers("/test/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .antMatchers("/api/accounts/client/**").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers("/api/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated()

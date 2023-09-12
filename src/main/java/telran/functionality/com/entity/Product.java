@@ -18,7 +18,6 @@ import java.util.Date;
 @Entity
 @Table(name = "products")
 @NoArgsConstructor
-//@ToString
 @Data
 @AllArgsConstructor
 public class Product {
@@ -27,7 +26,7 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne (cascade = CascadeType.PERSIST)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "manager_id", referencedColumnName = "id")
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -65,7 +64,6 @@ public class Product {
         this.limitValue = limitValue;
         this.updatedAt = updatedAt;
     }
-
 
 
     public void setUpdatedAt(Timestamp updatedAt) {

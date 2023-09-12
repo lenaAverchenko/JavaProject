@@ -1,10 +1,11 @@
 package telran.functionality.com.service;
 /**
  * Class implementing ClientDataService to manage information about Clients' access to the App
- * @see telran.functionality.com.service.ClientDataService
  *
  * @author Olena Averchenko
+ * @see telran.functionality.com.service.ClientDataService
  */
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class ClientDataServiceImpl implements ClientDataService {
     public ClientData create(ClientData clientData) {
         if (clientDataRepository.findAll().stream()
                 .map(ClientData::getLogin).toList()
-                .contains(clientData.getLogin())){
+                .contains(clientData.getLogin())) {
             throw new ForbiddenLoginNameException(String.format("Client with login %s already exists.", clientData.getLogin()));
         }
         return clientDataRepository.save(clientData);

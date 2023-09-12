@@ -74,7 +74,6 @@ public class TestDataController {
         initialDataService.createUserInfoForClient();
     }
 
-    //    @ApiOperation(value = "Creating access for manager info data for tests")
     @PostMapping("/createUserInfoForManager")
     @Operation(summary = "Create user info for manager", description = "Creating access info data for managers for tests")
     public void createUserInfoForManager() {

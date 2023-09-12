@@ -1,9 +1,9 @@
 package telran.functionality.com.service;
 /**
  * Class implementing ProductService to manage information for products
- * @see telran.functionality.com.service.ProductService
  *
  * @author Olena Averchenko
+ * @see telran.functionality.com.service.ProductService
  */
 
 import lombok.RequiredArgsConstructor;
@@ -14,13 +14,11 @@ import telran.functionality.com.enums.Status;
 import telran.functionality.com.exceptions.EmptyRequiredListException;
 import telran.functionality.com.exceptions.InvalidStatusException;
 import telran.functionality.com.exceptions.NotExistingEntityException;
-import telran.functionality.com.exceptions.WrongValueException;
 import telran.functionality.com.repository.ManagerRepository;
 import telran.functionality.com.repository.ProductRepository;
 
 import javax.transaction.Transactional;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -45,6 +43,7 @@ public class ProductServiceImpl implements ProductService {
         }
         return allProducts;
     }
+
     /**
      * Method to get the product by its id
      * @throws NotExistingEntityException if it doesn't exist
@@ -92,7 +91,6 @@ public class ProductServiceImpl implements ProductService {
             foundManager.setUpdatedAt(time);
             foundProduct.setManager(foundManager);
             productRepository.save(foundProduct);
-//            managerRepository.save(foundManager);
         }
     }
 

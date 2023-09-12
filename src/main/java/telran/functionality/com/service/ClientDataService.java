@@ -4,9 +4,9 @@ package telran.functionality.com.service;
  *
  * @author Olena Averchenko
  */
+
 import telran.functionality.com.entity.ClientData;
 
-import java.util.Optional;
 
 public interface ClientDataService {
 

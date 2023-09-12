@@ -1,10 +1,11 @@
 package telran.functionality.com.service;
 /**
  * Class implementing ManagerService to manage information about Managers and their products
- * @see telran.functionality.com.service.ManagerService
  *
  * @author Olena Averchenko
+ * @see telran.functionality.com.service.ManagerService
  */
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import telran.functionality.com.entity.Client;
@@ -99,15 +100,12 @@ public class ManagerServiceImpl implements ManagerService {
         if (!clients.isEmpty()) {
             clients = clients.stream().map(client -> {
                 client.setManager(managerRepository.getReferenceById(1L));
-//                client.setManager(managerRepository.getById(1L));
-
                 return client;
             }).toList();
         }
         if (!products.isEmpty()) {
             products = products.stream().map(product -> {
                 product.setManager(managerRepository.getReferenceById(1L));
-//                product.setManager(managerRepository.getById(1L));
                 return product;
             }).toList();
         }
@@ -143,7 +141,6 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     @Transactional
     public Manager addProduct(long managerId, Product product) {
-//        long managerId = product.get
         Manager currentManager = getById(managerId);
         if (product.getManager().getId() != managerId) {
             throw new ConflictIdException("Provided id's are not the same. Check the data.");

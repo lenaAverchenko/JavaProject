@@ -25,6 +25,7 @@ public class ProductConverterImpl implements Converter<Product, ProductDto, Prod
 
     /**
      * Method to convert Product entity to ProductDto, showed to user.
+     *
      * @param product entity from database
      * @return ProductDto object
      */
@@ -40,6 +41,7 @@ public class ProductConverterImpl implements Converter<Product, ProductDto, Prod
 
     /**
      * Method to convert ProductCreateDto (data provided by user) to entity Product, stored in database.
+     *
      * @param createdDto provided data
      * @return Product entity
      */

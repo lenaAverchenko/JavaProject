@@ -16,7 +16,8 @@ public class CurrencyConverter {
 
     /**
      * Method for currency conversion from one type to another according to the current exchange rate
-     * @param amount sum to convert
+     *
+     * @param amount       sum to convert
      * @param fromCurrency initial currency
      * @param fromCurrency currency to convert
      * @return double amount - converted value

@@ -4,14 +4,13 @@ package telran.functionality.com.entity;
  *
  * @author Olena Averchenko
  */
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import telran.functionality.com.enums.Status;
 
 import javax.persistence.*;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -20,7 +19,6 @@ import java.util.Date;
 @Table(name = "agreements")
 @NoArgsConstructor
 @AllArgsConstructor
-//@ToString
 @Data
 public class Agreement {
 
@@ -28,7 +26,7 @@ public class Agreement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
 

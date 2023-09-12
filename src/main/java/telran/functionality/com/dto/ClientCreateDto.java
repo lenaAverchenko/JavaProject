@@ -4,12 +4,12 @@ package telran.functionality.com.dto;
  *
  * @author Olena Averchenko
  */
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Data
-//@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)

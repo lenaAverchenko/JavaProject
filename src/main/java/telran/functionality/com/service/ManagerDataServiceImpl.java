@@ -1,10 +1,11 @@
 package telran.functionality.com.service;
 /**
  * Class implementing ManagerDataService to manage information about Managers' access to the App
- * @see telran.functionality.com.service.ManagerDataService
  *
  * @author Olena Averchenko
+ * @see telran.functionality.com.service.ManagerDataService
  */
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class ManagerDataServiceImpl implements ManagerDataService {
     public ManagerData create(ManagerData managerData) {
         if (managerDataRepository.findAll().stream()
                 .map(ManagerData::getLogin).toList()
-                .contains(managerData.getLogin())){
+                .contains(managerData.getLogin())) {
             throw new ForbiddenLoginNameException(String.format("Manager with login %s already exists.", managerData.getLogin()));
         }
         return managerDataRepository.save(managerData);

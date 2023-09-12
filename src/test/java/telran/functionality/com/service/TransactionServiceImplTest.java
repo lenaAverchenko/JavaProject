@@ -35,7 +35,7 @@ class TransactionServiceImplTest {
     private List<Account> accounts;
 
     @BeforeEach
-    public void init(){
+    public void init() {
         List<Manager> managers = Arrays.asList(
                 new Manager(1, "Oleh", "Olehov", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
                 new Manager(2, "Dalim", "Dalimow", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
@@ -43,13 +43,13 @@ class TransactionServiceImplTest {
 
         List<Client> clients = Arrays.asList(
                 new Client(UUID.randomUUID(), managers.get(0), new ArrayList<>(), Status.ACTIVE, "0000000", "Bank", "Bank", "bank@mail.com", "Banking Street", "000000000000", new Timestamp(new Date().getTime())),
-                new Client(UUID.randomUUID(), managers.get(1), new ArrayList<>(),Status.ACTIVE, "FT11111", "Michail", "Michailov", "michail@mail.com", "12/7 Long Street", "111222333444", new Timestamp(new Date().getTime())),
-                new Client(UUID.randomUUID(), managers.get(2), new ArrayList<>(),Status.ACTIVE, "FT22222", "Leo", "Leonov", "leo@mail.com", "2 Down Street", "777888999666", new Timestamp(new Date().getTime())));
+                new Client(UUID.randomUUID(), managers.get(1), new ArrayList<>(), Status.ACTIVE, "FT11111", "Michail", "Michailov", "michail@mail.com", "12/7 Long Street", "111222333444", new Timestamp(new Date().getTime())),
+                new Client(UUID.randomUUID(), managers.get(2), new ArrayList<>(), Status.ACTIVE, "FT22222", "Leo", "Leonov", "leo@mail.com", "2 Down Street", "777888999666", new Timestamp(new Date().getTime())));
 
         accounts = Arrays.asList(
-                new Account(UUID.randomUUID(),clients.get(0), "Bank Account", Type.INNERBANK, Status.ACTIVE, 0, Currency.PLN, new Timestamp(new Date().getTime())),
-                new Account(UUID.randomUUID(),clients.get(1), "Personal Account", Type.PERSONAL, Status.ACTIVE, 1000, Currency.PLN, new Timestamp(new Date().getTime())),
-                new Account(UUID.randomUUID(),clients.get(2), "Leo's Account", Type.PERSONAL, Status.ACTIVE, 200, Currency.USD, new Timestamp(new Date().getTime())));
+                new Account(UUID.randomUUID(), clients.get(0), "Bank Account", Type.INNERBANK, Status.ACTIVE, 0, Currency.PLN, new Timestamp(new Date().getTime())),
+                new Account(UUID.randomUUID(), clients.get(1), "Personal Account", Type.PERSONAL, Status.ACTIVE, 1000, Currency.PLN, new Timestamp(new Date().getTime())),
+                new Account(UUID.randomUUID(), clients.get(2), "Leo's Account", Type.PERSONAL, Status.ACTIVE, 200, Currency.USD, new Timestamp(new Date().getTime())));
 
 
         transactions = Arrays.asList(
@@ -61,7 +61,7 @@ class TransactionServiceImplTest {
     @Test
     void getAll() {
         Mockito.when(transactionRepository.findAll()).thenReturn(transactions);
-        assertEquals(3,transactionService.getAll().size());
+        assertEquals(3, transactionService.getAll().size());
     }
 
     @Test
@@ -89,11 +89,12 @@ class TransactionServiceImplTest {
         Mockito.when(transactionRepository.findById(someId)).thenReturn(Optional.ofNullable(null));
         assertThrows(NotExistingEntityException.class, () -> transactionService.getById(someId));
     }
+
     @Test
     void save() {
-          Transaction newTransaction = new Transaction(
-                  UUID.randomUUID(), accounts.get(2), accounts.get(1),
-                  Type.COMMERCIAL, 800, "New personal transfer");
+        Transaction newTransaction = new Transaction(
+                UUID.randomUUID(), accounts.get(2), accounts.get(1),
+                Type.COMMERCIAL, 800, "New personal transfer");
         Mockito.when(transactionRepository.save(newTransaction)).thenReturn(newTransaction);
         Transaction savedTransaction = transactionService.save(newTransaction);
         assertEquals(accounts.get(2).getId(), savedTransaction.getDebitAccount().getId());

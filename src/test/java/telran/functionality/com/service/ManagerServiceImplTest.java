@@ -36,17 +36,18 @@ class ManagerServiceImplTest {
     private Product product;
 
     @BeforeEach
-    public void init (){
+    public void init() {
         managers = Arrays.asList(
                 new Manager(1, "Oleh", "Olehov", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
                 new Manager(2, "Dalim", "Dalimow", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
-                new Manager(3, "Anna", "Antonova", new ArrayList<>(),new ArrayList<>(), new Timestamp(new Date().getTime())));
+                new Manager(3, "Anna", "Antonova", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())));
         List<Product> products = Arrays.asList(
                 new Product(7, managers.get(0), "classic", Currency.PLN, 1.00, 10000, new Timestamp(new Date().getTime())),
                 new Product(4, managers.get(0), "classic", Currency.PLN, 1.00, 3000, new Timestamp(new Date().getTime()))
         );
         managers.get(2).setProducts(products);
     }
+
     @Test
     void getAll() {
         Mockito.when(managerRepository.findAll()).thenReturn(managers);
@@ -120,26 +121,26 @@ class ManagerServiceImplTest {
     void addProduct() {
         Product product = new Product(3, managers.get(0), "classic", Currency.PLN, 1.00, 10000, new Timestamp(new Date().getTime()));
         Mockito.when(managerRepository.findById(1L)).thenReturn(Optional.ofNullable(managers.get(0)));
-        Manager manager = managerService.addProduct(1,product);
+        Manager manager = managerService.addProduct(1, product);
         Mockito.verify(productService).save(product);
     }
 
     @Test
     void changeManagerOfProduct() {
-        managerService.changeManagerOfProduct(7,1);
-        Mockito.verify(productService).changeManager(7,1);
+        managerService.changeManagerOfProduct(7, 1);
+        Mockito.verify(productService).changeManager(7, 1);
     }
 
     @Test
     void testChangeStatusOfProduct() {
-        managerService.changeStatusOfProduct(7,Status.WAITING);
-        Mockito.verify(productService).changeStatus(7,Status.WAITING);
+        managerService.changeStatusOfProduct(7, Status.WAITING);
+        Mockito.verify(productService).changeStatus(7, Status.WAITING);
     }
 
     @Test
     void changeLimitValueOfProduct() {
-        managerService.changeLimitValueOfProduct(7,3000);
-        Mockito.verify(productService).changeLimitValue(7,3000);
+        managerService.changeLimitValueOfProduct(7, 3000);
+        Mockito.verify(productService).changeLimitValue(7, 3000);
     }
 
     @Test
