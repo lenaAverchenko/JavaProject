@@ -162,8 +162,6 @@ public class AccountServiceImpl implements AccountService {
     @Transactional
     public Transaction transferMoneyBetweenAccounts(TransactionCreateDto transaction) {
         double sum = transaction.getAmount();
-//        UUID debitAccountId = transaction.getDebitAccount().getId();
-//        UUID creditAccountId = transaction.getCreditAccount().getId();
         UUID debitAccountId = transaction.getDebitAccountId();
         UUID creditAccountId = transaction.getCreditAccountId();
         if (sum < 0) {
@@ -236,7 +234,6 @@ public class AccountServiceImpl implements AccountService {
             sum = foundAccount.getBalance() - sum;
             foundAccount.setBalance(sum);
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-//            accountRepository.save(foundAccount);
             Transaction newTransaction = new Transaction(foundAccount, accountRepository.findAll().get(0), Type.INNERBANK, initSum, "bank account withdrawal");
             transactionService.save(newTransaction);
         }
@@ -256,7 +253,6 @@ public class AccountServiceImpl implements AccountService {
         if (accountIsValid(accountId)) {
             foundAccount.setBalance(sum + foundAccount.getBalance());
             foundAccount.setUpdatedAt(new Timestamp(new Date().getTime()));
-//            accountRepository.save(foundAccount);
             Transaction newTransaction = new Transaction(accountRepository.findAll().get(0), foundAccount, Type.INNERBANK, sum, "bank account replenishment");
             transactionService.save(newTransaction);
         }

@@ -207,6 +207,8 @@ class AccountServiceImplTest {
     @Test
     void transferMoneyBetweenAccountsNotEnoughMoney() {
         TransactionCreateDto transaction = new TransactionCreateDto(accounts.get(2).getId(), accounts.get(0).getId(), Type.COMMERCIAL, 1000, "Payment for service");
+        Mockito.when(accountRepository.findById(accounts.get(2).getId())).thenReturn(Optional.ofNullable(accounts.get(2)));
+        Mockito.when(accountRepository.findById(accounts.get(0).getId())).thenReturn(Optional.ofNullable(accounts.get(0)));
         Account debitAccount = accountService.getById(accounts.get(2).getId());
         Account creditAccount = accountService.getById(accounts.get(0).getId());
         Mockito.when(accountRepository.findById(debitAccount.getId())).thenReturn(Optional.ofNullable(debitAccount));

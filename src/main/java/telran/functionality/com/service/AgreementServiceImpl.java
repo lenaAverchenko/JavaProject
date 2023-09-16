@@ -62,13 +62,6 @@ public class AgreementServiceImpl implements AgreementService {
     @Override
     @Transactional
     public Agreement save(Agreement agreement) {
-        Agreement existedAgreement = getAll()
-                .stream()
-                .filter(agr -> agr.getAccount().getId().equals(agreement.getAccount().getId()))
-                .findFirst().orElse(null);
-        if (existedAgreement != null) {
-            throw new ExcessiveAgreementException("The agreement for the required account is already exist");
-        }
         Agreement createdAgreement = agreementRepository.save(agreement);
         UUID accountId = createdAgreement.getAccount().getId();
         accountService.changeStatus(accountId, Status.ACTIVE);

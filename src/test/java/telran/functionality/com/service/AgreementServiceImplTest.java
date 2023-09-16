@@ -19,6 +19,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(MockitoExtension.class)
 class AgreementServiceImplTest {
 
@@ -26,11 +27,14 @@ class AgreementServiceImplTest {
     private AgreementServiceImpl agreementService;
     @Mock
     private AgreementRepository agreementRepository;
+    @Mock
+    private AccountService accountService;
     private List<Agreement> agreements;
     private List<Account> accounts;
     private List<Product> products;
+
     @BeforeEach
-    public void init(){
+    public void init() {
         List<Manager> managers = Arrays.asList(
                 new Manager(1, "Oleh", "Olehov", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
                 new Manager(2, "Dalim", "Dalimow", new ArrayList<>(), new ArrayList<>(), new Timestamp(new Date().getTime())),
@@ -38,13 +42,13 @@ class AgreementServiceImplTest {
 
         List<Client> clients = Arrays.asList(
                 new Client(UUID.randomUUID(), managers.get(0), new ArrayList<>(), Status.ACTIVE, "0000000", "Bank", "Bank", "bank@mail.com", "Banking Street", "000000000000", new Timestamp(new Date().getTime())),
-                new Client(UUID.randomUUID(), managers.get(1), new ArrayList<>(),Status.ACTIVE, "FT11111", "Michail", "Michailov", "michail@mail.com", "12/7 Long Street", "111222333444", new Timestamp(new Date().getTime())),
-                new Client(UUID.randomUUID(), managers.get(2), new ArrayList<>(),Status.ACTIVE, "FT22222", "Leo", "Leonov", "leo@mail.com", "2 Down Street", "777888999666", new Timestamp(new Date().getTime())));
+                new Client(UUID.randomUUID(), managers.get(1), new ArrayList<>(), Status.ACTIVE, "FT11111", "Michail", "Michailov", "michail@mail.com", "12/7 Long Street", "111222333444", new Timestamp(new Date().getTime())),
+                new Client(UUID.randomUUID(), managers.get(2), new ArrayList<>(), Status.ACTIVE, "FT22222", "Leo", "Leonov", "leo@mail.com", "2 Down Street", "777888999666", new Timestamp(new Date().getTime())));
 
         accounts = Arrays.asList(
-                new Account(UUID.randomUUID(),clients.get(0), "Bank Account", Type.INNERBANK, Status.ACTIVE, 0, Currency.PLN, new Timestamp(new Date().getTime())),
-                new Account(UUID.randomUUID(),clients.get(1), "Personal Account", Type.PERSONAL, Status.ACTIVE, 1000, Currency.PLN, new Timestamp(new Date().getTime())),
-                new Account(UUID.randomUUID(),clients.get(2), "Leo's Account", Type.PERSONAL, Status.ACTIVE, 200, Currency.USD, new Timestamp(new Date().getTime())));
+                new Account(UUID.randomUUID(), clients.get(0), "Bank Account", Type.INNERBANK, Status.ACTIVE, 0, Currency.PLN, new Timestamp(new Date().getTime())),
+                new Account(UUID.randomUUID(), clients.get(1), "Personal Account", Type.PERSONAL, Status.ACTIVE, 1000, Currency.PLN, new Timestamp(new Date().getTime())),
+                new Account(UUID.randomUUID(), clients.get(2), "Leo's Account", Type.PERSONAL, Status.ACTIVE, 200, Currency.USD, new Timestamp(new Date().getTime())));
         products = Arrays.asList(
                 new Product(1, managers.get(1), "credit", Currency.PLN, 7.00, 100000, new Timestamp(new Date().getTime())),
                 new Product(2, managers.get(1), "mortgage", Currency.PLN, 3.00, 500000, new Timestamp(new Date().getTime())),
@@ -93,6 +97,7 @@ class AgreementServiceImplTest {
     void save() {
         Agreement agreement = new Agreement(4, accounts.get(0), products.get(0), 10.00, Status.ACTIVE, 200, new Timestamp(new Date().getTime()));
         Mockito.when(agreementRepository.save(agreement)).thenReturn(agreement);
+        Mockito.when(accountService.changeStatus(agreement.getAccount().getId(), Status.ACTIVE)).thenReturn(accounts.get(0));
         Agreement savedAgreement = agreementService.save(agreement);
         assertEquals(4, savedAgreement.getId());
         assertEquals(1, savedAgreement.getProduct().getId());
@@ -108,7 +113,7 @@ class AgreementServiceImplTest {
         Agreement agreementToChange = agreements.get(0);
         agreementToChange.setAccount(accounts.get(0));
         Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreementToChange));
-        Mockito.when(agreementRepository.findAll()).thenReturn(Arrays.asList(agreementToChange));
+        Mockito.when(agreementRepository.save(agreementToChange)).thenReturn(agreementToChange);
         Agreement agreement = agreementService.changeStatus(1, Status.WAITING);
         assertEquals(Status.WAITING, agreement.getStatus());
     }
@@ -117,6 +122,7 @@ class AgreementServiceImplTest {
     void changeInterestRate() {
         Agreement agreementToChange = agreements.get(0);
         agreementToChange.setAccount(accounts.get(0));
+        Mockito.when(agreementRepository.save(agreementToChange)).thenReturn(agreementToChange);
         Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreementToChange));
         Agreement agreement = agreementService.changeInterestRate(1, 50);
         assertEquals(50, agreement.getInterestRate());
@@ -134,6 +140,7 @@ class AgreementServiceImplTest {
     void inactivateAgreement() {
         Agreement agreementToChange = agreements.get(0);
         agreementToChange.setAccount(accounts.get(1));
+        Mockito.when(agreementRepository.save(agreementToChange)).thenReturn(agreementToChange);
         Mockito.when(agreementRepository.findById(1L)).thenReturn(Optional.ofNullable(agreementToChange));
         agreementService.inactivateAgreement(1);
         assertEquals(Status.INACTIVE, agreementService.getById(1).getStatus());

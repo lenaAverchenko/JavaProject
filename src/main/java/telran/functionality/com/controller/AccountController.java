@@ -262,7 +262,6 @@ public class AccountController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
                     @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "406", description = "Excessive agreement for the activated account"),
                     @ApiResponse(responseCode = "401", description = "Access denied")
             }
     )

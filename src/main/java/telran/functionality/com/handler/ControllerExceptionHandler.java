@@ -121,9 +121,4 @@ public class ControllerExceptionHandler {
         return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
     }
 
-    @ExceptionHandler
-    public ResponseEntity handleExcessiveAgreementException(ExcessiveAgreementException exception, HttpServletRequest request) {
-        return new ResponseEntity(exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
-    }
-
 }
