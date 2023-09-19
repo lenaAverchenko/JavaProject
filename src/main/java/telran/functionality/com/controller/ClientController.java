@@ -21,8 +21,6 @@ import telran.functionality.com.entity.Client;
 
 import telran.functionality.com.entity.ClientData;
 import telran.functionality.com.enums.Status;
-import telran.functionality.com.exceptions.ForbiddenLoginNameException;
-import telran.functionality.com.repository.ClientDataRepository;
 import telran.functionality.com.service.ClientDataService;
 import telran.functionality.com.service.ClientService;
 
@@ -42,8 +40,6 @@ public class ClientController {
 
     private final ClientDataService clientDataService;
 
-    private final ClientDataRepository clientDataRepository;
-
     private final ClientService clientService;
 
     private final Converter<Client, ClientDto, ClientCreateDto> clientConverter;
@@ -53,8 +49,6 @@ public class ClientController {
             description = "It allows us to get the list of all existing in database clients",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist")
             }
     )
@@ -70,8 +64,6 @@ public class ClientController {
             description = "It allows us to get a certain client by its id, if it exists",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -87,8 +79,6 @@ public class ClientController {
             description = "It allows us to save a new client",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "406", description = "Login already exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -108,8 +98,6 @@ public class ClientController {
             description = "It allows us to update personal information about the client",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -119,18 +107,7 @@ public class ClientController {
     @PutMapping("/updateInformation/{id}")
     public ClientDto updateInformation(@PathVariable(name = "id") @Parameter(description = "Identifier of the client") UUID id,
                                        @RequestBody @Parameter(description = "New data for the client to update information") ClientCreateDto clientCreateDto) {
-        Client client = null;
-        try {
-            ClientData foundClientData = clientDataRepository.findAll()
-                    .stream().filter(cl -> cl.getClient().getId().equals(id))
-                    .findFirst().orElse(null);
-            if (foundClientData != null) {
-                clientCreateDto.setLogin(foundClientData.getLogin());
-            }
-            client = clientService.updatePersonalInfo(id, clientConverter.toEntity(clientCreateDto));
-        } catch (ForbiddenLoginNameException ex) {
-            //
-        }
+        Client client = clientService.updatePersonalInfo(id, clientConverter.toEntity(clientCreateDto));
         return clientConverter.toDto(client);
     }
 
@@ -139,8 +116,6 @@ public class ClientController {
             description = "It allows us to delete the client by its id, if it exists, and if the balances of its accounts are empty",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
                     @ApiResponse(responseCode = "403", description = "Unable to delete bank client."),
@@ -159,8 +134,6 @@ public class ClientController {
             description = "It allows us to change a manager for the client, if it's acceptable",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
@@ -179,8 +152,6 @@ public class ClientController {
             description = "It allows us to change status of the client.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -197,8 +168,6 @@ public class ClientController {
             description = "It allows us to change status of the client to 'INACTIVE'.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }

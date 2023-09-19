@@ -51,8 +51,6 @@ public class AccountController {
             description = "It allows us to get the list of all existing in database accounts",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Empty list of accounts")}
     )
     @SecurityRequirement(name = "basicauth")
@@ -68,8 +66,6 @@ public class AccountController {
             description = "It allows us to get the list of all existing in database agreements",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Empty list of agreements")}
     )
     @SecurityRequirement(name = "basicauth")
@@ -86,8 +82,6 @@ public class AccountController {
             description = "It allows us to get a certain account by its id, if it exists",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist")}
     )
     @SecurityRequirement(name = "basicauth")
@@ -101,9 +95,7 @@ public class AccountController {
             summary = "Saving the account",
             description = "It allows us to save a new account",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied")
+                    @ApiResponse(responseCode = "200", description = "Successfull request")
             }
     )
     @SecurityRequirement(name = "basicauth")
@@ -118,8 +110,6 @@ public class AccountController {
             description = "It allows us to update status of the account",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "403", description = "Account has not been activated yet. There is no active agreement."),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
@@ -138,8 +128,6 @@ public class AccountController {
             description = "It allows us to delete the account by its id, if it exists, and if the balance is empty",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "403", description = "Unable to delete bank account. It belongs to the bank."),
                     @ApiResponse(responseCode = "403", description = "Not empty balance"),
@@ -158,8 +146,6 @@ public class AccountController {
             description = "It allows us to get the balance information about account by its id",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -177,8 +163,6 @@ public class AccountController {
             description = "It allows us to get the history of transactions by the account id, if there is at least one of them stored in database",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -197,8 +181,6 @@ public class AccountController {
             description = "It allows us to transfer money between two accounts,if there is no other restrains",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
                     @ApiResponse(responseCode = "451", description = "Account is not allowed to sent money."),
@@ -219,8 +201,6 @@ public class AccountController {
             description = "It allows us to withdraw money from the account, if there is no other restrains",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
@@ -243,8 +223,6 @@ public class AccountController {
             description = "It allows us to put money to the account, if it exists",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -260,9 +238,7 @@ public class AccountController {
             summary = "Create new agreement",
             description = "It allows us to create a new agreement for the existing account, and activates the last one.",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied")
+                    @ApiResponse(responseCode = "200", description = "Successfull request")
             }
     )
     @SecurityRequirement(name = "basicauth")
@@ -276,8 +252,6 @@ public class AccountController {
             description = "It allows us to change status of the account to 'INACTIVE'.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist")
             }
     )
@@ -292,8 +266,6 @@ public class AccountController {
             description = "It allows us to check if the account belongs to the client",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Account doesn't exist"),
                     @ApiResponse(responseCode = "404", description = "Client doesn't exist"),
                     @ApiResponse(responseCode = "403", description = "Account doesn't belong to the client.")
@@ -311,8 +283,6 @@ public class AccountController {
             description = "It allows us to change status of the agreement to 'INACTIVE'.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Agreement doesn't exist")
             }
     )
@@ -327,8 +297,6 @@ public class AccountController {
             description = "It allows us to change status of the agreement.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Agreement doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -345,8 +313,6 @@ public class AccountController {
             description = "It allows us to change interest rate for the agreement.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Agreement doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }

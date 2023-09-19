@@ -1,10 +1,10 @@
 package telran.functionality.com.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -27,7 +25,6 @@ import telran.functionality.com.dto.ProductDto;
 
 import telran.functionality.com.entity.Manager;
 import telran.functionality.com.entity.Product;
-import telran.functionality.com.repository.ManagerDataRepository;
 import telran.functionality.com.service.ManagerDataService;
 import telran.functionality.com.service.ManagerService;
 import telran.functionality.com.service.UserDetailService;
@@ -42,6 +39,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 
 
 @WebMvcTest(ManagerController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class ManagerControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -52,22 +50,13 @@ class ManagerControllerTest {
     @MockBean
     private ManagerService managerService;
     @MockBean
-    private ManagerDataRepository managerDataRepository;
-    @MockBean
     private Converter<Manager, ManagerDto, ManagerCreateDto> managerConverter;
     @MockBean
     private Converter<Product, ProductDto, ProductCreateDto> productConverter;
     @MockBean
     private ManagerDataService managerDataService;
 
-//    @BeforeEach
-//    public void init() {
-//        Mockito.when(userDetailService.loadUserByUsername(null)).thenReturn(new User("ManagerOne", "ManagerOne", Arrays.asList(new SimpleGrantedAuthority("ADMIN"))));
-//        Mockito.when(userDetailService.loadUserByUsername(anyString())).thenReturn(new User("ManagerOne", "ManagerOne", Arrays.asList(new SimpleGrantedAuthority("ADMIN"))));
-//    }
 
-    @WithMockUser(username = "ManagerOne", password = "ManagerOne", authorities = {"ROLE_ADMIN"})
-//    @WithMockUser
     @Test
     void getAll() throws Exception {
         Mockito.when(userDetailService.loadUserByUsername(null)).thenReturn(new User("ManagerOne", "ManagerOne", Arrays.asList(new SimpleGrantedAuthority("ADMIN"))));
@@ -86,53 +75,6 @@ class ManagerControllerTest {
                         manager.getFirstName(), manager.getLastName(), manager.getStatus(), null, null)))));
     }
 
-    @Test
-    void getById() {
-    }
-
-    @Test
-    void save() {
-    }
-
-    @Test
-    void updateInformation() {
-    }
-
-    @Test
-    void delete() {
-    }
-
-    @Test
-    void changeStatus() {
-    }
-
-    @Test
-    void inactivateStatus() {
-    }
-
-    @Test
-    void addProduct() {
-    }
-
-    @Test
-    void changeStatusOfProduct() {
-    }
-
-    @Test
-    void changeManagerOfProduct() {
-    }
-
-    @Test
-    void testChangeStatusOfProduct() {
-    }
-
-    @Test
-    void changeLimitValueOfProduct() {
-    }
-
-    @Test
-    void inactivateStatusOfProduct() {
-    }
 
     private static String asJsonString(final Object obj) {
         try {

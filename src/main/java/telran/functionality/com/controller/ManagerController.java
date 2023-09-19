@@ -18,8 +18,6 @@ import telran.functionality.com.converter.Converter;
 import telran.functionality.com.dto.*;
 import telran.functionality.com.entity.*;
 import telran.functionality.com.enums.Status;
-import telran.functionality.com.exceptions.ForbiddenLoginNameException;
-import telran.functionality.com.repository.ManagerDataRepository;
 import telran.functionality.com.service.ManagerDataService;
 import telran.functionality.com.service.ManagerService;
 
@@ -36,8 +34,6 @@ public class ManagerController {
 
     private final PasswordEncoder encoder;
     private final ManagerService managerService;
-
-    private final ManagerDataRepository managerDataRepository;
     private final Converter<Manager, ManagerDto, ManagerCreateDto> managerConverter;
     private final Converter<Product, ProductDto, ProductCreateDto> productConverter;
     private final ManagerDataService managerDataService;
@@ -47,8 +43,6 @@ public class ManagerController {
             description = "It allows us to get the list of all existing in database managers",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Empty lst of managers")
             }
     )
@@ -65,8 +59,6 @@ public class ManagerController {
             description = "It allows us to get a certain manager by its id, if it exists",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -82,8 +74,6 @@ public class ManagerController {
             description = "It allows us to save a new manager",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "406", description = "Login is already exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -106,8 +96,6 @@ public class ManagerController {
             description = "It allows us to update personal information about the manager",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -118,18 +106,7 @@ public class ManagerController {
     public ManagerDto updateInformation(
             @PathVariable(name = "id") @Parameter(description = "Identifier of the manager") long id,
             @RequestBody @Parameter(description = "New information for manager to update") ManagerCreateDto managerCreateDto) {
-        Manager manager = null;
-        try {
-            ManagerData foundManagerData = managerDataRepository.findAll()
-                    .stream().filter(mn -> mn.getManager().getId() == id)
-                    .findFirst().orElse(null);
-            if (foundManagerData != null) {
-                managerCreateDto.setLogin(foundManagerData.getLogin());
-            }
-            manager = managerService.update(id, managerConverter.toEntity(managerCreateDto));
-        } catch (ForbiddenLoginNameException ex) {
-            //
-        }
+        Manager manager = managerService.update(id, managerConverter.toEntity(managerCreateDto));
         return managerConverter.toDto(manager);
     }
 
@@ -138,8 +115,6 @@ public class ManagerController {
             description = "It allows us to delete the manager by its id, if it exists",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -155,8 +130,6 @@ public class ManagerController {
             description = "It allows us to change status of the manager.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -173,8 +146,6 @@ public class ManagerController {
             description = "It allows us to change status of the manager to 'INACTIVE'.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist")
             }
     )
@@ -189,8 +160,6 @@ public class ManagerController {
             description = "It allows us to add a new product to the manager",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
                     @ApiResponse(responseCode = "409", description = "Conflicted data - not the same"),
@@ -209,8 +178,6 @@ public class ManagerController {
             description = "It allows us to change status of the product, if it belongs to the manager.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data."),
@@ -231,8 +198,6 @@ public class ManagerController {
             description = "It allows us to change a manager for the product, if it's acceptable",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Manager doesn't exist"),
                     @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
@@ -251,8 +216,6 @@ public class ManagerController {
             description = "It allows us to change status of the product",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -269,8 +232,6 @@ public class ManagerController {
             description = "It allows us to change the limit for the product",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
@@ -288,8 +249,6 @@ public class ManagerController {
             description = "It allows us to change status of the product to 'INACTIVE'.",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Successfull request"),
-                    @ApiResponse(responseCode = "500", description = "Internal error"),
-                    @ApiResponse(responseCode = "401", description = "Access denied"),
                     @ApiResponse(responseCode = "404", description = "Product doesn't exist"),
                     @ApiResponse(responseCode = "400", description = "Wrong type of provided data.")
             }
