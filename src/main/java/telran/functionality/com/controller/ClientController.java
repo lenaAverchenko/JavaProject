@@ -103,7 +103,6 @@ public class ClientController {
             }
     )
     @SecurityRequirement(name = "basicauth")
-    @Transactional
     @PutMapping("/updateInformation/{id}")
     public ClientDto updateInformation(@PathVariable(name = "id") @Parameter(description = "Identifier of the client") UUID id,
                                        @RequestBody @Parameter(description = "New data for the client to update information") ClientCreateDto clientCreateDto) {

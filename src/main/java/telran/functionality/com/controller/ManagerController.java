@@ -101,7 +101,6 @@ public class ManagerController {
             }
     )
     @SecurityRequirement(name = "basicauth")
-    @Transactional
     @PutMapping("/updateInformation/{id}")
     public ManagerDto updateInformation(
             @PathVariable(name = "id") @Parameter(description = "Identifier of the manager") long id,
