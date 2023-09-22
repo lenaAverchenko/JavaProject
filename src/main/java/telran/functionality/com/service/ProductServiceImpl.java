@@ -82,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
             if (foundManager == null) {
                 throw new NotExistingEntityException(String.format("Manager with id %d does not exist", managerId));
             }
-            if (foundManager.getStatus().equals(Status.INACTIVE)) {
+            if (Status.INACTIVE.equals(foundManager.getStatus())) {
                 throw new InvalidStatusException(String.format("Impossible to set manager with id %d to a product, " +
                         "because this manager is no longer available", managerId));
             }
@@ -163,7 +163,7 @@ public class ProductServiceImpl implements ProductService {
     public boolean statusIsValid(long id) {
         Product product = productRepository.findById(id).orElse(null);
         if (productExists(product)) {
-            if (product.getStatus().equals(Status.INACTIVE)) {
+            if (Status.INACTIVE.equals(product.getStatus())) {
                 throw new InvalidStatusException(String.format("Unable to get access to the product with id %d. Access denied", id));
             }
         }

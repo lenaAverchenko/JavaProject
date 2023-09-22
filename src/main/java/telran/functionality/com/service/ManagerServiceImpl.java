@@ -234,7 +234,7 @@ public class ManagerServiceImpl implements ManagerService {
     public boolean statusIsValid(long id) {
         Manager manager = managerRepository.findById(id).orElse(null);
         if (managerExists(manager)) {
-            if (manager.getStatus().equals(Status.INACTIVE)) {
+            if (Status.INACTIVE.equals(manager.getStatus())) {
                 throw new InvalidStatusException(String.format("Unable to get access to the manager with id %d.", id));
             }
         }
@@ -242,7 +242,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     /**
-     * Method to inactivate the chosen product by it's id
+     * Method to inactivate the chosen product by its id
      * @param productId product id
      * @throws NotExistingEntityException if product doesn't exist
      */

@@ -119,7 +119,7 @@ public class ClientServiceImpl implements ClientService {
                 throw new NotExistingEntityException(
                         String.format("Manager with id %d doesn't exist", managerId));
             }
-            if (foundManager.getStatus().equals(Status.INACTIVE)) {
+            if (Status.INACTIVE.equals(foundManager.getStatus())) {
                 throw new InvalidStatusException(String.format("Impossible to set manager with id %d to the client, " +
                         "because this manager is no longer available", managerId));
             }
@@ -176,7 +176,7 @@ public class ClientServiceImpl implements ClientService {
     public boolean statusIsValid(UUID id) {
         Client client = getById(id);
         if (clientExists(client)) {
-            if (client.getStatus().equals(Status.INACTIVE)) {
+            if (Status.INACTIVE.equals(client.getStatus())) {
                 throw new InvalidStatusException(String.format("Unable to get access to the client with id %s.", id));
             }
         }

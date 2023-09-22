@@ -5,7 +5,6 @@ package telran.functionality.com.controller;
  * @author Olena Averchenko
  */
 
-import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -324,8 +323,8 @@ public class AccountController {
         agreementService.changeInterestRate(id, newRate);
     }
 
-    @Hidden
-    public UUID getCurrentClientId() {
+
+    private UUID getCurrentClientId() {
         Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
         User currentUser = (User) currentAuthentication.getPrincipal();
         String currentClientLogin = currentUser.getUsername();
@@ -336,8 +335,8 @@ public class AccountController {
         return null;
     }
 
-    @Hidden
-    public void getAccess(UUID id) {
+
+    private void getAccess(UUID id) {
         UUID currentClientId = getCurrentClientId();
         if (currentClientId != null) {
             if (!currentClientId.equals(accountService.getById(id).getClient().getId())) {
